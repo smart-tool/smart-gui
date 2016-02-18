@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>910</width>
+    <height>487</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA 1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 1</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_2">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 2</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_3">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 3</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_4">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Parametro 4&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_5">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 5</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_6">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 6</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_7">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 13</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_8">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_8">
+    <property name="geometry">
+     <rect>
+      <x>530</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 12</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_9">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 11</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_9">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_10">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 8</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_11">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 10</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_10">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_12">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 9</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_11">
+    <property name="geometry">
+     <rect>
+      <x>410</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="comboBox_12">
+    <property name="geometry">
+     <rect>
+      <x>290</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>30</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 7</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>110</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro 14</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox_13">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>140</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QComboBox" name="comboBox_14">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>60</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>PROVA1</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 2</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 3</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>PROVA 4</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>250</y>
+      <width>181</width>
+      <height>81</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Esegui SMART</string>
+    </property>
+   </widget>
+   <widget class="QProgressBar" name="progressBar">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>370</y>
+      <width>171</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="value">
+     <number>24</number>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>910</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
