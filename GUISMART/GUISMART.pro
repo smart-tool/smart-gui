@@ -15,10 +15,10 @@ CONFIG += console
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    selezione.cpp
+    select.cpp
 
 HEADERS  += mainwindow.h \
-    selezione.h
+    select.h
 
 FORMS    += mainwindow.ui \
-    selezione.ui
+    select.ui

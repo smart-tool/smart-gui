@@ -1,4 +1,4 @@
-#include "selezione.h"
+#include "select.h"
 #include "ui_selezione.h"
 
 Selezione::Selezione(QWidget *parent) :

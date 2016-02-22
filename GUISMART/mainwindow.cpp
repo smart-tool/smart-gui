@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "selezione.h"
+#include "select.h"
 #include <QDebug>
 #include <cstdlib>
 MainWindow::MainWindow(QWidget *parent) :
