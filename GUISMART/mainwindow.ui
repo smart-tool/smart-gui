@@ -647,7 +647,19 @@
      <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSeleziona">
+    <property name="title">
+     <string>Seleziona</string>
+    </property>
+    <addaction name="actionSeleziona_algortmi"/>
+   </widget>
+   <addaction name="menuSeleziona"/>
   </widget>
+  <action name="actionSeleziona_algortmi">
+   <property name="text">
+    <string>Seleziona algortmi</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

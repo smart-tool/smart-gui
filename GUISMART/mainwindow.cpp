@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "selezione.h"
 #include <QDebug>
 #include <cstdlib>
 MainWindow::MainWindow(QWidget *parent) :
@@ -18,5 +19,12 @@ MainWindow::~MainWindow()
 void MainWindow::on_pushButton_clicked()
 {
     qDebug()<< ui->comboBox->currentIndex();
-    system("./a.out");
+//    system("./smart -text all");
+}
+
+void MainWindow::on_actionSeleziona_algortmi_triggered()
+{
+        Selezione select;
+        select.setModal(true);
+        select.exec();
 }
