@@ -26,6 +26,36 @@
     <string>Mostra Selezionati</string>
    </property>
   </widget>
+  <widget class="QScrollArea" name="scrollArea">
+   <property name="geometry">
+    <rect>
+     <x>9</x>
+     <y>18</y>
+     <width>241</width>
+     <height>261</height>
+    </rect>
+   </property>
+   <property name="widgetResizable">
+    <bool>true</bool>
+   </property>
+   <widget class="QWidget" name="scrollContents">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>237</width>
+      <height>257</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <zorder>pushButton</zorder>
+  <zorder>checkBox_2</zorder>
+  <zorder>checkBox_3</zorder>
+  <zorder>checkBox_10</zorder>
+  <zorder>checkBox_11</zorder>
+  <zorder>checkBox</zorder>
+  <zorder>scrollArea</zorder>
  </widget>
  <resources/>
  <connections/>
