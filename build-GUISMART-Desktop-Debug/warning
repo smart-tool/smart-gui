@@ -1,0 +1,9 @@
+In file included from source/algos/faoso4.c:25:0:
+source/algos/include/main.h: In function ‘main’:
+source/algos/include/main.h:80:15: warning: implicit declaration of function ‘search’ [-Wimplicit-function-declaration]
+   int count = search(p,m,t,n);
+               ^
+source/algos/faoso4.c: In function ‘search’:
+source/algos/faoso4.c:55:24: warning: implicit declaration of function ‘search_large’ [-Wimplicit-function-declaration]
+    if(m>32-u+1) return search_large(x,m,y,n,q);
+                        ^

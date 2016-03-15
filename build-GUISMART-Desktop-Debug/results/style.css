@@ -1,0 +1,15 @@
+body {
+	font-family: tahoma, helvetica, arial, sans-serif;
+	font-size: 10px;
+	text-align: center;
+	background-color: #DDDDDD;
+	color: #444444;
+}
+
+table {
+	background-color: #ffffff;
+	width: 60%;
+	border: 1px solid black;
+	font-size: 10px;
+}
+
