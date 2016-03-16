@@ -20,6 +20,19 @@ private slots:
 
     void on_actionAbout_SMART_GUI_triggered();
 
+
+
+    void on_checkBox_released();
+
+    void on_lineEdit_8_textChanged(const QString &arg1);
+
+
+    void on_lineEdit_9_textChanged(const QString &arg1);
+
+    void on_lineEdit_6_textChanged(const QString &arg1);
+
+    void on_lineEdit_7_textChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
 };
