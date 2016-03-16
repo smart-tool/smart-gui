@@ -33,6 +33,8 @@ private slots:
 
     void on_lineEdit_7_textChanged(const QString &arg1);
 
+    void on_pushButton_pressed();
+
 private:
     Ui::MainWindow *ui;
 };

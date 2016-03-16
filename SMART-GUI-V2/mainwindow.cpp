@@ -6,15 +6,17 @@
 #include <QMessageBox>
 #include <QDebug>
 
+QString x="Default";
+QString Default500= "500";
+QString Default1Mb= "1";
+QString DefaultTb300= "300";
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
  //   ui->centralWidget->setFixedSize(500,500);
-    QString x="Default";
-    QString Default500= "500";
-    QString Default1Mb= "1Mb";
-    QString DefaultTb300= "300";
+
 
     ui->setupUi(this);
 //    ui->lineEdit->setReadOnly(true);
@@ -47,9 +49,14 @@ void MainWindow::on_checkBox_released()
     if(ui->checkBox->isChecked()){
      ui->lineEdit_6->setEnabled(false);
      ui->lineEdit_7->setEnabled(false);
+     ui->lineEdit_8->setEnabled(false);
+     ui->lineEdit_9->setEnabled(false);
+
     }else{
         ui->lineEdit_6->setEnabled(true);
         ui->lineEdit_7->setEnabled(true);
+        ui->lineEdit_8->setEnabled(true);
+        ui->lineEdit_9->setEnabled(true);
     }
 }
 
@@ -120,4 +127,11 @@ void MainWindow::on_lineEdit_7_textChanged(const QString &arg1)
         ui->lineEdit_8->setEnabled(true);
         ui->lineEdit_9->setEnabled(true);
     }
+}
+
+void MainWindow::on_pushButton_pressed()
+{
+    if(ui->lineEdit->text()=="") ui->lineEdit->setText(Default500);
+    if(ui->lineEdit_4->text()=="") ui->lineEdit_4->setText(Default1Mb);
+    if(ui->lineEdit_5->text()=="") ui->lineEdit_5->setText(DefaultTb300);
 }
