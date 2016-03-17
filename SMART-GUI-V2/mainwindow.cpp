@@ -2,9 +2,9 @@
 #include "ui_mainwindow.h"
 
 #include "selectalgwindow.h"
-
 #include <QMessageBox>
 #include <QDebug>
+//#include <source/smart.h> //Include function libray by SMART.
 
 QString x="Default";
 QString Default500= "500";
@@ -41,7 +41,8 @@ void MainWindow::on_actionSelect_algorithms_triggered()
 
 void MainWindow::on_actionAbout_SMART_GUI_triggered()
 {
-    QMessageBox::information(this,"About!","Alessandro Maggio\nSimone Di Mauro\nStefano Borzi'.");
+    const QString help= " This is an help guide for using the tool\n\n -pset N computes running times as the mean of N runs (default 500)\n -tsize S set the upper bound dimension (in Mb) of the text used for experimental results (default 1Mb)\n -plen L U  test only patterns with a length between L and U (included).\n -text F  performs experimental results using text buffer F (mandatory unless you use the -simple parameter)\n -short computes experimental results using short length patterns\n -occ prints the number of occurrences\n -tb L set to L the upper bound for any wort case running time (in ms). The default value is 300 ms\n -dif prints the number the best and the worst running time\n -std prints the standard deviations of the running times\n -txt output results in txt tabular format\n -tex output results in latex tabular format\n -simple P T executes a single run searching T (max 1000 chars) for occurrences of P (max 100 chars)\n \n \n SMART by Faro Simone \n GUI by Alessandro Maggio\nSimone Di Mauro\nStefano Borzi.";
+ QMessageBox::information(this,"About!",help);
 }
 
 void MainWindow::on_checkBox_released()

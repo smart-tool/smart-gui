@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>764</width>
-    <height>404</height>
+    <height>240</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -29,288 +29,268 @@
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>731</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="0" column="4">
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>Plen L</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Plen U</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Simple P </string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Tb</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="lineEdit_6"/>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLineEdit" name="lineEdit"/>
-     </item>
-     <item row="1" column="7">
-      <widget class="QComboBox" name="comboBox">
-       <item>
+   <layout class="QFormLayout" name="formLayout">
+    <item row="0" column="0" colspan="2">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="4">
+       <widget class="QLabel" name="label_6">
         <property name="text">
-         <string>All</string>
+         <string>Plen L</string>
         </property>
-       </item>
-       <item>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QLabel" name="label_4">
         <property name="text">
-         <string>EnglishTexts</string>
+         <string>Plen U</string>
         </property>
-       </item>
-       <item>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QLabel" name="label_7">
         <property name="text">
-         <string>ItalianTexts</string>
+         <string>Simple P </string>
         </property>
-       </item>
-       <item>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QLabel" name="label_2">
         <property name="text">
-         <string>Genone</string>
+         <string>Tb</string>
         </property>
-       </item>
-       <item>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QLineEdit" name="lineEdit_6"/>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="lineEdit"/>
+      </item>
+      <item row="1" column="7">
+       <widget class="QComboBox" name="comboBox">
+        <item>
+         <property name="text">
+          <string>All</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>EnglishTexts</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ItalianTexts</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Genone</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Protein</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand2</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand4</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand8</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand16</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand32</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand64</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand128</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Rand250</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="lineEdit_4"/>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="label">
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
         <property name="text">
-         <string>Protein</string>
+         <string>Pset</string>
         </property>
-       </item>
-       <item>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="label_3">
         <property name="text">
-         <string>Rand2</string>
+         <string>Tsize (Mb)</string>
         </property>
-       </item>
-       <item>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="lineEdit_7"/>
+      </item>
+      <item row="0" column="7">
+       <widget class="QLabel" name="label_5">
         <property name="text">
-         <string>Rand4</string>
+         <string>Text</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="1" column="5">
+       <widget class="QLineEdit" name="lineEdit_8">
+        <property name="maxLength">
+         <number>1000</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="lineEdit_5"/>
+      </item>
+      <item row="1" column="6">
+       <widget class="QLineEdit" name="lineEdit_9">
+        <property name="maxLength">
+         <number>100</number>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QLabel" name="label_8">
         <property name="text">
-         <string>Rand8</string>
+         <string>Simple T </string>
         </property>
-       </item>
-       <item>
+        <property name="alignment">
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="0" colspan="2">
+     <layout class="QGridLayout" name="gridLayout_2">
+      <item row="0" column="5">
+       <widget class="QCheckBox" name="checkBox_6">
         <property name="text">
-         <string>Rand16</string>
+         <string>Text</string>
         </property>
-       </item>
-       <item>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QCheckBox" name="checkBox">
         <property name="text">
-         <string>Rand32</string>
+         <string>Short</string>
         </property>
-       </item>
-       <item>
+        <property name="checked">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QCheckBox" name="checkBox_2">
         <property name="text">
-         <string>Rand64</string>
+         <string>Occ</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QCheckBox" name="checkBox_4">
         <property name="text">
-         <string>Rand128</string>
+         <string>Std</string>
         </property>
-       </item>
-       <item>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QCheckBox" name="checkBox_5">
         <property name="text">
-         <string>Rand250</string>
+         <string>Txt</string>
         </property>
-       </item>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="lineEdit_4"/>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="text">
-        <string>Pset</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Tsize (Mb)</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLineEdit" name="lineEdit_7"/>
-     </item>
-     <item row="0" column="7">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Text</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="5">
-      <widget class="QLineEdit" name="lineEdit_8">
-       <property name="maxLength">
-        <number>1000</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLineEdit" name="lineEdit_5"/>
-     </item>
-     <item row="1" column="6">
-      <widget class="QLineEdit" name="lineEdit_9">
-       <property name="maxLength">
-        <number>100</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="6">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Simple T </string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignCenter</set>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="gridLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>100</y>
-      <width>501</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="0" column="5">
-      <widget class="QCheckBox" name="checkBox_6">
-       <property name="text">
-        <string>Text</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QCheckBox" name="checkBox">
-       <property name="text">
-        <string>Short</string>
-       </property>
-       <property name="checked">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QCheckBox" name="checkBox_2">
-       <property name="text">
-        <string>Occ</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QCheckBox" name="checkBox_4">
-       <property name="text">
-        <string>Std</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QCheckBox" name="checkBox_5">
-       <property name="text">
-        <string>Txt</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-       <property name="tristate">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QCheckBox" name="checkBox_3">
-       <property name="text">
-        <string>Dif</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QProgressBar" name="progressBar">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>250</y>
-      <width>681</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="value">
-     <number>0</number>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>270</x>
-      <y>170</y>
-      <width>221</width>
-      <height>71</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Start S.M.A.R.T</string>
-    </property>
-   </widget>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="checkBox_3">
+        <property name="text">
+         <string>Dif</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="1">
+     <widget class="QPushButton" name="pushButton">
+      <property name="text">
+       <string>Start S.M.A.R.T</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>16</width>
+        <height>16</height>
+       </size>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -368,7 +348,6 @@
   <tabstop>checkBox_4</tabstop>
   <tabstop>checkBox_5</tabstop>
   <tabstop>checkBox_6</tabstop>
-  <tabstop>pushButton</tabstop>
  </tabstops>
  <resources/>
  <connections/>
