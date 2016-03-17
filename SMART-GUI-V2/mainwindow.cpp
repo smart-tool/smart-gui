@@ -4,7 +4,8 @@
 #include "selectalgwindow.h"
 #include <QMessageBox>
 #include <QDebug>
-//#include <source/smart.h> //Include function libray by SMART.
+
+#include <source/smart.h>
 
 QString x="Default";
 QString Default500= "500";
@@ -19,12 +20,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     ui->setupUi(this);
-//    ui->lineEdit->setReadOnly(true);
-//    ui->lineEdit->setEnabled(false);
+
     ui->lineEdit->setText(Default500);
     ui->lineEdit_4->setText(Default1Mb);
     ui->lineEdit_5->setText(DefaultTb300);
-  //  ui->lineEdit->ba
+
 }
 
 MainWindow::~MainWindow()
@@ -135,4 +135,17 @@ void MainWindow::on_pushButton_pressed()
     if(ui->lineEdit->text()=="") ui->lineEdit->setText(Default500);
     if(ui->lineEdit_4->text()=="") ui->lineEdit_4->setText(Default1Mb);
     if(ui->lineEdit_5->text()=="") ui->lineEdit_5->setText(DefaultTb300);
+}
+
+void MainWindow::on_pushButton_released()
+{
+/*
+    char* array[3];
+    array[1]="-text";
+    array[2]=" all";
+
+
+test(3,array);
+ui->progressBar->setValue(5);
+*/
 }

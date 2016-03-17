@@ -45,6 +45,7 @@ unsigned int MINLEN = 0, MAXLEN = 4200; //min length and max length of pattern s
 #include <sys/shm.h>
 
 
+
 void printManual() {
 	int i=system("./logo");
 	printf("\tThis is an help guide for using the tool\n\n");
@@ -94,7 +95,10 @@ int getText(char *T, char *path, int FREQ[SIGMA], int TSIZE) {
 	strcpy(indexfilename, path);
 	strcat(indexfilename, "/index.txt");
 	FILE *index;
-	if(index = fopen(indexfilename, "r")) {
+/*	printf(path);
+	printf("\n");
+	printf(indexfilename);
+*/	if(index = fopen(indexfilename, "r")) {
 		char c;
 		while( i<TSIZE && (c=getc(index))!=EOF ) {
 			if(c=='#') {
@@ -140,10 +144,10 @@ int execute(int algo, key_t pkey, int m, key_t tkey, int n, key_t rkey, key_t ek
 	else return -1;
 }
 
-void setOfRandomPatterns(char **setP, int m, char *T, int n, int numpatt, unsigned char* simplePattern) {
+void setOfRandomPatterns(char **setP, int m, char *T, int n, int numpatt,  char* simplePattern) {
 	int i,j,k;
 	for(i=0; i<numpatt; i++)  {
-		if(strcmp(simplePattern,"")) strcpy(setP[i],simplePattern);
+                if(strcmp(simplePattern,"")) strcpy(setP[i],simplePattern);
 		else {
 			k = random() % (n-m); //generates a number between 0 and n-m
 			for(j=0; j<m; j++) setP[i][j]=T[k+j]; //creates the pattern
@@ -155,15 +159,15 @@ void setOfRandomPatterns(char **setP, int m, char *T, int n, int numpatt, unsign
 
 
 /********************************************************/
-int run_setting(char *filename, key_t tkey, unsigned char* T, int n, 
+int run_setting(char *filename, key_t tkey, char* T, int n,
 				int alpha, int *FREQ, int VOLTE, int occ, int dif, char *code, int tshmid, int txt, int tex, int php,
-				unsigned char* simplePattern, int std, int limit) {
+                                 char* simplePattern, int std, int limit) {
    //performs experiments on a text
-   int    m, i, j, k, il, algo, occur, total_occur, try;
+   int    m, i, j, k, il, algo, occur, total_occur, try2;
    double TIME[NumAlgo][NumPatt], BEST[NumAlgo][NumPatt], WORST[NumAlgo][NumPatt], STD[NumAlgo][NumPatt], STDTIME[5000];
    char **setP = (char **) malloc (sizeof(char*)*VOLTE);
    for(i=0; i<VOLTE; i++) setP[i] = (char*) malloc (sizeof(char)*(XSIZE+1));
-   unsigned char   c, *P;
+   char   c, *P;
    FILE *fp, *ip, *stream;
    int SIMPLE = (strcmp(simplePattern,"")?1:0);
    if(!SIMPLE) {
@@ -179,55 +183,57 @@ int run_setting(char *filename, key_t tkey, unsigned char* T, int n,
 	double *time;
 	int eshmid;
 	key_t ekey = rand()%1000;
-	try = 0;
+	try2 = 0;
 	do {
 		ekey = rand()%1000; 
 		eshmid = shmget(ekey, 8, IPC_CREAT | 0666); 
-	} while((++try<10 && eshmid<0) || ekey==tkey);
+	} while((++try2<10 && eshmid<0) || ekey==tkey);
 	if (eshmid < 0) {
 		perror("shmget"); 
 		shmctl(tshmid, IPC_RMID,0);
 		exit(1);
 	}
-	if ((time = shmat(eshmid, NULL, 0)) == (double *) -1) {
+/*	if ((time = shmat(eshmid, NULL, 0)) == (double *) -1) {
 		perror("shmat"); 
 		shmctl(tshmid, IPC_RMID,0);
 		shmctl(eshmid, IPC_RMID,0);
 		exit(1);
 	}
-
+*/
 	//allocate space for pattern in shered memory
    int pshmid;
    key_t pkey = rand()%1000;
-   try = 0;
+   try2 = 0;
    do {
 		pkey = rand()%1000; 
 		pshmid = shmget(pkey, XSIZE+1, IPC_CREAT | 0666); 
-   } while((++try<10 && pshmid<0) || pkey==tkey || pkey==ekey);
+   } while((++try2<10 && pshmid<0) || pkey==tkey || pkey==ekey);
    if (pshmid < 0) {
        perror("shmget"); 
   	   shmctl(tshmid, IPC_RMID,0);
   	   shmctl(eshmid, IPC_RMID,0);
 	   exit(1);
    }
-   if ((P = shmat(pshmid, NULL, 0)) == (unsigned char *) -1) {
+   /*
+   if ((P = shmat(pshmid, NULL, 0)) == (char *) -1) {
        perror("shmat"); 
 	   shmctl(tshmid, IPC_RMID,0);
 	   shmctl(pshmid, IPC_RMID,0);
   	   shmctl(eshmid, IPC_RMID,0);
 	   exit(1);
    }
+   */
    for(i=0; i<SIGMA; i++) FREQ[i] = 0;
 
    //allocate space for the result number of occurrences in shared memory
    int *count;
    int rshmid;
    key_t rkey = rand()%1000;
-   try = 0;
+   try2 = 0;
    do  {
 		rkey = rand()%1000; 
 		rshmid = shmget(rkey, 4, IPC_CREAT | 0666); 
-   } while((++try<10 && rshmid<0) || rkey==tkey || rkey==pkey || pkey==ekey);
+   } while((++try2<10 && rshmid<0) || rkey==tkey || rkey==pkey || pkey==ekey);
    if (rshmid < 0) {
        perror("shmget"); 
 	   shmctl(tshmid, IPC_RMID,0);
@@ -235,6 +241,7 @@ int run_setting(char *filename, key_t tkey, unsigned char* T, int n,
 	   shmctl(pshmid, IPC_RMID,0);
 	   exit(1);
    }
+   /*
    if ((count = shmat(rshmid, NULL, 0)) == (int *) -1) {
        perror("shmat"); 
 	   shmctl(tshmid, IPC_RMID,0);
@@ -243,7 +250,7 @@ int run_setting(char *filename, key_t tkey, unsigned char* T, int n,
 	   shmctl(rshmid, IPC_RMID,0);
 	   exit(1);
    }
-
+*/
    //initializes the vector which will contain running times
 	for(i=0; i<NumAlgo; i++) for(j=0; j<NumPatt; j++) {
 		TIME[i][j] = WORST[i][j] = STD[i][j] = 0;
@@ -258,7 +265,7 @@ int run_setting(char *filename, key_t tkey, unsigned char* T, int n,
    for(il=0; PATT_SIZE[il]>0; il++) if(PATT_SIZE[il]>=MINLEN && PATT_SIZE[il]<=MAXLEN)
    {
       m = PATT_SIZE[il];
-	  setOfRandomPatterns(setP, m, T, n, VOLTE, simplePattern);
+          setOfRandomPatterns(setP, m, T, n, VOLTE, simplePattern);
       printf("\n");
   	  printTopEdge(60);
       if(!SIMPLE) printf("\tExperimental results on %s\n",filename);
@@ -357,10 +364,13 @@ int run_setting(char *filename, key_t tkey, unsigned char* T, int n,
    return 0;
 } 
 
+
+
+
 /**************************************************/
 int FREQ[SIGMA];				//frequency of alphabet characters
 
-int test(int argc, const char *argv[])
+int test(int argc, char *argv[])
 {
 	//mandatory parameters
    	char *filename = (char*) malloc (sizeof(char) * (100));
@@ -379,16 +389,16 @@ int test(int argc, const char *argv[])
 	int limit = 300;				//set to 300 running time bound
    	char *simplePattern = (char*) malloc (sizeof(char) * (100)); //used for the simple run of SMART
    	char *simpleText = (char*) malloc (sizeof(char) * (1000));    //used for the simple run of SMART
-	/* useful variables */
-   	unsigned char *T	;			//text and pattern
-	int n, tshmid,try;							//length of the text
+
+        char *T	;			//text and pattern
+	int n, tshmid,try2;							//length of the text
    	FILE *ip;						//file pointer for input text
    	char parameter[1000]; 
 	char c;
 
     srand( time(NULL) );
 
-	/* processing of input parameters */
+
 	if (argc==1) {printf("No parameter given. Use -h for help.\n\n"); return 0;}
 	if (!strcmp("-h", argv[1])) {printManual(); return 0;}
 	int par = 1;
@@ -415,6 +425,7 @@ int test(int argc, const char *argv[])
 			limit = string2decimal(parameter);
 		}
 		if (par<argc && !strcmp("-text", argv[par])) {
+			printf("Va\n\n");
 			par++;
 			if(par>=argc) {printf("Error in input parameters. Use -h for help.\n\n"); return 0;}
 			strcpy(parameter, argv[par++]);
@@ -500,21 +511,23 @@ int test(int argc, const char *argv[])
 
    	//allocate space for text in shered memory
     key_t tkey = rand()%1000;
-	size_t size = sizeof(unsigned char) * TSIZE+10;
-    try = 0;
+        size_t size = sizeof(char) * TSIZE+10;
+    try2 = 0;
     do  {
 		tkey = rand()%1000;
 		tshmid = shmget(tkey, TSIZE+10, IPC_CREAT | 0666); 
- 	} while(++try<10 && tshmid<0);
+ 	} while(++try2<10 && tshmid<0);
     if (tshmid < 0) {
         perror("shmget"); exit(1);
     }
-    if ((T = shmat(tshmid, NULL, 0)) == (unsigned char *) -1) {
-		printf("\nShared memory allocation failed!\nYou need at least 12Mb of shared memory\nPlease, change your system settings and try again.\n");
+   /*
+    if ((T = shmat(tshmid, NULL, 0)) == (char *) -1) {
+		printf("\nShared memory allocation failed!\nYou need at least 12Mb of shared memory\nPlease, change your system settings and try2 again.\n");
         perror("shmat"); 
 		shmctl(tshmid, IPC_RMID,0);
 		exit(1);
     }
+    */
 
 	if( SIMPLE ) {  
 		//experimental results on a single pattern and a single text
@@ -532,13 +545,14 @@ int test(int argc, const char *argv[])
 		char expcode[100];
 		generateCode(expcode);
    		printf("\tStarting experimental tests with code %s\n",expcode);
-   		run_setting("", tkey, T, n, alpha, FREQ, VOLTE, occ, dif, expcode, tshmid, txt, tex, php, simplePattern, std, limit);
+   	//	run_setting("", tkey, T, n, alpha, FREQ, VOLTE, occ, dif, expcode, tshmid, txt, tex, php, simplePattern, std, limit);
 		//no output is given for the simple case;
 	}
 	else if( strcmp(filename, "all") ) {  
 		//experimental results on a single corpus
    		printf("\n\tTry to process archive %s\n", filename);
 		char fullpath[100];
+
 		strcpy(fullpath,"data/");
 		strcat(fullpath, filename);
 		//initialize the frequency vector
@@ -555,7 +569,7 @@ int test(int argc, const char *argv[])
 		char expcode[100];
 		generateCode(expcode);
    		printf("\tStarting experimental tests with code %s\n",expcode);
-   		run_setting(filename, tkey, T, n, alpha, FREQ, VOLTE, occ, dif, expcode, tshmid, txt, tex, php, "", std, limit);
+   	//	run_setting(filename, tkey, T, n, alpha, FREQ, VOLTE, occ, dif, expcode, tshmid, txt, tex, php, "", std, limit);
 		outputINDEX(filename,expcode);
 	}
 	else {  
@@ -569,6 +583,7 @@ int test(int argc, const char *argv[])
 			strcpy(fullpath,"data/");
 			strcat(fullpath, SETTING_BUFFER[sett]);
    			alpha = SETTING_ALPHA_SIZE[sett];
+   			printf(fullpath);
    			printf("\n\tTry to process archive %s\n", SETTING_BUFFER[sett]);
 			//initialize the frequency vector
    			if( !(n = getText(T,fullpath,FREQ,TSIZE) ) ) {
@@ -577,7 +592,7 @@ int test(int argc, const char *argv[])
 			}
    			printf("\tText buffer of dimension %d byte\n", n);
    			printf("\tStarting experimental tests with code %s\n",expcode);
-    		run_setting((char*)SETTING_BUFFER[sett], tkey, T, n, alpha, FREQ, VOLTE, occ, dif, expcode, tshmid, txt, tex, php, "", std, limit);
+    	//	run_setting((char*)SETTING_BUFFER[sett], tkey, T, n, alpha, FREQ, VOLTE, occ, dif, expcode, tshmid, txt, tex, php, "", std, limit);
 		}
 		outputINDEX(filename,expcode);
 	}

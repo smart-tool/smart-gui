@@ -1,0 +1,5 @@
+In file included from source/algos/smoa.c:22:0:
+source/algos/include/main.h: In function ‘main’:
+source/algos/include/main.h:80:15: warning: implicit declaration of function ‘search’ [-Wimplicit-function-declaration]
+   int count = search(p,m,t,n);
+               ^

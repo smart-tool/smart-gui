@@ -15,7 +15,6 @@
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
-#include <QtGui/QFormLayout>
 #include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
@@ -27,6 +26,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QStatusBar>
 #include <QtGui/QToolBar>
+#include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -37,7 +37,7 @@ public:
     QAction *actionSelect_algorithms;
     QAction *actionAbout_SMART_GUI;
     QWidget *centralWidget;
-    QFormLayout *formLayout;
+    QVBoxLayout *verticalLayout;
     QGridLayout *gridLayout;
     QLabel *label_6;
     QLabel *label_4;
@@ -88,10 +88,10 @@ public:
         actionAbout_SMART_GUI->setObjectName(QString::fromUtf8("actionAbout_SMART_GUI"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
-        formLayout = new QFormLayout(centralWidget);
-        formLayout->setSpacing(6);
-        formLayout->setContentsMargins(11, 11, 11, 11);
-        formLayout->setObjectName(QString::fromUtf8("formLayout"));
+        verticalLayout = new QVBoxLayout(centralWidget);
+        verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
@@ -186,7 +186,7 @@ public:
         gridLayout->addWidget(label_8, 0, 6, 1, 1);
 
 
-        formLayout->setLayout(0, QFormLayout::SpanningRole, gridLayout);
+        verticalLayout->addLayout(gridLayout);
 
         gridLayout_2 = new QGridLayout();
         gridLayout_2->setSpacing(6);
@@ -226,19 +226,19 @@ public:
         gridLayout_2->addWidget(checkBox_3, 0, 2, 1, 1);
 
 
-        formLayout->setLayout(1, QFormLayout::SpanningRole, gridLayout_2);
+        verticalLayout->addLayout(gridLayout_2);
 
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
         pushButton->setIconSize(QSize(16, 16));
 
-        formLayout->setWidget(2, QFormLayout::FieldRole, pushButton);
+        verticalLayout->addWidget(pushButton);
 
         progressBar = new QProgressBar(centralWidget);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
         progressBar->setValue(0);
 
-        formLayout->setWidget(3, QFormLayout::FieldRole, progressBar);
+        verticalLayout->addWidget(progressBar);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);

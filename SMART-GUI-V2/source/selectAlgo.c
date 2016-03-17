@@ -25,6 +25,7 @@
 #define NumSetting	12				//number of text buffers
 #include "function.h"
 
+
 /***********************************************/
 /* SELECTS ALGORITHMS FOR EXPERIMENATL RESULTS */
 /***********************************************/
