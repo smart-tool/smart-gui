@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    selectalgwindow.cpp
+    selectalgwindow.cpp \
+    mythread.cpp
 
 HEADERS  += mainwindow.h \
-    selectalgwindow.h
+    selectalgwindow.h \
+    mythread.h
 
 FORMS    += mainwindow.ui \
     selectalgwindow.ui

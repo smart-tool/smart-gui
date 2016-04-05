@@ -4,8 +4,8 @@
 #include "selectalgwindow.h"
 #include <QMessageBox>
 #include <QDebug>
-
-#include <source/smart.h>
+#include "mythread.h"
+//#include <source/smart.h>
 
 QString x="Default";
 QString Default500= "500";
@@ -139,6 +139,10 @@ void MainWindow::on_pushButton_pressed()
 
 void MainWindow::on_pushButton_released()
 {
+    MyThread *thread1= new MyThread();
+    thread1->start();
+
+
 /*
     char* array[3];
     array[1]="-text";
