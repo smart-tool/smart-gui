@@ -7,7 +7,11 @@ class MyThread : public QThread
 {
 public:
     MyThread();
+    MyThread(const char* y);
+    const char* Para;
     void run();
+    void SetPara(QString x);
+    QString GetPara();
 };
 
 #endif // MYTHREAD_H

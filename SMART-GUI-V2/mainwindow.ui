@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>764</width>
-    <height>240</height>
+    <height>276</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -82,7 +82,7 @@
        <widget class="QComboBox" name="comboBox">
         <item>
          <property name="text">
-          <string>All</string>
+          <string>all</string>
          </property>
         </item>
         <item>
@@ -298,7 +298,7 @@
      <x>0</x>
      <y>0</y>
      <width>764</width>
-     <height>25</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuOptions">

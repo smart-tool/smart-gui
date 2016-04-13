@@ -139,17 +139,20 @@ void MainWindow::on_pushButton_pressed()
 
 void MainWindow::on_pushButton_released()
 {
-    MyThread *thread1= new MyThread();
+  //  Qstring text2="";
+
+   // if()
+
+
+    QString x= "./smart -pset "+ui->lineEdit->text()+" -tsize "+ ui->lineEdit_4->text() +" -text "+ ui->comboBox->currentText();
+
+    QByteArray ba = x.toLatin1();
+    const char *z = ba.data();
+
+    MyThread *thread1= new MyThread(z);
     thread1->start();
 
-
-/*
-    char* array[3];
-    array[1]="-text";
-    array[2]=" all";
+//    ui->pushButton->setEnabled(false);
 
 
-test(3,array);
-ui->progressBar->setValue(5);
-*/
 }

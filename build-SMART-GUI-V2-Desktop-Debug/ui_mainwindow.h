@@ -74,7 +74,7 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
         MainWindow->setWindowModality(Qt::NonModal);
-        MainWindow->resize(764, 240);
+        MainWindow->resize(764, 276);
         QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -243,7 +243,7 @@ public:
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 764, 25));
+        menuBar->setGeometry(QRect(0, 0, 764, 27));
         menuOptions = new QMenu(menuBar);
         menuOptions->setObjectName(QString::fromUtf8("menuOptions"));
         MainWindow->setMenuBar(menuBar);
@@ -289,7 +289,7 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "Tb", 0, QApplication::UnicodeUTF8));
         comboBox->clear();
         comboBox->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "All", 0, QApplication::UnicodeUTF8)
+         << QApplication::translate("MainWindow", "all", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "EnglishTexts", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "ItalianTexts", 0, QApplication::UnicodeUTF8)
          << QApplication::translate("MainWindow", "Genone", 0, QApplication::UnicodeUTF8)
