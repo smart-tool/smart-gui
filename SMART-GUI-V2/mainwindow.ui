@@ -87,62 +87,62 @@
         </item>
         <item>
          <property name="text">
-          <string>EnglishTexts</string>
+          <string>englishTexts</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>ItalianTexts</string>
+          <string>italianTexts</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Genone</string>
+          <string>genome</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Protein</string>
+          <string>protein</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand2</string>
+          <string>rand2</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand4</string>
+          <string>rand4</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand8</string>
+          <string>rand8</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand16</string>
+          <string>rand16</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand32</string>
+          <string>rand32</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand64</string>
+          <string>rand64</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand128</string>
+          <string>rand128</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Rand250</string>
+          <string>rand250</string>
          </property>
         </item>
        </widget>

@@ -139,10 +139,121 @@ void MainWindow::on_pushButton_pressed()
 
 void MainWindow::on_pushButton_released()
 {
-  //  Qstring text2="";
+    QString text2="";
 
-   // if()
+    if(((ui->lineEdit_8->text()!="") || (ui->lineEdit_9->text()!=""))){   //SIMPLE
+        if(ui->checkBox_2->isChecked()){
+           text2+=" -occ ";
+        }
+        if(ui->checkBox_3->isChecked()){
+           text2+=" -dif ";
+        }
+        if(ui->checkBox_4->isChecked()){
+           text2+=" -std ";
+        }
+        if(ui->checkBox_5->isChecked()){
+           text2+=" -txt ";
+        }
+        if(ui->checkBox_6->isChecked()){
+           text2+=" -tex ";
+        }
 
+
+
+        QString x= "./smart -simple "+ui->lineEdit_8->text()+" "+ui->lineEdit_9->text()+text2;
+
+        QByteArray ba = x.toLatin1();
+        const char *z = ba.data();
+
+        MyThread *thread1= new MyThread(z);
+        thread1->start();
+    qDebug()<<x;
+
+    }else if(((ui->lineEdit_6->text()!="") || (ui->lineEdit_7->text()!=""))){  //PSET
+        if(ui->checkBox_2->isChecked()){
+           text2+=" -occ ";
+        }
+        if(ui->checkBox_3->isChecked()){
+           text2+=" -dif ";
+        }
+        if(ui->checkBox_4->isChecked()){
+           text2+=" -std ";
+        }
+        if(ui->checkBox_5->isChecked()){
+           text2+=" -txt ";
+        }
+        if(ui->checkBox_6->isChecked()){
+           text2+=" -tex ";
+        }
+
+
+        QString x= "./smart -text "+ui->comboBox->currentText()+" -tsize "+ui->lineEdit_4->text()+" -tb "+ui->lineEdit_5->text()+" -plen "+ui->lineEdit_6->text()+" "+ui->lineEdit_7->text()+text2;
+
+        QByteArray ba = x.toLatin1();
+        const char *z = ba.data();
+
+        MyThread *thread1= new MyThread(z);
+        thread1->start();
+        qDebug()<<x;
+
+    }else if(ui->checkBox->isChecked()){  //SHORT
+        if(ui->checkBox_2->isChecked()){
+           text2+=" -occ ";
+        }
+        if(ui->checkBox_3->isChecked()){
+           text2+=" -dif ";
+        }
+        if(ui->checkBox_4->isChecked()){
+           text2+=" -std ";
+        }
+        if(ui->checkBox_5->isChecked()){
+           text2+=" -txt ";
+        }
+        if(ui->checkBox_6->isChecked()){
+           text2+=" -tex ";
+        }
+
+        QString x= "./smart -text "+ui->comboBox->currentText()+" -tsize "+ui->lineEdit_4->text()+" -tb "+ui->lineEdit_5->text()+" -short "+text2;
+
+        QByteArray ba = x.toLatin1();
+        const char *z = ba.data();
+
+        MyThread *thread1= new MyThread(z);
+        thread1->start();
+        qDebug()<<x;
+
+    }else{
+
+        if(ui->checkBox_2->isChecked()){
+           text2+=" -occ ";
+        }
+        if(ui->checkBox_3->isChecked()){
+           text2+=" -dif ";
+        }
+        if(ui->checkBox_4->isChecked()){
+           text2+=" -std ";
+        }
+        if(ui->checkBox_5->isChecked()){
+           text2+=" -txt ";
+        }
+        if(ui->checkBox_6->isChecked()){
+           text2+=" -tex ";
+        }
+
+        QString x= "./smart -text "+ui->comboBox->currentText()+" -tsize "+ui->lineEdit_4->text()+" -tb "+ui->lineEdit_5->text()+text2;
+
+        QByteArray ba = x.toLatin1();
+        const char *z = ba.data();
+
+        MyThread *thread1= new MyThread(z);
+        thread1->start();
+        qDebug()<<x;
+
+
+
+    }
+  //  qDebug()<<text2;
+/*
 
     QString x= "./smart -pset "+ui->lineEdit->text()+" -tsize "+ ui->lineEdit_4->text() +" -text "+ ui->comboBox->currentText();
 
@@ -154,5 +265,5 @@ void MainWindow::on_pushButton_released()
 
 //    ui->pushButton->setEnabled(false);
 
-
+*/
 }
