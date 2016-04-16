@@ -5,21 +5,21 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += webkit
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = SMART-GUI-V2
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    selectalgwindow.cpp \
-    mythread.cpp
+           mainwindow.cpp \
+           selectalgwindow.cpp \
+           mythread.cpp
 
-HEADERS  += mainwindow.h \
-    selectalgwindow.h \
-    mythread.h
+HEADERS += mainwindow.h \
+           selectalgwindow.h \
+           mythread.h
 
-FORMS    += mainwindow.ui \
-    selectalgwindow.ui
+FORMS   += mainwindow.ui \
+           selectalgwindow.ui

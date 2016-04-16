@@ -1,3 +1,0 @@
-sh: 1: ./source/bin/2block: not found
-sh: 1: ./source/bin/col: not found
-sh: 1: ./source/bin/dfdm: not found

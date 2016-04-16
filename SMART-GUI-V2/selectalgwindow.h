@@ -4,11 +4,10 @@
 #include <QDialog>
 
 namespace Ui {
-class SelectAlgWindow;
+    class SelectAlgWindow;
 }
 
-class SelectAlgWindow : public QDialog
-{
+class SelectAlgWindow : public QDialog  {
     Q_OBJECT
 
 public:
@@ -16,7 +15,6 @@ public:
     ~SelectAlgWindow();
 
 private slots:
-
 
     void on_checkAll_Button_clicked();
 

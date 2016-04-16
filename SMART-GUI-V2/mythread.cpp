@@ -3,9 +3,8 @@
 #include <QDebug>
 #include <QThread>
 
-MyThread::MyThread()
-{
- //    this->Para="-h";
+MyThread::MyThread(){
+
 }
 
 MyThread::MyThread(const char* y){
@@ -13,7 +12,7 @@ MyThread::MyThread(const char* y){
 }
 
 void MyThread::SetPara(QString x){
-   // this->Para=x;
+
 }
 
 QString MyThread::GetPara(){
@@ -22,11 +21,5 @@ QString MyThread::GetPara(){
 
 
 void MyThread::run(){
-    //qDebug()<<"test"
-    //QString x="./smart -h";
-    //system((const char *)x);
-
     system(this->Para);
-
-
 }

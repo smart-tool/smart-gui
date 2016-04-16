@@ -1,9 +1,0 @@
-sh: 1: ./source/bin/2block: not found
-Segmentation fault (core dumped)
-Segmentation fault (core dumped)
-Segmentation fault (core dumped)
-Segmentation fault (core dumped)
-sh: 1: ./source/bin/col: not found
-sh: 1: ./source/bin/dfdm: not found
-Segmentation fault (core dumped)
-Segmentation fault (core dumped)

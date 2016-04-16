@@ -3,8 +3,8 @@
 #include <QtCore>
 
 
-class MyThread : public QThread
-{
+class MyThread : public QThread {
+
 public:
     MyThread();
     MyThread(const char* y);

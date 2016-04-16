@@ -7,12 +7,10 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <cstdlib>
-//#include <source/function2.h>
 
 #define NumAlgo 500 //Define the number of algorithm
 
-
-void getAlgo_3(char *ALGO_NAME[], int EXECUTE[]) {
+void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {
     FILE *fp = fopen("source/algorithms.h", "r");
     char c; int i=0;
     while( (c=getc(fp)) != EOF )
@@ -30,28 +28,28 @@ void getAlgo_3(char *ALGO_NAME[], int EXECUTE[]) {
 }
 
 QCheckBox *arrayCheckBox[NumAlgo]; //Declary array of checkBox.
-int EXECUTE2[NumAlgo]; //Declare EXECTUE array with the state of alrgorithm (0/1).
-char *ALGO_NAME2[NumAlgo]; //Declare array ALGO_NAME with the name of all string matching algorithms
+int EXECUTE[NumAlgo]; //Declare EXECTUE array with the state of alrgorithm (0/1).
+char *ALGO_NAME[NumAlgo]; //Declare array ALGO_NAME with the name of all string matching algorithms
 
 SelectAlgWindow::SelectAlgWindow(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::SelectAlgWindow)
-{
+    ui(new Ui::SelectAlgWindow){
     ui->setupUi(this);
 
     //Start main
 
-    getAlgo_3(ALGO_NAME2,EXECUTE2); //Load array.
+    getAlgo(ALGO_NAME,EXECUTE); //Load array.
 
     QVBoxLayout *listCheckBox = new QVBoxLayout(); //Declare new Layout to add the new CheckBox
 
     //Create checkBox with the name of algorithm and check if the alg is enabled.
-    for(int i=0;i<NumAlgo;i++)
-    {
-        if(ALGO_NAME2[i])
-        {
-            arrayCheckBox[i] = new QCheckBox(ALGO_NAME2[i],this);
-            if(EXECUTE2[i])  arrayCheckBox[i]->setChecked(true);
+    for(int i=0;i<NumAlgo;i++){
+        if(ALGO_NAME[i]){
+            arrayCheckBox[i] = new QCheckBox(ALGO_NAME[i],this);
+
+            if(EXECUTE[i])
+                arrayCheckBox[i]->setChecked(true);
+
             listCheckBox->addWidget(arrayCheckBox[i]);
         }
     }
@@ -60,32 +58,32 @@ SelectAlgWindow::SelectAlgWindow(QWidget *parent) :
 
 }
 
-SelectAlgWindow::~SelectAlgWindow()
-{
+SelectAlgWindow::~SelectAlgWindow() {
     delete ui;
 }
 
 
-void SelectAlgWindow::on_checkAll_Button_clicked()
-{
-    for(int i=0;i<NumAlgo;i++)  if(ALGO_NAME2[i])    arrayCheckBox[i]->setChecked(true); //Check all alrgorithm.
+void SelectAlgWindow::on_checkAll_Button_clicked(){
+    for(int i=0;i<NumAlgo;i++)
+        if(ALGO_NAME[i])
+            arrayCheckBox[i]->setChecked(true); //Check all alrgorithm.
 }
 
-void SelectAlgWindow::on_uncheckAll_Button_clicked()
-{
-    for(int i=0;i<NumAlgo;i++)  if(ALGO_NAME2[i])    arrayCheckBox[i]->setChecked(false); //Unheck all alrgorithm.
+void SelectAlgWindow::on_uncheckAll_Button_clicked(){
+    for(int i=0;i<NumAlgo;i++)
+        if(ALGO_NAME[i])
+            arrayCheckBox[i]->setChecked(false); //Unheck all alrgorithm.
 }
 
-void SelectAlgWindow::on_update_Button_clicked()
-{
+void SelectAlgWindow::on_update_Button_clicked(){
 
     //Update EXECUTE vector.
-    for(int i=0;i<NumAlgo;i++)
-    {
-        if(ALGO_NAME2[i])
-        {
-            if(arrayCheckBox[i]->isChecked())   EXECUTE2[i]=1;
-            else    EXECUTE2[i]=0;
+    for(int i=0;i<NumAlgo;i++){
+        if(ALGO_NAME[i]){
+            if(arrayCheckBox[i]->isChecked())
+                EXECUTE[i]=1;
+            else
+                EXECUTE[i]=0;
         }
     }
 
@@ -93,12 +91,9 @@ void SelectAlgWindow::on_update_Button_clicked()
     int order[NumAlgo];
     for(int i=0; i<NumAlgo; i++) order[i] = i;
 
-    for(int i=0; i<NumAlgo; i++)
-    {
-        for(int j=0; j<NumAlgo; j++)
-        {
-            if(ALGO_NAME2[order[j]] && ALGO_NAME2[order[j+1]] && strcmp(ALGO_NAME2[order[j]],ALGO_NAME2[order[j+1]])>0)
-            {
+    for(int i=0; i<NumAlgo; i++){
+        for(int j=0; j<NumAlgo; j++){
+            if( ALGO_NAME[order[j]] && ALGO_NAME[order[j+1]] && strcmp( ALGO_NAME[order[j]] , ALGO_NAME[order[j+1]])>0 ){
                 int tmp = order[j];
                 order[j] = order[j+1];
                 order[j+1] = tmp;
@@ -108,7 +103,11 @@ void SelectAlgWindow::on_update_Button_clicked()
 
     //Update / Write the algorithms.h file.
     FILE *fp = fopen("source/algorithms.h", "w");
-    for(int j=0; j<NumAlgo; j++) if(ALGO_NAME2[j]) fprintf(fp,"#%d #%s \n", EXECUTE2[order[j]], ALGO_NAME2[order[j]] );
+
+    for(int j=0; j<NumAlgo; j++)
+        if(ALGO_NAME[j])
+            fprintf(fp,"#%d #%s \n", EXECUTE[order[j]], ALGO_NAME[order[j]] );
+
     fclose(fp);
 
     //Show a dialog.
