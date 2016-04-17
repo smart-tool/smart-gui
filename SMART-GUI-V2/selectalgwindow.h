@@ -15,11 +15,8 @@ public:
     ~SelectAlgWindow();
 
 private slots:
-
     void on_checkAll_Button_clicked();
-
     void on_uncheckAll_Button_clicked();
-
     void on_update_Button_clicked();
 
 private:

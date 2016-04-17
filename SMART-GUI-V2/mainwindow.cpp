@@ -2,7 +2,13 @@
 #include "ui_mainwindow.h"
 
 #include <QMessageBox>
+#include <QFile>
 #include <QDebug>
+#include <QString>
+#include <QStringList>
+#include <QtWebKit>
+#include <QWebView>
+#include <QTimer>
 
 #include "selectalgwindow.h"
 #include "mythread.h"
@@ -58,6 +64,127 @@ void MainWindow::on_actionAbout_SMART_GUI_triggered() {
     QMessageBox::information(this,"About!",help);
 }
 
+
+int nOldRow = 0;
+#define NumAlgo 500 //Define the number of algorithm
+
+void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
+    FILE *fp = fopen("source/algorithms.h", "r");
+    char c; int i=0;
+    while( (c=getc(fp)) != EOF )
+        if(c=='#') {
+            EXECUTE[i] = (getc(fp)-'0');
+            getc(fp);getc(fp);
+            ALGO_NAME[i] = (char*) malloc (sizeof(char)*20);
+            int j = 0;
+            while((c=getc(fp))!=' ') ALGO_NAME[i][j++]=c;
+            ALGO_NAME[i][j]='\0';
+            i++;
+        }
+    while(i<NumAlgo) ALGO_NAME[i++]=NULL;
+    fclose(fp);
+}
+
+void MainWindow::updateGraph(){
+    QFile timeAlgFile("guiExtract/timeAlg.txt");      //Load timeAlg.txt File.
+    QString javascriptCode = "";
+
+    QStringList testAlgo;
+    QStringList testAlgoSplitted;
+
+    QString timeAlgo;
+    QString lenghtAlgo;
+
+    QString tmpLine = "";
+
+    int nNewRow = 0;
+
+    //Read timeAlg.
+    if (timeAlgFile.open(QIODevice::ReadOnly)) {
+       QTextStream in(&timeAlgFile);
+       while (!in.atEnd()) {
+          tmpLine = in.readLine();
+          if ( tmpLine.contains("OK") ){
+              testAlgo << tmpLine;
+              nNewRow++;
+          }
+       }
+       timeAlgFile.close();
+    }
+
+    if(nOldRow != nNewRow){                                                                         //If the load file have new row by old.
+        for (int i=nOldRow; i<testAlgo.length(); i++){
+            testAlgoSplitted = testAlgo[i].split("|");                                              //Split by |.
+            lenghtAlgo = testAlgoSplitted[0];                                                       //Get the lenght (patternes).
+            timeAlgo = testAlgoSplitted[1];                                                         //Get the list of execute alg.
+            timeAlgo = timeAlgo.left(timeAlgo.length() - 3);                                        //Remove the ,OK flag .
+            javascriptCode = "myLineChart.addData([" + timeAlgo + "], '" + lenghtAlgo + "');";      //Create the javascript code.
+            ui->webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);                   //Send js code.
+        }
+        nOldRow = nNewRow;                                                                          //Update the number of row.
+    }
+}
+
+void loadGraph(){
+    int EXECUTE[NumAlgo];                                      //Declare EXECTUE array with the state of alrgorithm (0/1).
+    char *ALGO_NAME[NumAlgo];                                  //Declare array ALGO_NAME with the name of all string matching algorithms
+
+    QFile graphCode1File("guiExtract/graph/part1.txt");        //Load part1 of html graph.
+    QFile graphCode2File("guiExtract/graph/part2.txt");        //Load part2 of html graph.
+    QFile graphFile("guiExtract/graph/grafico.html");          //Load file of graph.
+
+    QString graphCodeComplete = "";
+    QString graphCode1 = "";
+    QString graphCode2 = "";
+
+    QString datasets = "";
+
+    int r, g, b;
+
+    //Read part1.
+    if (graphCode1File.open(QIODevice::ReadOnly)) {
+        QTextStream in(&graphCode1File);
+        graphCode1 = in.readAll();
+        graphCode1File.close();
+    }
+
+    //Read part2.
+    if (graphCode2File.open(QIODevice::ReadOnly)) {
+        QTextStream in(&graphCode2File);
+        graphCode2 = in.readAll();
+        graphCode2File.close();
+    }
+
+    //Load array.
+    getAlgoMain(ALGO_NAME,EXECUTE);
+
+    //Create the datasets
+    for(int i=0;i<NumAlgo;i++){\
+        if(ALGO_NAME[i] && EXECUTE[i]){
+            r = qrand() % ((255 + 1) - 1) + 1;
+            g = qrand() % ((255 + 1) - 1) + 1;
+            b = qrand() % ((255 + 1) - 1) + 1;
+
+            datasets = datasets + "{\n\tlabel: '" + ALGO_NAME[i] + "',\n" +
+                                  "\tfillColor: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",0.2)'" + ",\n" +
+                                  "\tstrokeColor: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",1)'" + ",\n" +
+                                  "\tpointColor: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",1)'" + ",\n" +
+                                  "\tpointStrokeColor: '#fff'" + ",\n" +
+                                  "\tpointHighlightFill: '#fff'" + ",\n" +
+                                  "\tpointHighlightStroke: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",1)'" + ",\n},\n" ;
+        }
+    }
+
+    graphCodeComplete = graphCodeComplete + graphCode1 + datasets + graphCode2;
+
+    //Write fileGraph.
+    if (graphFile.open(QFile::WriteOnly|QFile::Truncate)) {
+        QTextStream stream(&graphFile);
+        stream << graphCodeComplete;
+    }
+
+}
+
 void MainWindow::on_checkBox_released() {
 
     if(ui->checkBox->isChecked()){
@@ -95,7 +222,6 @@ void MainWindow::on_lineEdit_8_textChanged(const QString &arg1) {
     }
 
 }
-
 
 void MainWindow::on_lineEdit_9_textChanged(const QString &arg1) {
 
@@ -281,6 +407,14 @@ void MainWindow::on_pushButton_released() {
     }
 
     if (canI) {
+        loadGraph();                                        //Load graph.
+        QUrl url("guiExtract/graph/grafico.html");          //Url of graph.
+        ui->webView->load(url);                             //Insert graph in webView.
+
+
+        QTimer *timer = new QTimer(this);                                   //Declare newTimer.
+        connect(timer, SIGNAL(timeout()), this, SLOT(updateGraph()) );      //Connect timer to slot updateGraph().
+
         QString execute = smartSource + parameters;
         qDebug() << execute;
 
@@ -289,6 +423,9 @@ void MainWindow::on_pushButton_released() {
 
         MyThread *thread1 = new MyThread(z);
         thread1->start();
+
+        timer->start(1000);                         //Start timer(ms).
+
     }
 
 }

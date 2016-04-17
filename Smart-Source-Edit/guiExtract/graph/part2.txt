@@ -1,0 +1,25 @@
+
+		    ]
+		};
+
+	</script>
+
+	<body>
+		
+		<canvas id="myChart" width="650" height="500"> </canvas>
+		
+		<div id="legendDiv"> </div>
+
+
+		<script type="text/javascript">
+
+			var ctx = document.getElementById("myChart").getContext("2d");
+			var myLineChart = new Chart(ctx).Line(data, options);
+
+			document.getElementById("legendDiv").innerHTML = myLineChart.generateLegend();
+
+		</script>
+	</body>
+
+
+</html>

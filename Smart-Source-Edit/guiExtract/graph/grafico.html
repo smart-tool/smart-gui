@@ -1,0 +1,101 @@
+<html>
+
+    <script src="Chart.js">	</script>
+    
+    <script type="text/javascript">
+
+        var options={
+            animation : true,
+            scaleShowGridLines : true,
+            scaleGridLineColor : "rgba(0,0,0,.05)",
+            scaleGridLineWidth : 1,
+            scaleShowHorizontalLines: true,
+            scaleShowVerticalLines: true,
+            bezierCurve : true,
+            bezierCurveTension : 0.4,
+            pointDot : true,
+            pointDotRadius : 4,
+            pointDotStrokeWidth : 1,
+            pointHitDetectionRadius : 20,
+            datasetStroke : true,
+            datasetStrokeWidth : 2,
+            datasetFill : true,
+            legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"><%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>"
+
+        };
+
+
+        var data = {
+            labels: [],
+            datasets: [
+    
+{
+	label: 'bsdm',
+	fillColor: 'rgba(4,38,134,0.2)',
+	strokeColor: 'rgba(4,38,134,1)',
+	pointColor: 'rgba(4,38,134,1)',
+	pointStrokeColor: '#fff',
+	pointHighlightFill: '#fff',
+	pointHighlightStroke: 'rgba(4,38,134,1)',
+},
+{
+	label: 'bsdm4',
+	fillColor: 'rgba(192,88,135,0.2)',
+	strokeColor: 'rgba(192,88,135,1)',
+	pointColor: 'rgba(192,88,135,1)',
+	pointStrokeColor: '#fff',
+	pointHighlightFill: '#fff',
+	pointHighlightStroke: 'rgba(192,88,135,1)',
+},
+{
+	label: 'kbndm',
+	fillColor: 'rgba(19,219,222,0.2)',
+	strokeColor: 'rgba(19,219,222,1)',
+	pointColor: 'rgba(19,219,222,1)',
+	pointStrokeColor: '#fff',
+	pointHighlightFill: '#fff',
+	pointHighlightStroke: 'rgba(19,219,222,1)',
+},
+{
+	label: 'new2',
+	fillColor: 'rgba(253,147,148,0.2)',
+	strokeColor: 'rgba(253,147,148,1)',
+	pointColor: 'rgba(253,147,148,1)',
+	pointStrokeColor: '#fff',
+	pointHighlightFill: '#fff',
+	pointHighlightStroke: 'rgba(253,147,148,1)',
+},
+{
+	label: 'wom',
+	fillColor: 'rgba(250,234,157,0.2)',
+	strokeColor: 'rgba(250,234,157,1)',
+	pointColor: 'rgba(250,234,157,1)',
+	pointStrokeColor: '#fff',
+	pointHighlightFill: '#fff',
+	pointHighlightStroke: 'rgba(250,234,157,1)',
+},
+
+		    ]
+		};
+
+	</script>
+
+	<body>
+		
+		<canvas id="myChart" width="800" height="600"> </canvas>
+		
+		<div id="legendDiv"> </div>
+
+
+		<script type="text/javascript">
+
+			var ctx = document.getElementById("myChart").getContext("2d");
+			var myLineChart = new Chart(ctx).Line(data, options);
+
+			document.getElementById("legendDiv").innerHTML = myLineChart.generateLegend();
+
+		</script>
+	</body>
+
+
+</html>
