@@ -11,6 +11,10 @@ QString Default500 = "500";
 QString Default1Mb = "1";
 QString DefaultTb300 = "300";
 
+QString smartSource = "./smart ";
+QString parameters = "";
+
+//Constructor.
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
@@ -25,19 +29,32 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
+//Distructor.
 MainWindow::~MainWindow() {
     delete ui;
 }
 
+//Menù option. Open selecAlgorithm Window.
 void MainWindow::on_actionSelect_algorithms_triggered() {
     SelectAlgWindow openSelectAlgWin;
     openSelectAlgWin.setModal(true);
     openSelectAlgWin.exec();
 }
 
+//Menù option. Open about alert.
 void MainWindow::on_actionAbout_SMART_GUI_triggered() {
-    //Read from file?
-    const QString help = " This is an help guide for using the tool\n\n -pset N computes running times as the mean of N runs (default 500)\n -tsize S set the upper bound dimension (in Mb) of the text used for experimental results (default 1Mb)\n -plen L U  test only patterns with a length between L and U (included).\n -text F  performs experimental results using text buffer F (mandatory unless you use the -simple parameter)\n -short computes experimental results using short length patterns\n -occ prints the number of occurrences\n -tb L set to L the upper bound for any wort case running time (in ms). The default value is 300 ms\n -dif prints the number the best and the worst running time\n -std prints the standard deviations of the running times\n -txt output results in txt tabular format\n -tex output results in latex tabular format\n -simple P T executes a single run searching T (max 1000 chars) for occurrences of P (max 100 chars)\n \n \n SMART by Faro Simone \n GUI by Alessandro Maggio\nSimone Di Mauro\nStefano Borzi.";
+    const QString help = " This is an help guide for using the tool\n\n "
+                         "-pset N computes running times as the mean of N runs (default 500)\n "
+                         "-tsize S set the upper bound dimension (in Mb) of the text used for experimental results (default 1Mb)\n "
+                         "-plen L U  test only patterns with a length between L and U (included).\n "
+                         "-text F  performs experimental results using text buffer F (mandatory unless you use the -simple parameter)\n "
+                         "-short computes experimental results using short length patterns\n -occ prints the number of occurrences\n "
+                         "-tb L set to L the upper bound for any wort case running time (in ms). The default value is 300 ms\n "
+                         "-dif prints the number the best and the worst running time\n -std prints the standard deviations of the running times\n "
+                         "-txt output results in txt tabular format\n -tex output results in latex tabular format\n "
+                         "-simple P T executes a single run searching T (max 1000 chars) for occurrences of P (max 100 chars)\n \n "
+                         "\n SMART by Faro Simone \n GUI by Alessandro Maggio\nSimone Di Mauro\nStefano Borzi.";
+
     QMessageBox::information(this,"About!",help);
 }
 
@@ -146,6 +163,7 @@ void MainWindow::on_pushButton_pressed() {
 void MainWindow::on_pushButton_released() {
 
     QString text2 = "";
+    bool canI = false;
 
     if( ( (ui->lineEdit_8->text() != "") || (ui->lineEdit_9->text() != "") ) ){   //SIMPLE
 
@@ -165,19 +183,13 @@ void MainWindow::on_pushButton_released() {
            text2 += " -tex ";
 
 
-        QString x = "./smart -simple " +
+        parameters = "-simple " +
                     ui->lineEdit_8->text() +
                     " " +
                     ui->lineEdit_9->text() +
                     text2;
 
-
-        QByteArray ba = x.toLatin1();
-        const char *z = ba.data();
-
-        MyThread *thread1 = new MyThread(z);
-        thread1->start();
-        qDebug()<<x;
+        canI = true;
 
     }else if( ( (ui->lineEdit_6->text()!="") || (ui->lineEdit_7->text()!="") ) ){  //PSET
 
@@ -197,7 +209,7 @@ void MainWindow::on_pushButton_released() {
            text2 += " -tex ";
 
 
-        QString x = "./smart -text " +
+        parameters = "-text " +
                     ui->comboBox->currentText() +
                     " -tsize "+ui->lineEdit_4->text() +
                     " -tb " +
@@ -208,13 +220,7 @@ void MainWindow::on_pushButton_released() {
                     ui->lineEdit_7->text() +
                     text2;
 
-
-        QByteArray ba = x.toLatin1();
-        const char *z = ba.data();
-
-        MyThread *thread1= new MyThread(z);
-        thread1->start();
-        qDebug()<<x;
+        canI = true;
 
     }else if(ui->checkBox->isChecked()){  //SHORT
 
@@ -234,8 +240,7 @@ void MainWindow::on_pushButton_released() {
            text2 += " -tex ";
 
 
-
-        QString x = "./smart -text " +
+        parameters = "-text " +
                     ui->comboBox->currentText() +
                     " -tsize " +
                     ui->lineEdit_4->text() +
@@ -244,13 +249,7 @@ void MainWindow::on_pushButton_released() {
                     " -short " +
                     text2;
 
-
-        QByteArray ba = x.toLatin1();
-        const char *z = ba.data();
-
-        MyThread *thread1= new MyThread(z);
-        thread1->start();
-        qDebug()<<x;
+        canI = true;
 
     }else{
 
@@ -269,7 +268,7 @@ void MainWindow::on_pushButton_released() {
         if(ui->checkBox_6->isChecked())
            text2 += " -tex ";
 
-        QString x = "./smart -text " +
+        parameters = "-text " +
                     ui->comboBox->currentText() +
                     " -tsize " +
                     ui->lineEdit_4->text() +
@@ -277,12 +276,19 @@ void MainWindow::on_pushButton_released() {
                     ui->lineEdit_5->text() +
                     text2;
 
-        QByteArray ba = x.toLatin1();
-        const char *z = ba.data();
-
-        MyThread *thread1= new MyThread(z);
-        thread1->start();
-        qDebug()<<x;
+        canI = true;
 
     }
+
+    if (canI) {
+        QString execute = smartSource + parameters;
+        qDebug() << execute;
+
+        QByteArray ba = execute.toLatin1();
+        const char *z = ba.data();
+
+        MyThread *thread1 = new MyThread(z);
+        thread1->start();
+    }
+
 }
