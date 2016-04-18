@@ -6,9 +6,11 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
-#include <QtWebKit>
 #include <QWebView>
 #include <QTimer>
+#include <QProcess>
+
+#include <QtWebKit>
 
 #include "selectalgwindow.h"
 #include "mythread.h"
@@ -19,6 +21,8 @@ QString DefaultTb300 = "300";
 
 QString smartSource = "./smart ";
 QString parameters = "";
+
+QProcess *myProc;
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) :
@@ -86,6 +90,9 @@ void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
 }
 
 void MainWindow::updateGraph(){
+
+    //qDebug() << myProc->readAllStandardOutput().replace('\b',' ');
+
     QFile timeAlgFile("guiExtract/timeAlg.txt");      //Load timeAlg.txt File.
     QString javascriptCode = "";
 
@@ -411,20 +418,31 @@ void MainWindow::on_pushButton_released() {
         QUrl url("guiExtract/graph/grafico.html");          //Url of graph.
         ui->webView->load(url);                             //Insert graph in webView.
 
-
         QTimer *timer = new QTimer(this);                                   //Declare newTimer.
         connect(timer, SIGNAL(timeout()), this, SLOT(updateGraph()) );      //Connect timer to slot updateGraph().
 
         QString execute = smartSource + parameters;
-        qDebug() << execute;
+        //myProc = new QProcess(this);
+        //connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGraph()) );
 
-        QByteArray ba = execute.toLatin1();
-        const char *z = ba.data();
+        //myProc->start(execute);
 
-        MyThread *thread1 = new MyThread(z);
-        thread1->start();
+        //myProc->kill();
 
-        timer->start(1000);                         //Start timer(ms).
+        /*
+
+            //QString execute = smartSource + parameters;
+            qDebug() << execute;
+
+            QByteArray ba = execute.toLatin1();
+            const char *z = ba.data();
+
+            MyThread *thread1 = new MyThread(z);
+            thread1->start();
+         */
+
+
+        timer->start(1000);                         //Start timer(ms).*/
 
     }
 

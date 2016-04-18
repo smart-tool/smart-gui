@@ -10,6 +10,7 @@ public:
     MyThread(const char* y);
     const char* Para;
     void run();
+    void stop();
     void SetPara(QString x);
     QString GetPara();
 };
