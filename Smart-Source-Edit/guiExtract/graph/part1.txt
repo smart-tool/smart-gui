@@ -5,6 +5,8 @@
     <script type="text/javascript">
 
         var options={
+            responsive: true,
+	    maintainAspectRatio: false,
             animation : true,
             scaleShowGridLines : true,
             scaleGridLineColor : "rgba(0,0,0,.05)",

@@ -26,7 +26,8 @@ private slots:
     void on_pushButton_released();
 
 public slots:
-    void updateGraph();
+    void updateGUI();
+    void processEnded();
 
 private:
     Ui::MainWindow *ui;

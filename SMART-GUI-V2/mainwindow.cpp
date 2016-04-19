@@ -12,8 +12,9 @@
 
 #include <QtWebKit>
 
+#include <cmath>
+
 #include "selectalgwindow.h"
-#include "mythread.h"
 
 QString Default500 = "500";
 QString Default1Mb = "1";
@@ -23,6 +24,13 @@ QString smartSource = "./smart ";
 QString parameters = "";
 
 QProcess *myProc;
+
+QStringList outputSmart;
+QStringList myAlgoName;
+int nEnabledAlg = 0;
+int nExecutePatt = 0;
+bool plenDefault = true;
+
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) :
@@ -89,9 +97,78 @@ void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
     fclose(fp);
 }
 
-void MainWindow::updateGraph(){
+double Log2( double n )  {
+    return log( n ) / log( 2 );
+}
 
-    //qDebug() << myProc->readAllStandardOutput().replace('\b',' ');
+void MainWindow::processEnded(){
+    qDebug() << "Finito";
+
+    qDebug() << "N algo attivi: " << nEnabledAlg;
+
+    int algDebug = 0;
+    double minPlen, maxPlen, currPlen;
+
+    if(plenDefault){
+        minPlen = 2;
+        maxPlen = 4096;
+    }else{
+        minPlen = ui->lineEdit_6->text().toDouble();
+        maxPlen = ui->lineEdit_7->text().toDouble();
+    }
+
+    nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
+
+    qDebug() << nExecutePatt;
+
+    minPlen = pow(2, ceil ( Log2(minPlen) ) );
+    maxPlen = pow(2, floor ( Log2(maxPlen) ) );
+
+    currPlen = minPlen;
+
+    int j = 0;
+
+    for (int i=0; i<outputSmart.length(); i++){
+
+        QStringList aa;
+        aa = outputSmart[i].split(' ');
+
+        if (algDebug == 0)
+            qDebug() << "Pattern lengh: "<<currPlen;
+
+        if(aa[0].contains("[OK]")){
+            qDebug() << "Tempo di " << myAlgoName[j] << " : " << aa[2].replace('\t',"");
+            algDebug++;
+            j++;
+        }else{
+            qDebug() << "Tempo di " << myAlgoName[j] << " : null ";
+            algDebug++;
+            j++;
+        }
+
+        if (algDebug == nEnabledAlg){
+            currPlen*=2;
+            algDebug = 0;
+            j=0;
+        }
+
+    }
+}
+
+void MainWindow::updateGUI(){
+
+    QString a = myProc->readAllStandardOutput().replace('\b',"");
+
+    //qDebug() << a;
+
+    if( a.contains("[OK]") ||
+        a.contains("[ERROR]") ||
+        a.contains("[--]") ||
+        a.contains("[OUT]")
+       )
+        outputSmart << a;
+
+    ui->fakeTerminal->setText(a /* + ui->fakeTerminal->toPlainText() */ );
 
     QFile timeAlgFile("guiExtract/timeAlg.txt");      //Load timeAlg.txt File.
     QString javascriptCode = "";
@@ -168,6 +245,10 @@ void loadGraph(){
     //Create the datasets
     for(int i=0;i<NumAlgo;i++){\
         if(ALGO_NAME[i] && EXECUTE[i]){
+
+            myAlgoName << ALGO_NAME[i];
+            nEnabledAlg++;
+
             r = qrand() % ((255 + 1) - 1) + 1;
             g = qrand() % ((255 + 1) - 1) + 1;
             b = qrand() % ((255 + 1) - 1) + 1;
@@ -326,6 +407,8 @@ void MainWindow::on_pushButton_released() {
 
     }else if( ( (ui->lineEdit_6->text()!="") || (ui->lineEdit_7->text()!="") ) ){  //PSET
 
+        plenDefault = false;
+
         if(ui->checkBox_2->isChecked())
            text2 += " -occ ";
 
@@ -418,31 +501,14 @@ void MainWindow::on_pushButton_released() {
         QUrl url("guiExtract/graph/grafico.html");          //Url of graph.
         ui->webView->load(url);                             //Insert graph in webView.
 
-        QTimer *timer = new QTimer(this);                                   //Declare newTimer.
-        connect(timer, SIGNAL(timeout()), this, SLOT(updateGraph()) );      //Connect timer to slot updateGraph().
-
         QString execute = smartSource + parameters;
-        //myProc = new QProcess(this);
-        //connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGraph()) );
+        qDebug() << execute;
 
-        //myProc->start(execute);
+        myProc = new QProcess(this);
+        connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );
+        connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );
 
-        //myProc->kill();
-
-        /*
-
-            //QString execute = smartSource + parameters;
-            qDebug() << execute;
-
-            QByteArray ba = execute.toLatin1();
-            const char *z = ba.data();
-
-            MyThread *thread1 = new MyThread(z);
-            thread1->start();
-         */
-
-
-        timer->start(1000);                         //Start timer(ms).*/
+        myProc->start(execute);
 
     }
 
