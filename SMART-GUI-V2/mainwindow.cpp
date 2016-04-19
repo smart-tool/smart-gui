@@ -405,7 +405,7 @@ void MainWindow::on_pushButton_released() {
 
         canI = true;
 
-    }else if( ( (ui->lineEdit_6->text()!="") || (ui->lineEdit_7->text()!="") ) ){  //PSET
+    }else if( ( (ui->lineEdit_6->text()!="") || (ui->lineEdit_7->text()!="") ) ){  //PLEN
 
         plenDefault = false;
 
@@ -427,6 +427,8 @@ void MainWindow::on_pushButton_released() {
 
         parameters = "-text " +
                     ui->comboBox->currentText() +
+                    " -pset "+
+                    ui->lineEdit->text()+
                     " -tsize "+ui->lineEdit_4->text() +
                     " -tb " +
                     ui->lineEdit_5->text() +
@@ -458,6 +460,8 @@ void MainWindow::on_pushButton_released() {
 
         parameters = "-text " +
                     ui->comboBox->currentText() +
+                    " -pset "+
+                    ui->lineEdit->text()+
                     " -tsize " +
                     ui->lineEdit_4->text() +
                     " -tb " +
@@ -486,6 +490,8 @@ void MainWindow::on_pushButton_released() {
 
         parameters = "-text " +
                     ui->comboBox->currentText() +
+                    " -pset "+
+                    ui->lineEdit->text()+
                     " -tsize " +
                     ui->lineEdit_4->text() +
                     " -tb " +
