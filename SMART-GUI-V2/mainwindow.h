@@ -14,6 +14,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void loadChart();
+
 private slots:
     void on_actionSelect_algorithms_triggered();
     void on_actionAbout_SMART_GUI_triggered();

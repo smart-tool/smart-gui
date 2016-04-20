@@ -8,7 +8,8 @@
 #include <QMessageBox>
 #include <cstdlib>
 
-#define NumAlgo 500 //Define the number of algorithm
+//Define the number of algorithm.
+#define NumAlgo 500
 
 void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {
     FILE *fp = fopen("source/algorithms.h", "r");
@@ -27,20 +28,20 @@ void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {
     fclose(fp);
 }
 
-QCheckBox *arrayCheckBox[NumAlgo]; //Declary array of checkBox.
-int EXECUTE[NumAlgo]; //Declare EXECTUE array with the state of alrgorithm (0/1).
-char *ALGO_NAME[NumAlgo]; //Declare array ALGO_NAME with the name of all string matching algorithms
+QCheckBox *arrayCheckBox[NumAlgo];  //Declary array of checkBox.
+int EXECUTE[NumAlgo];               //Declare EXECTUE array with the state of alrgorithm (0/1).
+char *ALGO_NAME[NumAlgo];           //Declare array ALGO_NAME with the name of all string matching algorithms.
 
 SelectAlgWindow::SelectAlgWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SelectAlgWindow){
     ui->setupUi(this);
 
-    //Start main
+    //Load array.
+    getAlgo(ALGO_NAME,EXECUTE);
 
-    getAlgo(ALGO_NAME,EXECUTE); //Load array.
-
-    QVBoxLayout *listCheckBox = new QVBoxLayout(); //Declare new Layout to add the new CheckBox
+    //Declare new Layout to add the new CheckBox.
+    QVBoxLayout *listCheckBox = new QVBoxLayout();
 
     //Create checkBox with the name of algorithm and check if the alg is enabled.
     for(int i=0;i<NumAlgo;i++){
@@ -54,7 +55,8 @@ SelectAlgWindow::SelectAlgWindow(QWidget *parent) :
         }
     }
 
-    ui->scrollAreaWidgetContents->setLayout(listCheckBox); //Apply layout.
+    //Apply layout.
+    ui->scrollAreaWidgetContents->setLayout(listCheckBox);
 
 }
 

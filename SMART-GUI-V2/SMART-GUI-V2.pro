@@ -21,3 +21,6 @@ HEADERS += mainwindow.h \
 
 FORMS   += mainwindow.ui \
            selectalgwindow.ui
+
+RESOURCES += \
+    chartfile.qrc

@@ -9,6 +9,9 @@
 #include <QWebView>
 #include <QTimer>
 #include <QProcess>
+#include <QRegExp>
+#include <QColor>
+#include <QPalette>
 
 #include <QtWebKit>
 
@@ -16,26 +19,33 @@
 
 #include "selectalgwindow.h"
 
+#define NumAlgo 500             //Define the number of algorithm
+
+QRegExp rx("[^0-9.]");          //Regex keeps floating number.
+
+QProcess *myProc;               //Declare myProc.
+
+QStringList myAlgoName;         //Name of active algo.
+
+int nEnabledAlg;                //Number of active algo.
+int nExecutePatt;               //Number of patterns to execute.
+int currentAlgo;                //Current algorithm.
+
+double minPlen = 2;             //Min plen.
+double maxPlen = 4096;          //Max plen.
+double currentPlen;             //Current plen.
+
+QVBoxLayout *layoutLegend;      //Declare new Layout.
+
+QString parameters = "";        //Parameters to send in smart.
+QString timeAlgo = "";          //String with result algo time.
+
 QString Default500 = "500";
 QString Default1Mb = "1";
 QString DefaultTb300 = "300";
 
-QString smartSource = "./smart ";
-QString parameters = "";
-
-QProcess *myProc;
-
-QStringList outputSmart;
-QStringList myAlgoName;
-int nEnabledAlg = 0;
-int nExecutePatt = 0;
-bool plenDefault = true;
-
-
 //Constructor.
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow) {
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
     //ui->centralWidget->setFixedSize(500,500);
 
@@ -44,6 +54,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit->setText(Default500);
     ui->lineEdit_4->setText(Default1Mb);
     ui->lineEdit_5->setText(DefaultTb300);
+
+    layoutLegend = new QVBoxLayout();
 
 }
 
@@ -76,10 +88,7 @@ void MainWindow::on_actionAbout_SMART_GUI_triggered() {
     QMessageBox::information(this,"About!",help);
 }
 
-
-int nOldRow = 0;
-#define NumAlgo 500 //Define the number of algorithm
-
+//Load into array parameters the status of algo.
 void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
     FILE *fp = fopen("source/algorithms.h", "r");
     char c; int i=0;
@@ -97,179 +106,157 @@ void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
     fclose(fp);
 }
 
+//Logarithm in base two.
 double Log2( double n )  {
     return log( n ) / log( 2 );
 }
 
+//Execute this SLOT on ended process.
 void MainWindow::processEnded(){
-    qDebug() << "Finito";
-
-    qDebug() << "N algo attivi: " << nEnabledAlg;
-
-    int algDebug = 0;
-    double minPlen, maxPlen, currPlen;
-
-    if(plenDefault){
-        minPlen = 2;
-        maxPlen = 4096;
-    }else{
-        minPlen = ui->lineEdit_6->text().toDouble();
-        maxPlen = ui->lineEdit_7->text().toDouble();
-    }
-
-    nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
-
-    qDebug() << nExecutePatt;
-
-    minPlen = pow(2, ceil ( Log2(minPlen) ) );
-    maxPlen = pow(2, floor ( Log2(maxPlen) ) );
-
-    currPlen = minPlen;
-
-    int j = 0;
-
-    for (int i=0; i<outputSmart.length(); i++){
-
-        QStringList aa;
-        aa = outputSmart[i].split(' ');
-
-        if (algDebug == 0)
-            qDebug() << "Pattern lengh: "<<currPlen;
-
-        if(aa[0].contains("[OK]")){
-            qDebug() << "Tempo di " << myAlgoName[j] << " : " << aa[2].replace('\t',"");
-            algDebug++;
-            j++;
-        }else{
-            qDebug() << "Tempo di " << myAlgoName[j] << " : null ";
-            algDebug++;
-            j++;
-        }
-
-        if (algDebug == nEnabledAlg){
-            currPlen*=2;
-            algDebug = 0;
-            j=0;
-        }
-
-    }
+    qDebug() << " Ho Finito";
 }
 
+//Execute this SLOT everytime the SMART have an output.
+//Update the chart e progress-bar.
 void MainWindow::updateGUI(){
 
-    QString a = myProc->readAllStandardOutput().replace('\b',"");
-
-    //qDebug() << a;
-
-    if( a.contains("[OK]") ||
-        a.contains("[ERROR]") ||
-        a.contains("[--]") ||
-        a.contains("[OUT]")
-       )
-        outputSmart << a;
-
-    ui->fakeTerminal->setText(a /* + ui->fakeTerminal->toPlainText() */ );
-
-    QFile timeAlgFile("guiExtract/timeAlg.txt");      //Load timeAlg.txt File.
     QString javascriptCode = "";
 
-    QStringList testAlgo;
-    QStringList testAlgoSplitted;
+    QString tmpOutput = myProc->readAllStandardOutput().replace('\b',"");
+    ui->fakeTerminal->setText(tmpOutput  /* + ui->fakeTerminal->toPlainText() */ );
 
-    QString timeAlgo;
-    QString lenghtAlgo;
+    if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
 
-    QString tmpLine = "";
+        QStringList splittedOutput;
+        splittedOutput << tmpOutput.split('\t');
 
-    int nNewRow = 0;
+        for(int j=0; j<splittedOutput.length(); j++){
+            tmpOutput = splittedOutput[j].replace(" ","").replace('\t',"").replace('\n',"");
 
-    //Read timeAlg.
-    if (timeAlgFile.open(QIODevice::ReadOnly)) {
-       QTextStream in(&timeAlgFile);
-       while (!in.atEnd()) {
-          tmpLine = in.readLine();
-          if ( tmpLine.contains("OK") ){
-              testAlgo << tmpLine;
-              nNewRow++;
-          }
-       }
-       timeAlgFile.close();
-    }
+            if (currentAlgo == nEnabledAlg){
 
-    if(nOldRow != nNewRow){                                                                         //If the load file have new row by old.
-        for (int i=nOldRow; i<testAlgo.length(); i++){
-            testAlgoSplitted = testAlgo[i].split("|");                                              //Split by |.
-            lenghtAlgo = testAlgoSplitted[0];                                                       //Get the lenght (patternes).
-            timeAlgo = testAlgoSplitted[1];                                                         //Get the list of execute alg.
-            timeAlgo = timeAlgo.left(timeAlgo.length() - 3);                                        //Remove the ,OK flag .
-            javascriptCode = "myLineChart.addData([" + timeAlgo + "], '" + lenghtAlgo + "');";      //Create the javascript code.
-            ui->webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);                   //Send js code.
+                //Create the javascript code.
+                javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
+
+                //Send js code.
+                ui->webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+
+                //Support debug @Helias.
+                qDebug() << "Aggiorna il grafico." ;
+                qDebug() << "Valori: " << timeAlgo.left(timeAlgo.length() - 1);
+                qDebug() << "Lenght: " << currentPlen;
+                qDebug() << "Javascript code: " << javascriptCode;
+
+                timeAlgo = "";
+                currentPlen*=2;
+                currentAlgo = 0;
+            }
+
+            if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
+
+                //Support debug @Helias.
+                qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rx,"");
+
+                timeAlgo += tmpOutput.replace(rx,"") + ',';
+                currentAlgo++;
+            }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
+
+                //Support debug @Helias.
+                qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : null";
+
+                timeAlgo += "null,";
+                currentAlgo++;
+            }
         }
-        nOldRow = nNewRow;                                                                          //Update the number of row.
     }
+
 }
 
-void loadGraph(){
-    int EXECUTE[NumAlgo];                                      //Declare EXECTUE array with the state of alrgorithm (0/1).
-    char *ALGO_NAME[NumAlgo];                                  //Declare array ALGO_NAME with the name of all string matching algorithms
+//loadResource to create chart and load it into webView.
+void MainWindow::loadChart(){
 
-    QFile graphCode1File("guiExtract/graph/part1.txt");        //Load part1 of html graph.
-    QFile graphCode2File("guiExtract/graph/part2.txt");        //Load part2 of html graph.
-    QFile graphFile("guiExtract/graph/grafico.html");          //Load file of graph.
+    //Inizialize and clear all supportVariables.
+    nEnabledAlg = 0;
+    myAlgoName.clear();
 
-    QString graphCodeComplete = "";
-    QString graphCode1 = "";
-    QString graphCode2 = "";
+    while(!layoutLegend->isEmpty())
+        delete layoutLegend->takeAt(0);
+
+
+    int EXECUTE[NumAlgo];                                             //Declare EXECTUE array with the state of alrgorithm (0/1).
+    char *ALGO_NAME[NumAlgo];                                         //Declare array ALGO_NAME with the name of all string matching algorithms
+
+    QFile chartCode1File(":/chartFile/chart/chartPart1.html");        //Load part1 of htmlChart by res.
+    QFile chartCode2File(":/chartFile/chart/chartPart2.html");        //Load part2 of htmlChart by res..
+    QFile chartFile("chart.html");                                    //Load file of graph.
+
+    QString chartCode1, chartCode2;
+    QString r, g, b;
 
     QString datasets = "";
 
-    int r, g, b;
-
     //Read part1.
-    if (graphCode1File.open(QIODevice::ReadOnly)) {
-        QTextStream in(&graphCode1File);
-        graphCode1 = in.readAll();
-        graphCode1File.close();
+    if (chartCode1File.open(QIODevice::ReadOnly)) {
+        QTextStream in(&chartCode1File);
+        chartCode1 = in.readAll();
+        chartCode1File.close();
     }
 
     //Read part2.
-    if (graphCode2File.open(QIODevice::ReadOnly)) {
-        QTextStream in(&graphCode2File);
-        graphCode2 = in.readAll();
-        graphCode2File.close();
+    if (chartCode2File.open(QIODevice::ReadOnly)) {
+        QTextStream in(&chartCode2File);
+        chartCode2 = in.readAll();
+        chartCode2File.close();
     }
 
     //Load array.
     getAlgoMain(ALGO_NAME,EXECUTE);
 
-    //Create the datasets
-    for(int i=0;i<NumAlgo;i++){\
+    for(int i=0;i<NumAlgo;i++){
         if(ALGO_NAME[i] && EXECUTE[i]){
 
             myAlgoName << ALGO_NAME[i];
             nEnabledAlg++;
 
-            r = qrand() % ((255 + 1) - 1) + 1;
-            g = qrand() % ((255 + 1) - 1) + 1;
-            b = qrand() % ((255 + 1) - 1) + 1;
+            //Create randomColor.
+            r = QString::number( qrand() % ((255 + 1) - 1) + 1 );
+            g = QString::number( qrand() % ((255 + 1) - 1) + 1 );
+            b = QString::number( qrand() % ((255 + 1) - 1) + 1 );
 
-            datasets = datasets + "{\n\tlabel: '" + ALGO_NAME[i] + "',\n" +
-                                  "\tfillColor: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",0.2)'" + ",\n" +
-                                  "\tstrokeColor: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",1)'" + ",\n" +
-                                  "\tpointColor: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",1)'" + ",\n" +
-                                  "\tpointStrokeColor: '#fff'" + ",\n" +
-                                  "\tpointHighlightFill: '#fff'" + ",\n" +
-                                  "\tpointHighlightStroke: 'rgba(" + QString::number(r) + "," + QString::number(g) + "," + QString::number(b) + ",1)'" + ",\n},\n" ;
+            //Crete label with name of algo and color (legend).
+            QLabel *label = new QLabel(QString::fromUtf8("• ") + myAlgoName[nEnabledAlg-1],0);
+            label->setStyleSheet( "color: rgb(" + r + "," + g + "," + b+ ") ; font-weight: bold; font-size: 20px;" );
+            layoutLegend->addWidget(label);
+
+            //Create datasets.
+            datasets +=  "{\n\tlabel: '" + myAlgoName[nEnabledAlg-1] + "',\n" +
+                            "\tfillColor: 'rgba(" + r + "," + g + "," + b + ",0.2)'" + ",\n" +
+                            "\tstrokeColor: 'rgba(" + r + "," + g + "," + b + ",1)'" + ",\n" +
+                            "\tpointColor: 'rgba(" + r + "," + g + "," + b + ",1)'" + ",\n" +
+                            "\tpointStrokeColor: '#fff'" + ",\n" +
+                            "\tpointHighlightFill: '#fff'" + ",\n" +
+                            "\tpointHighlightStroke: 'rgba(" + r + "," + g + "," + b + ",1)'" + ",\n},\n" ;
         }
     }
 
-    graphCodeComplete = graphCodeComplete + graphCode1 + datasets + graphCode2;
 
-    //Write fileGraph.
-    if (graphFile.open(QFile::WriteOnly|QFile::Truncate)) {
-        QTextStream stream(&graphFile);
-        stream << graphCodeComplete;
+    //Apply layout of label with algoName in ui.
+    ui->scrollAreaWidgetContents->setLayout(layoutLegend);
+
+    QString chartCodeComplete = chartCode1 + datasets + chartCode2;
+
+    //Write fileChart.
+    if (chartFile.open(QFile::WriteOnly|QFile::Truncate)) {
+        QTextStream stream(&chartFile);
+        stream << chartCodeComplete;
     }
+
+
+    //Copy Chart.js from resource in local.
+    QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
+
+    QUrl url("chart.html");          //Url of chart.
+    ui->webView->load(url);          //Insert chart in webView.
 
 }
 
@@ -407,7 +394,8 @@ void MainWindow::on_pushButton_released() {
 
     }else if( ( (ui->lineEdit_6->text()!="") || (ui->lineEdit_7->text()!="") ) ){  //PLEN
 
-        plenDefault = false;
+        minPlen = ui->lineEdit_6->text().toDouble();
+        maxPlen = ui->lineEdit_7->text().toDouble();
 
         if(ui->checkBox_2->isChecked())
            text2 += " -occ ";
@@ -503,18 +491,31 @@ void MainWindow::on_pushButton_released() {
     }
 
     if (canI) {
-        loadGraph();                                        //Load graph.
-        QUrl url("guiExtract/graph/grafico.html");          //Url of graph.
-        ui->webView->load(url);                             //Insert graph in webView.
 
-        QString execute = smartSource + parameters;
+        loadChart();
+
+        QString execute = "./smart " + parameters;
         qDebug() << execute;
 
-        myProc = new QProcess(this);
-        connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );
-        connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );
+        //Support debug @Helias.
+        qDebug() << "Numero di algoritmi attivi: " << nEnabledAlg;
+        qDebug() << myAlgoName;
 
-        myProc->start(execute);
+        nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
+        qDebug() << "Numero di esecuzioni totali: " << nExecutePatt;
+
+        minPlen = pow(2, ceil ( Log2(minPlen) ) );
+        maxPlen = pow(2, floor ( Log2(maxPlen) ) );
+
+        qDebug() << "MinPlen: " << minPlen << "MaxPlen: " << maxPlen;
+
+        currentPlen = minPlen;
+
+
+        myProc = new QProcess(this);                                                    //Create process.
+        connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
+        connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
+        myProc->start(execute);                                                         //Start process.
 
     }
 

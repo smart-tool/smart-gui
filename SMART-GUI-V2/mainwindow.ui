@@ -323,6 +323,12 @@
           <height>0</height>
          </size>
         </property>
+        <property name="autoFillBackground">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
@@ -351,6 +357,9 @@
         </property>
         <property name="acceptDrops">
          <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
