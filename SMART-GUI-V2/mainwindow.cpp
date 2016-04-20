@@ -39,6 +39,7 @@ QVBoxLayout *layoutLegend;      //Declare new Layout.
 
 QString parameters = "";        //Parameters to send in smart.
 QString timeAlgo = "";          //String with result algo time.
+QString expCode = "";           //String with code ex.
 
 QString Default500 = "500";
 QString Default1Mb = "1";
@@ -51,9 +52,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     ui->setupUi(this);
 
-    ui->lineEdit->setText(Default500);
-    ui->lineEdit_4->setText(Default1Mb);
-    ui->lineEdit_5->setText(DefaultTb300);
+    ui->Pset_lineEdit->setText(Default500);
+    ui->Tsize_lineEdit->setText(Default1Mb);
+    ui->Tb_lineEdit->setText(DefaultTb300);
 
     layoutLegend = new QVBoxLayout();
 
@@ -111,9 +112,32 @@ double Log2( double n )  {
     return log( n ) / log( 2 );
 }
 
+//Generate code experiment
+void generateEXPCode(){
+    int t = (int)time(NULL);
+    expCode = "EXP" + QString::number(t);
+}
+
+QString MainWindow::createHeadEXP(){
+
+    return  QString::fromLatin1("\n\n  -----------------------------------------------------------------------------") +
+            QString::fromLatin1("\n  Experimental results on ") + ui->Text_comboBox->currentText() + QString::fromLatin1(": ") + expCode +
+            QString::fromLatin1("\n  Searching for a set of ") + ui->Pset_lineEdit->text() + QString::fromLatin1(" patterns with length ") + QString::number(currentPlen) +
+            QString::fromLatin1("\n  Testing ") + QString::number(nEnabledAlg) + QString::fromLatin1(" algorithms \n");
+
+}
+
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
     qDebug() << " Ho Finito";
+
+    ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
+                                        "\n\n  -----------------------------------------------------------------------------" +
+                                        "\n  OUTPUT RUNNING TIMES " + expCode
+                                        );
+
+    ui->start_pushButton->setEnabled(true);
+    ui->stop_pushButton->setEnabled(false);
 }
 
 //Execute this SLOT everytime the SMART have an output.
@@ -121,9 +145,7 @@ void MainWindow::processEnded(){
 void MainWindow::updateGUI(){
 
     QString javascriptCode = "";
-
     QString tmpOutput = myProc->readAllStandardOutput().replace('\b',"");
-    ui->fakeTerminal->setText(tmpOutput  /* + ui->fakeTerminal->toPlainText() */ );
 
     if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
 
@@ -139,7 +161,7 @@ void MainWindow::updateGUI(){
                 javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
 
                 //Send js code.
-                ui->webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+                ui->chart_webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
 
                 //Support debug @Helias.
                 qDebug() << "Aggiorna il grafico." ;
@@ -154,20 +176,34 @@ void MainWindow::updateGUI(){
 
             if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
 
+                if(currentAlgo == 0)
+                    ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + createHeadEXP());
+
                 //Support debug @Helias.
+                ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rx,"") + " ms" );
                 qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rx,"");
 
                 timeAlgo += tmpOutput.replace(rx,"") + ',';
                 currentAlgo++;
             }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
 
+                if(currentAlgo == 0)
+                    ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + createHeadEXP());
+
                 //Support debug @Helias.
+                ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]\t" + myAlgoName[currentAlgo] + "\t[--]" );
                 qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : null";
 
                 timeAlgo += "null,";
                 currentAlgo++;
             }
+
+            //Go to the end of fakeTerminal.
+            QTextCursor c = ui->fakeTerminal_textEdit->textCursor();
+            c.movePosition(QTextCursor::End);
+            ui->fakeTerminal_textEdit->setTextCursor(c);
         }
+
     }
 
 }
@@ -178,6 +214,10 @@ void MainWindow::loadChart(){
     //Inizialize and clear all supportVariables.
     nEnabledAlg = 0;
     myAlgoName.clear();
+    expCode = "";
+    ui->fakeTerminal_textEdit->setText("");
+
+    generateEXPCode();
 
     while(!layoutLegend->isEmpty())
         delete layoutLegend->takeAt(0);
@@ -241,7 +281,7 @@ void MainWindow::loadChart(){
 
 
     //Apply layout of label with algoName in ui.
-    ui->scrollAreaWidgetContents->setLayout(layoutLegend);
+    ui->activeAlgo_scrollArea->setLayout(layoutLegend);
 
     QString chartCodeComplete = chartCode1 + datasets + chartCode2;
 
@@ -255,205 +295,205 @@ void MainWindow::loadChart(){
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
 
-    QUrl url("chart.html");          //Url of chart.
-    ui->webView->load(url);          //Insert chart in webView.
+    QUrl url("chart.html");             //Url of chart.
+    ui->chart_webView->load(url);       //Insert chart in webView.
 
 }
 
-void MainWindow::on_checkBox_released() {
+void MainWindow::on_Short_checkBox_released() {
 
-    if(ui->checkBox->isChecked()){
-     ui->lineEdit_6->setEnabled(false);
-     ui->lineEdit_7->setEnabled(false);
-     ui->lineEdit_8->setEnabled(false);
-     ui->lineEdit_9->setEnabled(false);
+    if(ui->Short_checkBox->isChecked()){
+     ui->PlenU_lineEdit->setEnabled(false);
+     ui->PlenL_lineEdit->setEnabled(false);
+     ui->SimpleP_lineEdit->setEnabled(false);
+     ui->SimpleT_lineEdit->setEnabled(false);
     }else{
-        ui->lineEdit_6->setEnabled(true);
-        ui->lineEdit_7->setEnabled(true);
-        ui->lineEdit_8->setEnabled(true);
-        ui->lineEdit_9->setEnabled(true);
+        ui->PlenU_lineEdit->setEnabled(true);
+        ui->PlenL_lineEdit->setEnabled(true);
+        ui->SimpleP_lineEdit->setEnabled(true);
+        ui->SimpleT_lineEdit->setEnabled(true);
     }
 
 }
 
-void MainWindow::on_lineEdit_8_textChanged(const QString &arg1) {
+void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
 
     if(arg1 != ""){
-       ui->lineEdit->setEnabled(false);
-       ui->lineEdit_4->setEnabled(false);
-       ui->lineEdit_5->setEnabled(false);
-       ui->lineEdit_6->setEnabled(false);
-       ui->lineEdit_7->setEnabled(false);
-       ui->comboBox->setEnabled(false);
-       ui->checkBox->setEnabled(false);
-    }else if(arg1 == "" && ui->lineEdit_9->text() == ""){
-        ui->lineEdit->setEnabled(true);
-        ui->lineEdit_4->setEnabled(true);
-        ui->lineEdit_5->setEnabled(true);
-        ui->lineEdit_6->setEnabled(true);
-        ui->lineEdit_7->setEnabled(true);
-        ui->comboBox->setEnabled(true);
-        ui->checkBox->setEnabled(true);
+       ui->Pset_lineEdit->setEnabled(false);
+       ui->Tsize_lineEdit->setEnabled(false);
+       ui->Tb_lineEdit->setEnabled(false);
+       ui->PlenU_lineEdit->setEnabled(false);
+       ui->PlenL_lineEdit->setEnabled(false);
+       ui->Text_comboBox->setEnabled(false);
+       ui->Short_checkBox->setEnabled(false);
+    }else if(arg1 == "" && ui->SimpleT_lineEdit->text() == ""){
+        ui->Pset_lineEdit->setEnabled(true);
+        ui->Tsize_lineEdit->setEnabled(true);
+        ui->Tb_lineEdit->setEnabled(true);
+        ui->PlenU_lineEdit->setEnabled(true);
+        ui->PlenL_lineEdit->setEnabled(true);
+        ui->Text_comboBox->setEnabled(true);
+        ui->Short_checkBox->setEnabled(true);
     }
 
 }
 
-void MainWindow::on_lineEdit_9_textChanged(const QString &arg1) {
+void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
 
     if(arg1 != ""){
-        ui->lineEdit->setEnabled(false);
-        ui->lineEdit_4->setEnabled(false);
-        ui->lineEdit_5->setEnabled(false);
-        ui->lineEdit_6->setEnabled(false);
-        ui->lineEdit_7->setEnabled(false);
-        ui->comboBox->setEnabled(false);
-        ui->checkBox->setEnabled(false);
-    }else if(arg1 == "" && ui->lineEdit_8->text() == ""){
-        ui->lineEdit->setEnabled(true);
-        ui->lineEdit_4->setEnabled(true);
-        ui->lineEdit_5->setEnabled(true);
-        ui->lineEdit_6->setEnabled(true);
-        ui->lineEdit_7->setEnabled(true);
-        ui->comboBox->setEnabled(true);
-        ui->checkBox->setEnabled(true);
+        ui->Pset_lineEdit->setEnabled(false);
+        ui->Tsize_lineEdit->setEnabled(false);
+        ui->Tb_lineEdit->setEnabled(false);
+        ui->PlenU_lineEdit->setEnabled(false);
+        ui->PlenL_lineEdit->setEnabled(false);
+        ui->Text_comboBox->setEnabled(false);
+        ui->Short_checkBox->setEnabled(false);
+    }else if(arg1 == "" && ui->SimpleP_lineEdit->text() == ""){
+        ui->Pset_lineEdit->setEnabled(true);
+        ui->Tsize_lineEdit->setEnabled(true);
+        ui->Tb_lineEdit->setEnabled(true);
+        ui->PlenU_lineEdit->setEnabled(true);
+        ui->PlenL_lineEdit->setEnabled(true);
+        ui->Text_comboBox->setEnabled(true);
+        ui->Short_checkBox->setEnabled(true);
     }
 
 }
 
-void MainWindow::on_lineEdit_6_textChanged(const QString &arg1) {
+void MainWindow::on_PlenU_lineEdit_textChanged(const QString &arg1) {
 
     if(arg1 != ""){
-       ui->checkBox->setEnabled(false);
-       ui->lineEdit_8->setEnabled(false);
-       ui->lineEdit_9->setEnabled(false);
-    }else if(arg1 == "" && ui->lineEdit_7->text() == ""){
-        ui->checkBox->setEnabled(true);
-        ui->lineEdit_8->setEnabled(true);
-        ui->lineEdit_9->setEnabled(true);
+       ui->Short_checkBox->setEnabled(false);
+       ui->SimpleP_lineEdit->setEnabled(false);
+       ui->SimpleT_lineEdit->setEnabled(false);
+    }else if(arg1 == "" && ui->PlenL_lineEdit->text() == ""){
+        ui->Short_checkBox->setEnabled(true);
+        ui->SimpleP_lineEdit->setEnabled(true);
+        ui->SimpleT_lineEdit->setEnabled(true);
     }
 
 }
 
-void MainWindow::on_lineEdit_7_textChanged(const QString &arg1) {
+void MainWindow::on_PlenL_lineEdit_textChanged(const QString &arg1) {
 
     if(arg1 != ""){
-       ui->checkBox->setEnabled(false);
-       ui->lineEdit_8->setEnabled(false);
-       ui->lineEdit_9->setEnabled(false);
-    }else if(arg1 == "" && ui->lineEdit_6->text() == ""){
-        ui->checkBox->setEnabled(true);
-        ui->lineEdit_8->setEnabled(true);
-        ui->lineEdit_9->setEnabled(true);
+       ui->Short_checkBox->setEnabled(false);
+       ui->SimpleP_lineEdit->setEnabled(false);
+       ui->SimpleT_lineEdit->setEnabled(false);
+    }else if(arg1 == "" && ui->PlenU_lineEdit->text() == ""){
+        ui->Short_checkBox->setEnabled(true);
+        ui->SimpleP_lineEdit->setEnabled(true);
+        ui->SimpleT_lineEdit->setEnabled(true);
     }
 
 }
 
-void MainWindow::on_pushButton_pressed() {
+void MainWindow::on_start_pushButton_pressed() {
 
-    if(ui->lineEdit->text() == "")
-        ui->lineEdit->setText(Default500);
+    if(ui->Pset_lineEdit->text() == "")
+        ui->Pset_lineEdit->setText(Default500);
 
-    if(ui->lineEdit_4->text() == "")
-        ui->lineEdit_4->setText(Default1Mb);
+    if(ui->Tsize_lineEdit->text() == "")
+        ui->Tsize_lineEdit->setText(Default1Mb);
 
-    if(ui->lineEdit_5->text() == "")
-        ui->lineEdit_5->setText(DefaultTb300);
+    if(ui->Tb_lineEdit->text() == "")
+        ui->Tb_lineEdit->setText(DefaultTb300);
 
 }
 
-void MainWindow::on_pushButton_released() {
+void MainWindow::on_start_pushButton_released() {
 
     QString text2 = "";
     bool canI = false;
 
-    if( ( (ui->lineEdit_8->text() != "") || (ui->lineEdit_9->text() != "") ) ){   //SIMPLE
+    if( ( (ui->SimpleP_lineEdit->text() != "") || (ui->SimpleT_lineEdit->text() != "") ) ){   //SIMPLE
 
-        if(ui->checkBox_2->isChecked())
+        if(ui->Occ_checkBox->isChecked())
            text2 += " -occ ";
 
-        if(ui->checkBox_3->isChecked())
+        if(ui->Dif_checkBox->isChecked())
            text2 += " -dif ";
 
-        if(ui->checkBox_4->isChecked())
+        if(ui->Std_checkBox->isChecked())
            text2 += " -std ";
 
-        if(ui->checkBox_5->isChecked())
+        if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->checkBox_6->isChecked())
+        if(ui->Text_checkBox->isChecked())
            text2 += " -tex ";
 
 
         parameters = "-simple " +
-                    ui->lineEdit_8->text() +
+                    ui->SimpleP_lineEdit->text() +
                     " " +
-                    ui->lineEdit_9->text() +
+                    ui->SimpleT_lineEdit->text() +
                     text2;
 
         canI = true;
 
-    }else if( ( (ui->lineEdit_6->text()!="") || (ui->lineEdit_7->text()!="") ) ){  //PLEN
+    }else if( ( (ui->PlenU_lineEdit->text()!="") || (ui->PlenL_lineEdit->text()!="") ) ){  //PLEN
 
-        minPlen = ui->lineEdit_6->text().toDouble();
-        maxPlen = ui->lineEdit_7->text().toDouble();
+        minPlen = ui->PlenU_lineEdit->text().toDouble();
+        maxPlen = ui->PlenL_lineEdit->text().toDouble();
 
-        if(ui->checkBox_2->isChecked())
+        if(ui->Occ_checkBox->isChecked())
            text2 += " -occ ";
 
-        if(ui->checkBox_3->isChecked())
+        if(ui->Dif_checkBox->isChecked())
            text2 += " -dif ";
 
-        if(ui->checkBox_4->isChecked())
+        if(ui->Std_checkBox->isChecked())
            text2 += " -std ";
 
-        if(ui->checkBox_5->isChecked())
+        if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->checkBox_6->isChecked())
+        if(ui->Text_checkBox->isChecked())
            text2 += " -tex ";
 
 
         parameters = "-text " +
-                    ui->comboBox->currentText() +
+                    ui->Text_comboBox->currentText() +
                     " -pset "+
-                    ui->lineEdit->text()+
-                    " -tsize "+ui->lineEdit_4->text() +
+                    ui->Pset_lineEdit->text()+
+                    " -tsize "+ui->Tsize_lineEdit->text() +
                     " -tb " +
-                    ui->lineEdit_5->text() +
+                    ui->Tb_lineEdit->text() +
                     " -plen " +
-                    ui->lineEdit_6->text() +
+                    ui->PlenU_lineEdit->text() +
                     " " +
-                    ui->lineEdit_7->text() +
+                    ui->PlenL_lineEdit->text() +
                     text2;
 
         canI = true;
 
-    }else if(ui->checkBox->isChecked()){  //SHORT
+    }else if(ui->Short_checkBox->isChecked()){  //SHORT
 
-        if(ui->checkBox_2->isChecked())
+        if(ui->Occ_checkBox->isChecked())
            text2 += " -occ ";
 
-        if(ui->checkBox_3->isChecked())
+        if(ui->Dif_checkBox->isChecked())
            text2 += " -dif ";
 
-        if(ui->checkBox_4->isChecked())
+        if(ui->Std_checkBox->isChecked())
            text2 += " -std ";
 
-        if(ui->checkBox_5->isChecked())
+        if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->checkBox_6->isChecked())
+        if(ui->Text_checkBox->isChecked())
            text2 += " -tex ";
 
 
         parameters = "-text " +
-                    ui->comboBox->currentText() +
+                    ui->Text_comboBox->currentText() +
                     " -pset "+
-                    ui->lineEdit->text()+
+                    ui->Pset_lineEdit->text()+
                     " -tsize " +
-                    ui->lineEdit_4->text() +
+                    ui->Tsize_lineEdit->text() +
                     " -tb " +
-                    ui->lineEdit_5->text() +
+                    ui->Tb_lineEdit->text() +
                     " -short " +
                     text2;
 
@@ -461,29 +501,29 @@ void MainWindow::on_pushButton_released() {
 
     }else{
 
-        if(ui->checkBox_2->isChecked())
+        if(ui->Occ_checkBox->isChecked())
            text2 += " -occ ";
 
-        if(ui->checkBox_3->isChecked())
+        if(ui->Dif_checkBox->isChecked())
            text2 += " -dif ";
 
-        if(ui->checkBox_4->isChecked())
+        if(ui->Std_checkBox->isChecked())
            text2 += " -std ";
 
-        if(ui->checkBox_5->isChecked())
+        if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->checkBox_6->isChecked())
+        if(ui->Text_checkBox->isChecked())
            text2 += " -tex ";
 
         parameters = "-text " +
-                    ui->comboBox->currentText() +
+                    ui->Text_comboBox->currentText() +
                     " -pset "+
-                    ui->lineEdit->text()+
+                    ui->Pset_lineEdit->text()+
                     " -tsize " +
-                    ui->lineEdit_4->text() +
+                    ui->Tsize_lineEdit->text() +
                     " -tb " +
-                    ui->lineEdit_5->text() +
+                    ui->Tb_lineEdit->text() +
                     text2;
 
         canI = true;
@@ -492,6 +532,8 @@ void MainWindow::on_pushButton_released() {
 
     if (canI) {
 
+        ui->stop_pushButton->setEnabled(true);
+        ui->start_pushButton->setEnabled(false);
         loadChart();
 
         QString execute = "./smart " + parameters;
@@ -511,7 +553,6 @@ void MainWindow::on_pushButton_released() {
 
         currentPlen = minPlen;
 
-
         myProc = new QProcess(this);                                                    //Create process.
         connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
         connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
@@ -519,4 +560,10 @@ void MainWindow::on_pushButton_released() {
 
     }
 
+}
+
+void MainWindow::on_stop_pushButton_released(){
+    ui->start_pushButton->setEnabled(true);
+    ui->stop_pushButton->setEnabled(false);
+    myProc->kill();
 }
