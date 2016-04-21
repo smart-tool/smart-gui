@@ -15,6 +15,7 @@ public:
     ~MainWindow();
 
     void loadChart();
+    void inizializeAll();
 
 private slots:
     void on_actionSelect_algorithms_triggered();

@@ -297,10 +297,9 @@ void clearLayout(){
     }
 }
 
-//loadResource to create chart and load it into webView.
-void MainWindow::loadChart(){
+//Inizialize and clear all supportVariables
+void MainWindow::inizializeAll(){
 
-    //Inizialize and clear all supportVariables
     ui->progressBar->setValue(0);
     helpCounterAlg = 0;
 
@@ -320,6 +319,12 @@ void MainWindow::loadChart(){
     generateEXPCode();
 
     clearLayout();
+}
+
+//loadResource to create chart and load it into webView.
+void MainWindow::loadChart(){
+
+    inizializeAll();
 
     int EXECUTE[NumAlgo];                                             //Declare EXECTUE array with the state of alrgorithm (0/1).
     char *ALGO_NAME[NumAlgo];                                         //Declare array ALGO_NAME with the name of all string matching algorithms
@@ -396,8 +401,7 @@ void MainWindow::loadChart(){
     ui->chart_webView->load(url);       //Insert chart in webView.
 
     algoOutput = new QString[nEnabledAlg];
-    for (int i=0; i<nEnabledAlg; i++)
-        algoOutput[i] = "";
+    algoOutput->clear();
 
 }
 
@@ -538,9 +542,6 @@ void MainWindow::on_start_pushButton_released() {
 
     }else if( ( (ui->PlenU_lineEdit->text()!="") || (ui->PlenL_lineEdit->text()!="") ) ){  //PLEN
 
-        minPlen = ui->PlenU_lineEdit->text().toDouble();
-        maxPlen = ui->PlenL_lineEdit->text().toDouble();
-
         if(ui->Occ_checkBox->isChecked())
            text2 += " -occ ";
 
@@ -643,6 +644,14 @@ void MainWindow::on_start_pushButton_released() {
 
     }
 
+    if(ui->PlenU_lineEdit->text()!="" || ui->PlenU_lineEdit->text()!=""){
+        minPlen = ui->PlenU_lineEdit->text().toDouble();
+        maxPlen = ui->PlenL_lineEdit->text().toDouble();
+    }else{
+        minPlen = 2;
+        maxPlen = 4096;
+    }
+
     if (canI) {
 
         QFile SmartCheck("smart");
@@ -653,6 +662,7 @@ void MainWindow::on_start_pushButton_released() {
 
             ui->stop_pushButton->setEnabled(true);
             ui->start_pushButton->setEnabled(false);
+
             loadChart();
 
             QString execute = "./smart " + parameters;
