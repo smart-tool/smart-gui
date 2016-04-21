@@ -32,6 +32,7 @@ int nEnabledAlg;                //Number of active algo.
 int nExecutePatt;               //Number of patterns to execute.
 int currentAlgo;                //Current algorithm.
 int countPercent = 0;           //Percent of currente execute algorithm.
+int helpCounterAlg = 0;         //Help variable to calculate percentage.
 
 double minPlen = 2;             //Min plen.
 double maxPlen = 4096;          //Max plen.
@@ -53,42 +54,11 @@ QString DefaultTb300 = "300";
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
-    //ui->centralWidget->setFixedSize(500,500);
-
     ui->setupUi(this);
 
     ui->Pset_lineEdit->setText(Default500);
     ui->Tsize_lineEdit->setText(Default1Mb);
     ui->Tb_lineEdit->setText(DefaultTb300);
-
-
-    QFile SmartCheck("smart");
-    QFile SelectCheck("select");
-    QFile TestCheck("test");
-
-
-
-    if(!(SmartCheck.exists())){
-        qDebug()<< "Entra";
-        const QString Problem="Need Smart in the folder\n\n";
-
-        QMessageBox::information(this,"About!",Problem);
-
-    }else if(!(SelectCheck.exists())){
-             qDebug()<< "Entra";
-             const QString Problem="Need Smart in the folder\n\n";
-
-             QMessageBox::information(this,"About!",Problem);
-
-    }else if(!(TestCheck.exists())){
-             qDebug()<< "Entra";
-             const QString Problem="Need Smart in the folder\n\n";
-
-             QMessageBox::information(this,"About!",Problem);
-
-    }
-
-
 
     layoutLegend = new QVBoxLayout();
 
@@ -108,17 +78,21 @@ void MainWindow::on_actionSelect_algorithms_triggered() {
 
 //Menù option. Open about alert.
 void MainWindow::on_actionAbout_SMART_GUI_triggered() {
-    const QString help = " This is an help guide for using the tool\n\n "
-                         "-pset N computes running times as the mean of N runs (default 500)\n "
-                         "-tsize S set the upper bound dimension (in Mb) of the text used for experimental results (default 1Mb)\n "
-                         "-plen L U  test only patterns with a length between L and U (included).\n "
-                         "-text F  performs experimental results using text buffer F (mandatory unless you use the -simple parameter)\n "
-                         "-short computes experimental results using short length patterns\n -occ prints the number of occurrences\n "
-                         "-tb L set to L the upper bound for any wort case running time (in ms). The default value is 300 ms\n "
-                         "-dif prints the number the best and the worst running time\n -std prints the standard deviations of the running times\n "
-                         "-txt output results in txt tabular format\n -tex output results in latex tabular format\n "
-                         "-simple P T executes a single run searching T (max 1000 chars) for occurrences of P (max 100 chars)\n \n "
-                         "\n SMART by Faro Simone \n GUI by Alessandro Maggio\nSimone Di Mauro\nStefano Borzi.";
+    const QString help = "\tThis is an help guide for using the tool.\n"
+                         "\n\n-pset N computes running times as the mean of N runs (default 500)."
+                         "\n\n-tsize S set the upper bound dimension (in Mb) of the text used for experimental results (default 1Mb)."
+                         "\n\n-plen L U  test only patterns with a length between L and U (included)."
+                         "\n\n-text F  performs experimental results using text buffer F (mandatory unless you use the -simple parameter)."
+                         "\n\n-short computes experimental results using short length patterns."
+                         "\n\n-occ prints the number of occurrences."
+                         "\n\n-tb L set to L the upper bound for any wort case running time (in ms). The default value is 300 ms."
+                         "\n\n-dif prints the number the best and the worst running time."
+                         "\n\n-std prints the standard deviations of the running times."
+                         "\n\n-txt output results in txt tabular format."
+                         "\n\n-tex output results in latex tabular format."
+                         "\n\n-simple P T executes a single run searching T (max 1000 chars) for occurrences of P (max 100 chars)."
+                         "\n\nSMART by Faro Simone."
+                         "\nGUI by \nAlessandro Maggio\nSimone Di Mauro\nStefano Borzi.";
 
     QMessageBox::information(this,"About!",help);
 }
@@ -161,6 +135,12 @@ QString MainWindow::createHeadEXP(){
 
 }
 
+
+int calculatePercentage(){
+    return (helpCounterAlg*100)/(nEnabledAlg * nExecutePatt);
+}
+
+
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
 
@@ -172,6 +152,7 @@ void MainWindow::processEnded(){
                                             "\n  STOPPED BY USER " + expCode
                                             );
     else{
+        ui->progressBar->setValue(calculatePercentage());
         ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
                                             "\n\n  -----------------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
@@ -185,6 +166,8 @@ void MainWindow::processEnded(){
 //Execute this SLOT everytime the SMART have an output.
 //Update the chart e progress-bar.
 void MainWindow::updateGUI(){
+
+    ui->progressBar->setValue(calculatePercentage());
 
     QString javascriptCode = "";
     QString tmpOutput = myProc->readAllStandardOutput().replace('\b',"");
@@ -265,6 +248,8 @@ void MainWindow::updateGUI(){
                 currentAlgo++;
                 countPercent=0;
 
+                helpCounterAlg++;
+
             }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
 
                 QString tmpError = "--";
@@ -282,6 +267,8 @@ void MainWindow::updateGUI(){
                 timeAlgo += "null,";
                 currentAlgo++;
                 countPercent=0;
+
+                helpCounterAlg++;
             }
 
         }
@@ -295,10 +282,28 @@ void MainWindow::updateGUI(){
 
 }
 
+//Clear layout.
+void clearLayout(){
+    QLayoutItem *item;
+    while((item = layoutLegend->takeAt(0))) {
+        if (item->layout()) {
+            clearLayout();
+            delete item->layout();
+        }
+        if (item->widget()) {
+            delete item->widget();
+        }
+        delete item;
+    }
+}
+
 //loadResource to create chart and load it into webView.
 void MainWindow::loadChart(){
 
-    //Inizialize and clear all supportVariables.
+    //Inizialize and clear all supportVariables
+    ui->progressBar->setValue(0);
+    helpCounterAlg = 0;
+
     forcedStop = false;
 
     nEnabledAlg = 0;
@@ -314,9 +319,7 @@ void MainWindow::loadChart(){
 
     generateEXPCode();
 
-    while(!layoutLegend->isEmpty())
-        delete layoutLegend->takeAt(0);
-
+    clearLayout();
 
     int EXECUTE[NumAlgo];                                             //Declare EXECTUE array with the state of alrgorithm (0/1).
     char *ALGO_NAME[NumAlgo];                                         //Declare array ALGO_NAME with the name of all string matching algorithms
@@ -385,7 +388,6 @@ void MainWindow::loadChart(){
         QTextStream stream(&chartFile);
         stream << chartCodeComplete;
     }
-
 
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
@@ -643,31 +645,33 @@ void MainWindow::on_start_pushButton_released() {
 
     if (canI) {
 
-        ui->stop_pushButton->setEnabled(true);
-        ui->start_pushButton->setEnabled(false);
-        loadChart();
+        QFile SmartCheck("smart");
+        QFile SelectCheck("select");
+        QFile TestCheck("test");
 
-        QString execute = "./smart " + parameters;
-        qDebug() << execute;
+        if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
-        //Support debug @Helias.
-        qDebug() << "Numero di algoritmi attivi: " << nEnabledAlg;
-        qDebug() << myAlgoName;
+            ui->stop_pushButton->setEnabled(true);
+            ui->start_pushButton->setEnabled(false);
+            loadChart();
 
-        nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
-        qDebug() << "Numero di esecuzioni totali: " << nExecutePatt;
+            QString execute = "./smart " + parameters;
+            qDebug() << execute;
 
-        minPlen = pow(2, ceil ( Log2(minPlen) ) );
-        maxPlen = pow(2, floor ( Log2(maxPlen) ) );
+            nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
 
-        qDebug() << "MinPlen: " << minPlen << "MaxPlen: " << maxPlen;
+            minPlen = pow(2, ceil ( Log2(minPlen) ) );
+            maxPlen = pow(2, floor ( Log2(maxPlen) ) );
 
-        currentPlen = minPlen;
+            currentPlen = minPlen;
 
-        myProc = new QProcess(this);                                                    //Create process.
-        connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
-        connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
-        myProc->start(execute);                                                         //Start process.
+            myProc = new QProcess(this);                                                    //Create process.
+            connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
+            connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
+            myProc->start(execute);                                                         //Start process.
+
+        }else
+            QMessageBox::warning(this,"Error!","Need SMART source in folder.");
 
     }
 
