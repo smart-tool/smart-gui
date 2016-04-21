@@ -6,18 +6,14 @@
 
 	<body>
 		<div style="width: 100%; height: 100%;">
-		<canvas id="myChart" width="100%" height="100%"> </canvas>
+                    <canvas id="myChart" width="100%" height="100%"> </canvas>
 		</div>
-		
-		<!--<div id="legendDiv"> </div>-->
 
 
 		<script type="text/javascript">
 
 			var ctx = document.getElementById("myChart").getContext("2d");
 			var myLineChart = new Chart(ctx).Line(data, options);
-
-			document.getElementById("legendDiv").innerHTML = myLineChart.generateLegend();
 
 		</script>
 	</body>

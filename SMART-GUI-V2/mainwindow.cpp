@@ -210,41 +210,50 @@ void MainWindow::updateGUI(){
 
                 REMENBER TO RESET PATT WHEN currePat = maxPat  !!!
 
-                if(pre){
+                */
+
+                if(ui->Pre_checkBox->isChecked()){
                     QString timePre = "";
-                    QStrinList tmpPreTime = tmpOutput.split('+');
-                    for( int k=0; k<tmpPreTime.lenght(); k++){
-                        if(tmpPreTime[k].contains("ms"){
+                    QStringList tmpPreTime = tmpOutput.split('+');
+                    for(int k=0; k<tmpPreTime.length(); k++){
+                        if(tmpPreTime[k].contains("ms")){
                             timeAlgo += tmpPreTime[k].replace(rxFloat,"") + ',';
-                            timePre += " + " + tmpPreTime[k].replace(rxFloat,"")
+                            timePre += " + " + tmpPreTime[k].replace(rxFloat,"");
                         }else{
                             timePre += tmpPreTime[k].replace(rxFloat,"");
                         }
 
                     }
 
-                algoOutput[currentAlgo] = ..... ;
+                    //Support debug @Helias.
+                    qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rxFloat,"");
+
+                    algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                                "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + timePre + " ms" ;
+
+                    completeOutput += algoOutput[currentAlgo];
+                    ui->fakeTerminal_textEdit->setText(completeOutput);
+
+                    currentAlgo++;
+                    countPercent=0;
 
                 }else{
 
-}
+                    //Support debug @Helias.
+                    qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rxFloat,"");
+
+                    algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                                "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rxFloat,"") + " ms" ;
+
+                    completeOutput += algoOutput[currentAlgo];
+                    ui->fakeTerminal_textEdit->setText(completeOutput);
 
 
-                */
+                    timeAlgo += tmpOutput.replace(rxFloat,"") + ',';
+                    currentAlgo++;
+                    countPercent=0;
 
-                //Support debug @Helias.
-                qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rxFloat,"");
-
-                algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                            "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rxFloat,"") + " ms" ;
-
-                completeOutput += algoOutput[currentAlgo];
-                ui->fakeTerminal_textEdit->setText(completeOutput);
-
-
-                timeAlgo += tmpOutput.replace(rxFloat,"") + ',';
-                currentAlgo++;
-                countPercent=0;
+                }
 
             }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
 
@@ -505,6 +514,9 @@ void MainWindow::on_start_pushButton_released() {
         if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
 
+        if(ui->Pre_checkBox->isChecked())
+            text2 += " -pre ";
+
 
         parameters = "-simple " +
                     ui->SimpleP_lineEdit->text() +
@@ -533,6 +545,9 @@ void MainWindow::on_start_pushButton_released() {
 
         if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
+
+        if(ui->Pre_checkBox->isChecked())
+            text2 += " -pre ";
 
 
         parameters = "-text " +
@@ -567,6 +582,9 @@ void MainWindow::on_start_pushButton_released() {
         if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
 
+        if(ui->Pre_checkBox->isChecked())
+            text2 += " -pre ";
+
 
         parameters = "-text " +
                     ui->Text_comboBox->currentText() +
@@ -597,6 +615,9 @@ void MainWindow::on_start_pushButton_released() {
 
         if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
+
+        if(ui->Pre_checkBox->isChecked())
+            text2 += " -pre ";
 
         parameters = "-text " +
                     ui->Text_comboBox->currentText() +
