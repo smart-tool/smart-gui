@@ -6,7 +6,10 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
+
 #include <QWebView>
+#include <QWebFrame>
+
 #include <QTimer>
 #include <QProcess>
 #include <QRegExp>
