@@ -26,10 +26,12 @@ QRegExp rx("[^0-9.]");          //Regex keeps floating number.
 QProcess *myProc;               //Declare myProc.
 
 QStringList myAlgoName;         //Name of active algo.
+QString *algoOutput;            //List of all output for fake terminal.
 
 int nEnabledAlg;                //Number of active algo.
 int nExecutePatt;               //Number of patterns to execute.
 int currentAlgo;                //Current algorithm.
+int countPercent = 0;           //Percent of currente execute algorithm.
 
 double minPlen = 2;             //Min plen.
 double maxPlen = 4096;          //Max plen.
@@ -37,6 +39,7 @@ double currentPlen;             //Current plen.
 
 QVBoxLayout *layoutLegend;      //Declare new Layout.
 
+QString completeOutput = "";    //Output string goint to fake terminal.
 QString parameters = "";        //Parameters to send in smart.
 QString timeAlgo = "";          //String with result algo time.
 QString expCode = "";           //String with code ex.
@@ -129,6 +132,7 @@ QString MainWindow::createHeadEXP(){
 
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
+
     qDebug() << " Ho Finito";
 
     ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
@@ -146,6 +150,22 @@ void MainWindow::updateGUI(){
 
     QString javascriptCode = "";
     QString tmpOutput = myProc->readAllStandardOutput().replace('\b',"");
+
+    if (tmpOutput.contains("%")){
+
+        if (countPercent == 0 && currentAlgo == 0)
+            completeOutput += createHeadEXP();
+
+        int tmpPercent = (100*countPercent)/ui->Pset_lineEdit->text().toDouble();
+
+        algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                    "\t" + myAlgoName[currentAlgo] + " \t[" + QString::number(tmpPercent) + "%]\t" ;
+
+        countPercent += tmpOutput.count('%');
+
+        ui->fakeTerminal_textEdit->setText(completeOutput + algoOutput[currentAlgo]);
+
+    }
 
     if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
 
@@ -176,35 +196,45 @@ void MainWindow::updateGUI(){
 
             if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
 
-                if(currentAlgo == 0)
-                    ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + createHeadEXP());
-
                 //Support debug @Helias.
-                ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rx,"") + " ms" );
                 qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rx,"");
+
+
+                algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                            "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rx,"") + " ms" ;
+
+                completeOutput += algoOutput[currentAlgo];
+                ui->fakeTerminal_textEdit->setText(completeOutput);
+
 
                 timeAlgo += tmpOutput.replace(rx,"") + ',';
                 currentAlgo++;
+                countPercent=0;
+
             }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
 
-                if(currentAlgo == 0)
-                    ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + createHeadEXP());
-
                 //Support debug @Helias.
-                ui->fakeTerminal_textEdit->setText(ui->fakeTerminal_textEdit->toPlainText() + "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]\t" + myAlgoName[currentAlgo] + "\t[--]" );
                 qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : null";
+
+                algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                            "\t" + myAlgoName[currentAlgo] + " \t[--]\t" ;
+
+                completeOutput += algoOutput[currentAlgo];
+                ui->fakeTerminal_textEdit->setText(completeOutput);
 
                 timeAlgo += "null,";
                 currentAlgo++;
+                countPercent=0;
             }
 
-            //Go to the end of fakeTerminal.
-            QTextCursor c = ui->fakeTerminal_textEdit->textCursor();
-            c.movePosition(QTextCursor::End);
-            ui->fakeTerminal_textEdit->setTextCursor(c);
         }
 
     }
+
+    //Go to the end of fakeTerminal.
+    QTextCursor c = ui->fakeTerminal_textEdit->textCursor();
+    c.movePosition(QTextCursor::End);
+    ui->fakeTerminal_textEdit->setTextCursor(c);
 
 }
 
@@ -213,9 +243,15 @@ void MainWindow::loadChart(){
 
     //Inizialize and clear all supportVariables.
     nEnabledAlg = 0;
+    countPercent = 0;
+    currentAlgo = 0;
+
     myAlgoName.clear();
-    expCode = "";
+
     ui->fakeTerminal_textEdit->setText("");
+
+    expCode = "";
+    completeOutput = "";
 
     generateEXPCode();
 
@@ -297,6 +333,10 @@ void MainWindow::loadChart(){
 
     QUrl url("chart.html");             //Url of chart.
     ui->chart_webView->load(url);       //Insert chart in webView.
+
+    algoOutput = new QString[nEnabledAlg];
+    for (int i=0; i<nEnabledAlg; i++)
+        algoOutput[i] = "";
 
 }
 
