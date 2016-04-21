@@ -61,6 +61,35 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tsize_lineEdit->setText(Default1Mb);
     ui->Tb_lineEdit->setText(DefaultTb300);
 
+
+    QFile SmartCheck("smart");
+    QFile SelectCheck("select");
+    QFile TestCheck("test");
+
+
+
+    if(!(SmartCheck.exists())){
+        qDebug()<< "Entra";
+        const QString Problem="Need Smart in the folder\n\n";
+
+        QMessageBox::information(this,"About!",Problem);
+
+    }else if(!(SelectCheck.exists())){
+             qDebug()<< "Entra";
+             const QString Problem="Need Smart in the folder\n\n";
+
+             QMessageBox::information(this,"About!",Problem);
+
+    }else if(!(TestCheck.exists())){
+             qDebug()<< "Entra";
+             const QString Problem="Need Smart in the folder\n\n";
+
+             QMessageBox::information(this,"About!",Problem);
+
+    }
+
+
+
     layoutLegend = new QVBoxLayout();
 
 }
