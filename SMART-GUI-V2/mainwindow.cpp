@@ -192,25 +192,17 @@ void MainWindow::updateGUI(){
                 //Send js code.
                 ui->chart_webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
 
-                //Support debug @Helias.
-                qDebug() << "Aggiorna il grafico." ;
-                qDebug() << "Valori: " << timeAlgo.left(timeAlgo.length() - 1);
-                qDebug() << "Lenght: " << currentPlen;
-                qDebug() << "Javascript code: " << javascriptCode;
-
                 timeAlgo = "";
-                currentPlen*=2;
                 currentAlgo = 0;
+
+                if (currentPlen == maxPlen)
+                    currentPlen = minPlen;
+                else
+                    currentPlen*=2;
+
             }
 
             if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
-
-
-                /*
-
-                REMENBER TO RESET PATT WHEN currePat = maxPat  !!!
-
-                */
 
                 if(ui->Pre_checkBox->isChecked()){
                     QString timePre = "";
@@ -219,41 +211,30 @@ void MainWindow::updateGUI(){
                         if(tmpPreTime[k].contains("ms")){
                             timeAlgo += tmpPreTime[k].replace(rxFloat,"") + ',';
                             timePre += " + " + tmpPreTime[k].replace(rxFloat,"");
-                        }else{
+                        }else
                             timePre += tmpPreTime[k].replace(rxFloat,"");
-                        }
 
                     }
 
-                    //Support debug @Helias.
-                    qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rxFloat,"");
-
                     algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                                "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + timePre + " ms" ;
-
-                    completeOutput += algoOutput[currentAlgo];
-                    ui->fakeTerminal_textEdit->setText(completeOutput);
-
-                    currentAlgo++;
-                    countPercent=0;
+                                                "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + timePre + " ms" ; 
 
                 }else{
-
-                    //Support debug @Helias.
-                    qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rxFloat,"");
 
                     algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
                                                 "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rxFloat,"") + " ms" ;
 
-                    completeOutput += algoOutput[currentAlgo];
-                    ui->fakeTerminal_textEdit->setText(completeOutput);
-
 
                     timeAlgo += tmpOutput.replace(rxFloat,"") + ',';
-                    currentAlgo++;
-                    countPercent=0;
 
                 }
+
+                completeOutput += algoOutput[currentAlgo];
+                ui->fakeTerminal_textEdit->setText(completeOutput);
+
+
+                currentAlgo++;
+                countPercent=0;
 
             }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
 
@@ -262,8 +243,6 @@ void MainWindow::updateGUI(){
                 if ( tmpOutput.contains("[ERROR]"))     tmpError = "ERROR";
                 else if (tmpOutput.contains("[OUT]"))   tmpError = "OUT";
 
-                //Support debug @Helias.
-                qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : null";
 
                 algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
                                             "\t" + myAlgoName[currentAlgo] + " \t[" + tmpError + "]\t" ;
