@@ -21,7 +21,7 @@
 
 #define NumAlgo 500             //Define the number of algorithm
 
-QRegExp rx("[^0-9.]");          //Regex keeps floating number.
+QRegExp rxFloat("[^0-9.]");     //Regex keeps floating number.
 
 QProcess *myProc;               //Declare myProc.
 
@@ -43,6 +43,8 @@ QString completeOutput = "";    //Output string goint to fake terminal.
 QString parameters = "";        //Parameters to send in smart.
 QString timeAlgo = "";          //String with result algo time.
 QString expCode = "";           //String with code ex.
+
+bool forcedStop = false;        //Bool true if click stop button.
 
 QString Default500 = "500";
 QString Default1Mb = "1";
@@ -135,10 +137,17 @@ void MainWindow::processEnded(){
 
     qDebug() << " Ho Finito";
 
-    ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
-                                        "\n\n  -----------------------------------------------------------------------------" +
-                                        "\n  OUTPUT RUNNING TIMES " + expCode
-                                        );
+    if(forcedStop)
+        ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
+                                            "\n\n  -----------------------------------------------------------------------------" +
+                                            "\n  STOPPED BY USER " + expCode
+                                            );
+    else{
+        ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
+                                            "\n\n  -----------------------------------------------------------------------------" +
+                                            "\n  OUTPUT RUNNING TIMES " + expCode
+                                            );
+    }
 
     ui->start_pushButton->setEnabled(true);
     ui->stop_pushButton->setEnabled(false);
@@ -196,28 +205,59 @@ void MainWindow::updateGUI(){
 
             if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
 
-                //Support debug @Helias.
-                qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rx,"");
 
+                /*
+
+                REMENBER TO RESET PATT WHEN currePat = maxPat  !!!
+
+                if(pre){
+                    QString timePre = "";
+                    QStrinList tmpPreTime = tmpOutput.split('+');
+                    for( int k=0; k<tmpPreTime.lenght(); k++){
+                        if(tmpPreTime[k].contains("ms"){
+                            timeAlgo += tmpPreTime[k].replace(rxFloat,"") + ',';
+                            timePre += " + " + tmpPreTime[k].replace(rxFloat,"")
+                        }else{
+                            timePre += tmpPreTime[k].replace(rxFloat,"");
+                        }
+
+                    }
+
+                algoOutput[currentAlgo] = ..... ;
+
+                }else{
+
+}
+
+
+                */
+
+                //Support debug @Helias.
+                qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : " << tmpOutput.replace(rxFloat,"");
 
                 algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                            "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rx,"") + " ms" ;
+                                            "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rxFloat,"") + " ms" ;
 
                 completeOutput += algoOutput[currentAlgo];
                 ui->fakeTerminal_textEdit->setText(completeOutput);
 
 
-                timeAlgo += tmpOutput.replace(rx,"") + ',';
+                timeAlgo += tmpOutput.replace(rxFloat,"") + ',';
                 currentAlgo++;
                 countPercent=0;
 
             }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
 
+                QString tmpError = "--";
+
+                if ( tmpOutput.contains("[ERROR]"))     tmpError = "ERROR";
+                else if (tmpOutput.contains("[OUT]"))   tmpError = "OUT";
+
                 //Support debug @Helias.
                 qDebug() << "[" << currentAlgo+1 << "/" << nEnabledAlg << "] " << myAlgoName[currentAlgo] << " : null";
 
                 algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                            "\t" + myAlgoName[currentAlgo] + " \t[--]\t" ;
+                                            "\t" + myAlgoName[currentAlgo] + " \t[" + tmpError + "]\t" ;
 
                 completeOutput += algoOutput[currentAlgo];
                 ui->fakeTerminal_textEdit->setText(completeOutput);
@@ -242,6 +282,8 @@ void MainWindow::updateGUI(){
 void MainWindow::loadChart(){
 
     //Inizialize and clear all supportVariables.
+    forcedStop = false;
+
     nEnabledAlg = 0;
     countPercent = 0;
     currentAlgo = 0;
@@ -603,6 +645,7 @@ void MainWindow::on_start_pushButton_released() {
 }
 
 void MainWindow::on_stop_pushButton_released(){
+    forcedStop = true;
     ui->start_pushButton->setEnabled(true);
     ui->stop_pushButton->setEnabled(false);
     myProc->kill();
