@@ -420,7 +420,7 @@ void MainWindow::on_start_pushButton_released() {
         if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->Text_checkBox->isChecked())
+        if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
 
 
@@ -449,7 +449,7 @@ void MainWindow::on_start_pushButton_released() {
         if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->Text_checkBox->isChecked())
+        if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
 
 
@@ -482,7 +482,7 @@ void MainWindow::on_start_pushButton_released() {
         if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->Text_checkBox->isChecked())
+        if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
 
 
@@ -513,7 +513,7 @@ void MainWindow::on_start_pushButton_released() {
         if(ui->Txt_checkBox->isChecked())
            text2 += " -txt ";
 
-        if(ui->Text_checkBox->isChecked())
+        if(ui->Tex_checkBox->isChecked())
            text2 += " -tex ";
 
         parameters = "-text " +
