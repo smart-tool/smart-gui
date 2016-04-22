@@ -135,16 +135,12 @@ QString MainWindow::createHeadEXP(){
 
 }
 
-
 int calculatePercentage(){
     return (helpCounterAlg*100)/(nEnabledAlg * nExecutePatt);
 }
 
-
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
-
-    qDebug() << " Ho Finito";
 
     if(forcedStop)
         ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
@@ -153,6 +149,7 @@ void MainWindow::processEnded(){
                                             );
     else{
         ui->progressBar->setValue(calculatePercentage());
+        QMessageBox::information(this,"Done!","Test complete.");
         ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
                                             "\n\n  -----------------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
@@ -508,182 +505,97 @@ void MainWindow::on_start_pushButton_pressed() {
 
 void MainWindow::on_start_pushButton_released() {
 
-    QString text2 = "";
-    bool canI = false;
+    QString tmpPr = "";
 
-    if( ( (ui->SimpleP_lineEdit->text() != "") || (ui->SimpleT_lineEdit->text() != "") ) ){   //SIMPLE
+    QFile SmartCheck("smart");
+    QFile SelectCheck("select");
+    QFile TestCheck("test");
 
-        if(ui->Occ_checkBox->isChecked())
-           text2 += " -occ ";
-
-        if(ui->Dif_checkBox->isChecked())
-           text2 += " -dif ";
-
-        if(ui->Std_checkBox->isChecked())
-           text2 += " -std ";
-
-        if(ui->Txt_checkBox->isChecked())
-           text2 += " -txt ";
-
-        if(ui->Tex_checkBox->isChecked())
-           text2 += " -tex ";
-
-        if(ui->Pre_checkBox->isChecked())
-            text2 += " -pre ";
-
-
-        parameters = "-simple " +
-                    ui->SimpleP_lineEdit->text() +
-                    " " +
-                    ui->SimpleT_lineEdit->text() +
-                    text2;
-
-        canI = true;
-
-    }else if( ( (ui->PlenU_lineEdit->text()!="") || (ui->PlenL_lineEdit->text()!="") ) ){  //PLEN
+    if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
         if(ui->Occ_checkBox->isChecked())
-           text2 += " -occ ";
+           tmpPr += " -occ ";
 
         if(ui->Dif_checkBox->isChecked())
-           text2 += " -dif ";
+           tmpPr += " -dif ";
 
         if(ui->Std_checkBox->isChecked())
-           text2 += " -std ";
+           tmpPr += " -std ";
 
         if(ui->Txt_checkBox->isChecked())
-           text2 += " -txt ";
+           tmpPr += " -txt ";
 
         if(ui->Tex_checkBox->isChecked())
-           text2 += " -tex ";
+           tmpPr += " -tex ";
 
         if(ui->Pre_checkBox->isChecked())
-            text2 += " -pre ";
+            tmpPr += " -pre ";
+
+        if( ( (ui->SimpleP_lineEdit->text() != "") || (ui->SimpleT_lineEdit->text() != "") ) ){   //SIMPLE
+
+            parameters = "-simple " + ui->SimpleP_lineEdit->text() + " " + ui->SimpleT_lineEdit->text() +
+                         tmpPr;
 
 
-        parameters = "-text " +
-                    ui->Text_comboBox->currentText() +
-                    " -pset "+
-                    ui->Pset_lineEdit->text()+
-                    " -tsize "+ui->Tsize_lineEdit->text() +
-                    " -tb " +
-                    ui->Tb_lineEdit->text() +
-                    " -plen " +
-                    ui->PlenU_lineEdit->text() +
-                    " " +
-                    ui->PlenL_lineEdit->text() +
-                    text2;
+        }else if( ( (ui->PlenU_lineEdit->text()!="") || (ui->PlenL_lineEdit->text()!="") ) ){  //PLEN
 
-        canI = true;
-
-    }else if(ui->Short_checkBox->isChecked()){  //SHORT
-
-        if(ui->Occ_checkBox->isChecked())
-           text2 += " -occ ";
-
-        if(ui->Dif_checkBox->isChecked())
-           text2 += " -dif ";
-
-        if(ui->Std_checkBox->isChecked())
-           text2 += " -std ";
-
-        if(ui->Txt_checkBox->isChecked())
-           text2 += " -txt ";
-
-        if(ui->Tex_checkBox->isChecked())
-           text2 += " -tex ";
-
-        if(ui->Pre_checkBox->isChecked())
-            text2 += " -pre ";
+            parameters = "-text " + ui->Text_comboBox->currentText() +
+                        " -pset "+ ui->Pset_lineEdit->text()+
+                        " -tsize " + ui->Tsize_lineEdit->text() +
+                        " -tb " + ui->Tb_lineEdit->text() +
+                        " -plen " + ui->PlenU_lineEdit->text() + " " + ui->PlenL_lineEdit->text() +
+                        tmpPr;
 
 
-        parameters = "-text " +
-                    ui->Text_comboBox->currentText() +
-                    " -pset "+
-                    ui->Pset_lineEdit->text()+
-                    " -tsize " +
-                    ui->Tsize_lineEdit->text() +
-                    " -tb " +
-                    ui->Tb_lineEdit->text() +
-                    " -short " +
-                    text2;
+        }else if(ui->Short_checkBox->isChecked()){  //SHORT
 
-        canI = true;
+            parameters = "-text " + ui->Text_comboBox->currentText() +
+                        " -pset "+ ui->Pset_lineEdit->text()+
+                        " -tsize " + ui->Tsize_lineEdit->text() +
+                        " -tb " + ui->Tb_lineEdit->text() + " -short " + tmpPr;
 
-    }else{
+        }else{
 
-        if(ui->Occ_checkBox->isChecked())
-           text2 += " -occ ";
+            parameters = "-text " + ui->Text_comboBox->currentText() +
+                        " -pset "+ ui->Pset_lineEdit->text()+
+                        " -tsize " + ui->Tsize_lineEdit->text() +
+                        " -tb " + ui->Tb_lineEdit->text() +
+                        tmpPr;
 
-        if(ui->Dif_checkBox->isChecked())
-           text2 += " -dif ";
+        }
 
-        if(ui->Std_checkBox->isChecked())
-           text2 += " -std ";
+        if(ui->PlenU_lineEdit->text()!="" || ui->PlenU_lineEdit->text()!=""){
+            minPlen = ui->PlenU_lineEdit->text().toDouble();
+            maxPlen = ui->PlenL_lineEdit->text().toDouble();
+        }else{
+            minPlen = 2;
+            maxPlen = 4096;
+        }
 
-        if(ui->Txt_checkBox->isChecked())
-           text2 += " -txt ";
 
-        if(ui->Tex_checkBox->isChecked())
-           text2 += " -tex ";
+        ui->stop_pushButton->setEnabled(true);
+        ui->start_pushButton->setEnabled(false);
 
-        if(ui->Pre_checkBox->isChecked())
-            text2 += " -pre ";
+        loadChart();
 
-        parameters = "-text " +
-                    ui->Text_comboBox->currentText() +
-                    " -pset "+
-                    ui->Pset_lineEdit->text()+
-                    " -tsize " +
-                    ui->Tsize_lineEdit->text() +
-                    " -tb " +
-                    ui->Tb_lineEdit->text() +
-                    text2;
+        QString execute = "./smart " + parameters;
+        qDebug() << execute;
 
-        canI = true;
+        nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
 
-    }
+        minPlen = pow(2, ceil ( Log2(minPlen) ) );
+        maxPlen = pow(2, floor ( Log2(maxPlen) ) );
 
-    if(ui->PlenU_lineEdit->text()!="" || ui->PlenU_lineEdit->text()!=""){
-        minPlen = ui->PlenU_lineEdit->text().toDouble();
-        maxPlen = ui->PlenL_lineEdit->text().toDouble();
-    }else{
-        minPlen = 2;
-        maxPlen = 4096;
-    }
+        currentPlen = minPlen;
 
-    if (canI) {
+        myProc = new QProcess(this);                                                    //Create process.
+        connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
+        connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
+        myProc->start(execute);                                                         //Start process.
 
-        QFile SmartCheck("smart");
-        QFile SelectCheck("select");
-        QFile TestCheck("test");
+    }else
+        QMessageBox::warning(this,"Error!","Need SMART source in folder.");
 
-        if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
-
-            ui->stop_pushButton->setEnabled(true);
-            ui->start_pushButton->setEnabled(false);
-
-            loadChart();
-
-            QString execute = "./smart " + parameters;
-            qDebug() << execute;
-
-            nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
-
-            minPlen = pow(2, ceil ( Log2(minPlen) ) );
-            maxPlen = pow(2, floor ( Log2(maxPlen) ) );
-
-            currentPlen = minPlen;
-
-            myProc = new QProcess(this);                                                    //Create process.
-            connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
-            connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
-            myProc->start(execute);                                                         //Start process.
-
-        }else
-            QMessageBox::warning(this,"Error!","Need SMART source in folder.");
-
-    }
 
 }
 
