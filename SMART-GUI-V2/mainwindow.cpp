@@ -55,6 +55,8 @@ QString Default500 = "500";
 QString Default1Mb = "1";
 QString DefaultTb300 = "300";
 
+QWebView *chartWebView;
+
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
@@ -65,6 +67,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tb_lineEdit->setText(DefaultTb300);
 
     layoutLegend = new QVBoxLayout();
+
+    chartWebView = new QWebView();
+    ui->webView_Layout->layout()->addWidget(chartWebView);
 
 }
 
@@ -202,8 +207,10 @@ void MainWindow::updateGUI(){
                 //Create the javascript code.
                 javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
 
+                qDebug() << "Send JS Code : " << javascriptCode;
+
                 //Send js code.
-                ui->chart_webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+                chartWebView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
 
                 timeAlgo = "";
                 currentAlgo = 0;
@@ -291,15 +298,23 @@ void clearLayout(){
             clearLayout();
             delete item->layout();
         }
-        if (item->widget()) {
+        if (item->widget())
             delete item->widget();
-        }
+
         delete item;
     }
 }
 
 //Inizialize and clear all supportVariables
 void MainWindow::inizializeAll(){
+
+    ui->webView_Layout->layout()->removeWidget(chartWebView);
+
+    chartWebView = NULL;
+    delete chartWebView;
+    chartWebView = new QWebView();
+
+    ui->webView_Layout->layout()->addWidget(chartWebView);
 
     ui->progressBar->setValue(0);
     helpCounterAlg = 0;
@@ -399,7 +414,7 @@ void MainWindow::loadChart(){
     QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
 
     QUrl url("chart.html");             //Url of chart.
-    ui->chart_webView->load(url);       //Insert chart in webView.
+    chartWebView->load(url);            //Insert chart in webView.
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();
@@ -576,7 +591,6 @@ void MainWindow::on_start_pushButton_released() {
             maxPlen = 4096;
         }
 
-
         ui->stop_pushButton->setEnabled(true);
         ui->start_pushButton->setEnabled(false);
 
@@ -603,15 +617,14 @@ void MainWindow::on_start_pushButton_released() {
 
 }
 
-void MainWindow::on_stop_pushButton_released(){
+void MainWindow::on_stop_pushButton_released() {
     forcedStop = true;
     ui->start_pushButton->setEnabled(true);
     ui->stop_pushButton->setEnabled(false);
     myProc->kill();
 }
 
-void MainWindow::on_actionAdd_Algorithms_triggered()
-{
+void MainWindow::on_actionAdd_Algorithms_triggered() {
     AddAlgo openAddAlgoWin;
     openAddAlgoWin.setModal(true);
     openAddAlgoWin.exec();
