@@ -6,7 +6,10 @@
 #include <QDebug>
 #include <QString>
 #include <QStringList>
+
 #include <QWebView>
+#include <QWebFrame>
+
 #include <QTimer>
 #include <QProcess>
 #include <QRegExp>
@@ -18,6 +21,7 @@
 #include <cmath>
 
 #include "selectalgwindow.h"
+#include "addalgo.h"
 
 #define NumAlgo 500             //Define the number of algorithm
 
@@ -604,4 +608,12 @@ void MainWindow::on_stop_pushButton_released(){
     ui->start_pushButton->setEnabled(true);
     ui->stop_pushButton->setEnabled(false);
     myProc->kill();
+}
+
+void MainWindow::on_actionAdd_Algorithms_triggered()
+{
+    AddAlgo openAddAlgoWin;
+    openAddAlgoWin.setModal(true);
+    openAddAlgoWin.exec();
+
 }

@@ -4,23 +4,25 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
-QT       += webkit
+QT       += core gui webkit webkitwidgets
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+# greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = SMART-GUI-V2
 TEMPLATE = app
 
 SOURCES += main.cpp\
            mainwindow.cpp \
-           selectalgwindow.cpp
+           selectalgwindow.cpp \
+    addalgo.cpp
 
 HEADERS += mainwindow.h \
-           selectalgwindow.h
+           selectalgwindow.h \
+    addalgo.h
 
 FORMS   += mainwindow.ui \
-           selectalgwindow.ui
+           selectalgwindow.ui \
+    addalgo.ui
 
 RESOURCES += \
     chartfile.qrc
