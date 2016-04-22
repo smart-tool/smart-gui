@@ -73,14 +73,25 @@ void AddAlgo::on_pushButton_clicked()
                     system(AddSequence2);
 
 
+
                     if(this->Selected){
 
                         QString SelectSequence="./select "+NameAlgo;
                         QByteArray ba=SelectSequence.toLatin1();
                         const char * SelectSequence2= ba.data();
                         system(SelectSequence2);
+                        QString error="Algortmhs add and select \n\n";
+                        QMessageBox::information(this,"ADD and Select",error);
+
+                    }else {
+
+                        QString error="Algortmhs add \n\n";
+                        QMessageBox::information(this,"ADD",error);
 
                     }
+
+
+
 
 
             }
