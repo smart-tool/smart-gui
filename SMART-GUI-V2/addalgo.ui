@@ -29,14 +29,14 @@
      <item>
       <widget class="QCheckBox" name="checkBox">
        <property name="text">
-        <string>CheckBox</string>
+        <string>Select ?</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="pushButton">
        <property name="text">
-        <string>PushButton</string>
+        <string>Add</string>
        </property>
       </widget>
      </item>
