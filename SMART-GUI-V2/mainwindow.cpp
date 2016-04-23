@@ -202,8 +202,6 @@ void MainWindow::updateGUI(){
                 //Create the javascript code.
                 javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
 
-                qDebug() << "Send JS Code : " << javascriptCode;
-
                 //Send js code.
                 ui->chart_webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
 
@@ -218,6 +216,22 @@ void MainWindow::updateGUI(){
             }
 
             if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
+
+                if( ui->Std_checkBox->isChecked() || ui->Dif_checkBox->isChecked() || ui->Occ_checkBox->isChecked() ){
+                    QStringList tmpStd = tmpOutput.split(rxFloat);
+                    //qDebug() << tmpStd;
+
+                    QStringList tmpStd2;
+                    for(int i=0; i<tmpStd.length();i++)
+                        if(tmpStd[i] != "")
+                            tmpStd2 << tmpStd[i];
+
+                    if(ui->Pre_checkBox->isChecked())
+                    tmpOutput = tmpStd2[1];
+                    else
+                    tmpOutput = tmpStd2[0];
+
+                }
 
                 if(ui->Pre_checkBox->isChecked()){
                     QString timePre = "";
