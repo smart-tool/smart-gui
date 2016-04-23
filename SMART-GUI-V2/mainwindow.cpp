@@ -55,8 +55,6 @@ QString Default500 = "500";
 QString Default1Mb = "1";
 QString DefaultTb300 = "300";
 
-QWebView *chartWebView;
-
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
@@ -67,9 +65,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tb_lineEdit->setText(DefaultTb300);
 
     layoutLegend = new QVBoxLayout();
-
-    chartWebView = new QWebView();
-    ui->webView_Layout->layout()->addWidget(chartWebView);
 
 }
 
@@ -210,7 +205,7 @@ void MainWindow::updateGUI(){
                 qDebug() << "Send JS Code : " << javascriptCode;
 
                 //Send js code.
-                chartWebView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+                ui->chart_webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
 
                 timeAlgo = "";
                 currentAlgo = 0;
@@ -308,13 +303,7 @@ void clearLayout(){
 //Inizialize and clear all supportVariables
 void MainWindow::inizializeAll(){
 
-    ui->webView_Layout->layout()->removeWidget(chartWebView);
-
-    chartWebView = NULL;
-    delete chartWebView;
-    chartWebView = new QWebView();
-
-    ui->webView_Layout->layout()->addWidget(chartWebView);
+    timeAlgo = "";
 
     ui->progressBar->setValue(0);
     helpCounterAlg = 0;
@@ -414,7 +403,7 @@ void MainWindow::loadChart(){
     QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
 
     QUrl url("chart.html");             //Url of chart.
-    chartWebView->load(url);            //Insert chart in webView.
+    ui->chart_webView->load(url);       //Insert chart in webView.
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();
