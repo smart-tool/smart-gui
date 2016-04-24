@@ -367,13 +367,13 @@
        <widget class="QTextEdit" name="fakeTerminal_textEdit">
         <property name="minimumSize">
          <size>
-          <width>400</width>
+          <width>380</width>
           <height>0</height>
          </size>
         </property>
         <property name="maximumSize">
          <size>
-          <width>400</width>
+          <width>500</width>
           <height>16777215</height>
          </size>
         </property>
@@ -411,7 +411,7 @@ p, li { white-space: pre-wrap; }
        <widget class="QScrollArea" name="scrollArea">
         <property name="minimumSize">
          <size>
-          <width>150</width>
+          <width>130</width>
           <height>0</height>
          </size>
         </property>
@@ -435,7 +435,7 @@ p, li { white-space: pre-wrap; }
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>148</width>
+           <width>128</width>
            <height>524</height>
           </rect>
          </property>

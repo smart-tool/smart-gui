@@ -191,11 +191,37 @@ void MainWindow::updateGUI(){
 
     if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
 
+        QString infoAlgo = "";
         QStringList splittedOutput;
         splittedOutput << tmpOutput.split('\t');
 
         for(int j=0; j<splittedOutput.length(); j++){
-            tmpOutput = splittedOutput[j].replace(" ","").replace('\t',"").replace('\n',"");
+
+            tmpOutput = splittedOutput[j].replace('\n',"");
+            QStringList splittedBySpace = tmpOutput.split("  "); //Split by doubleSpace
+
+            for(int i=0; i<splittedBySpace.length(); i++){
+                if(splittedBySpace[i].contains("ms") && tmpOutput.contains('.')){
+
+                    infoAlgo += '\t' + splittedBySpace[i];
+
+                    if(splittedBySpace[i].contains('+')){
+                        QStringList tmpTimePre = splittedBySpace[i].split('+');
+                        for(int f=0; f<tmpTimePre.length(); f++)
+                            if(tmpTimePre[f].contains("ms"))
+                                timeAlgo += tmpTimePre[f].replace(rxFloat,"") + ',';
+
+                    }else
+                        timeAlgo += splittedBySpace[i].replace(rxFloat,"") + ',';
+                }
+
+                if(splittedBySpace[i].contains("std"))
+                    infoAlgo += '\t' + splittedBySpace[i];
+
+                if(splittedBySpace[i].contains('[') &&  splittedBySpace[i].contains(']') && splittedBySpace[i].contains(',')){
+                    infoAlgo += '\t' + splittedBySpace[i];
+                }
+            }
 
             if (currentAlgo == nEnabledAlg){
 
@@ -217,46 +243,8 @@ void MainWindow::updateGUI(){
 
             if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
 
-                if( ui->Std_checkBox->isChecked() || ui->Dif_checkBox->isChecked() || ui->Occ_checkBox->isChecked() ){
-                    QStringList tmpStd = tmpOutput.split(rxFloat);
-                    //qDebug() << tmpStd;
-
-                    QStringList tmpStd2;
-                    for(int i=0; i<tmpStd.length();i++)
-                        if(tmpStd[i] != "")
-                            tmpStd2 << tmpStd[i];
-
-                    if(ui->Pre_checkBox->isChecked())
-                    tmpOutput = tmpStd2[1];
-                    else
-                    tmpOutput = tmpStd2[0];
-
-                }
-
-                if(ui->Pre_checkBox->isChecked()){
-                    QString timePre = "";
-                    QStringList tmpPreTime = tmpOutput.split('+');
-                    for(int k=0; k<tmpPreTime.length(); k++){
-                        if(tmpPreTime[k].contains("ms")){
-                            timeAlgo += tmpPreTime[k].replace(rxFloat,"") + ',';
-                            timePre += " + " + tmpPreTime[k].replace(rxFloat,"");
-                        }else
-                            timePre += tmpPreTime[k].replace(rxFloat,"");
-
-                    }
-
-                    algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                                "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + timePre + " ms" ; 
-
-                }else{
-
-                    algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                                "\t" + myAlgoName[currentAlgo] + " \t[OK]\t" + tmpOutput.replace(rxFloat,"") + " ms" ;
-
-
-                    timeAlgo += tmpOutput.replace(rxFloat,"") + ',';
-
-                }
+                algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                            "\t" + myAlgoName[currentAlgo] + " \t[OK]" + infoAlgo ;
 
                 completeOutput += algoOutput[currentAlgo];
                 ui->fakeTerminal_textEdit->setText(completeOutput);
