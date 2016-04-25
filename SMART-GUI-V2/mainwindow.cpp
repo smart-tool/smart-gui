@@ -44,10 +44,11 @@ double currentPlen;             //Current plen.
 
 QVBoxLayout *layoutLegend;      //Declare new Layout.
 
-QString completeOutput = "";    //Output string goint to fake terminal.
-QString parameters = "";        //Parameters to send in smart.
-QString timeAlgo = "";          //String with result algo time.
-QString expCode = "";           //String with code ex.
+QString completeOutput = "";               //Output string goint to fake terminal.
+QString parameters = "";                   //Parameters to send in smart.
+QString timeAlgo = "";                     //String with result algo time.
+QString expCode = "";                      //String with code ex.
+QString folderSource = "smartSource";      //Folder contains source of smart.
 
 bool forcedStop = false;        //Bool true if click stop button.
 
@@ -103,7 +104,7 @@ void MainWindow::on_actionAbout_SMART_GUI_triggered() {
 
 //Load into array parameters the status of algo.
 void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
-    FILE *fp = fopen("source/algorithms.h", "r");
+    FILE *fp = fopen("smartSource/source/algorithms.h", "r");
     char c; int i=0;
     while( (c=getc(fp)) != EOF )
         if(c=='#') {
@@ -517,9 +518,9 @@ void MainWindow::on_start_pushButton_released() {
 
     QString tmpPr = "";
 
-    QFile SmartCheck("smart");
-    QFile SelectCheck("select");
-    QFile TestCheck("test");
+    QFile SmartCheck(folderSource + "/smart");
+    QFile SelectCheck(folderSource + "/select");
+    QFile TestCheck(folderSource + "/test");
 
     if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
@@ -600,6 +601,7 @@ void MainWindow::on_start_pushButton_released() {
         myProc = new QProcess(this);                                                    //Create process.
         connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
         connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
+        myProc->setWorkingDirectory(folderSource);                                      //Set the folder with SMART.
         myProc->start(execute);                                                         //Start process.
 
     }else

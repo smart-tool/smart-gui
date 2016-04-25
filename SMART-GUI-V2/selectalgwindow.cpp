@@ -8,11 +8,13 @@
 #include <QMessageBox>
 #include <cstdlib>
 
-//Define the number of algorithm.
-#define NumAlgo 500
+#define NumAlgo 500                        //Define the number of algorithm.
+QCheckBox *arrayCheckBox[NumAlgo];         //Declary array of checkBox.
+int EXECUTE[NumAlgo];                      //Declare EXECTUE array with the state of alrgorithm (0/1).
+char *ALGO_NAME[NumAlgo];                  //Declare array ALGO_NAME with the name of all string matching algorithms.
 
 void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {
-    FILE *fp = fopen("source/algorithms.h", "r");
+    FILE *fp = fopen("smartSource/source/algorithms.h", "r");
     char c; int i=0;
     while( (c=getc(fp)) != EOF )
         if(c=='#') {
@@ -27,10 +29,6 @@ void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {
     while(i<NumAlgo) ALGO_NAME[i++]=NULL;
     fclose(fp);
 }
-
-QCheckBox *arrayCheckBox[NumAlgo];  //Declary array of checkBox.
-int EXECUTE[NumAlgo];               //Declare EXECTUE array with the state of alrgorithm (0/1).
-char *ALGO_NAME[NumAlgo];           //Declare array ALGO_NAME with the name of all string matching algorithms.
 
 SelectAlgWindow::SelectAlgWindow(QWidget *parent) :
     QDialog(parent),
@@ -104,7 +102,7 @@ void SelectAlgWindow::on_update_Button_clicked(){
     }
 
     //Update / Write the algorithms.h file.
-    FILE *fp = fopen("source/algorithms.h", "w");
+    FILE *fp = fopen("smartSource/source/algorithms.h", "w");
 
     for(int j=0; j<NumAlgo; j++)
         if(ALGO_NAME[j])
