@@ -399,13 +399,7 @@ p, li { white-space: pre-wrap; }
        </widget>
       </item>
       <item>
-       <widget class="QWebView" name="chart_webView">
-        <property name="url">
-         <url>
-          <string>about:blank</string>
-         </url>
-        </property>
-       </widget>
+       <layout class="QVBoxLayout" name="layoutWebView"/>
       </item>
       <item>
        <widget class="QScrollArea" name="scrollArea">
@@ -435,7 +429,7 @@ p, li { white-space: pre-wrap; }
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>128</width>
+           <width>198</width>
            <height>524</height>
           </rect>
          </property>
@@ -493,13 +487,6 @@ p, li { white-space: pre-wrap; }
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>QWebView</class>
-   <extends>QWidget</extends>
-   <header>QtWebKitWidgets/QWebView</header>
-  </customwidget>
- </customwidgets>
  <tabstops>
   <tabstop>Pset_lineEdit</tabstop>
   <tabstop>Tsize_lineEdit</tabstop>

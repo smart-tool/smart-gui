@@ -10,6 +10,8 @@
 #include <QWebView>
 #include <QWebFrame>
 
+#include <QTabWidget>
+
 #include <QTimer>
 #include <QProcess>
 #include <QRegExp>
@@ -56,6 +58,9 @@ QString Default500 = "500";
 QString Default1Mb = "1";
 QString DefaultTb300 = "300";
 
+QWebView *chartWebView;
+QTabWidget *tabWebView;
+
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
@@ -66,6 +71,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tb_lineEdit->setText(DefaultTb300);
 
     layoutLegend = new QVBoxLayout();
+
+    tabWebView = new QTabWidget;
+    ui->layoutWebView->addWidget(tabWebView);
 
 }
 
@@ -176,9 +184,6 @@ void MainWindow::updateGUI(){
 
     if (tmpOutput.contains("%")){
 
-        if (countPercent == 0 && currentAlgo == 0)
-            completeOutput += createHeadEXP();
-
         int tmpPercent = (100*countPercent)/ui->Pset_lineEdit->text().toDouble();
 
         algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
@@ -230,7 +235,9 @@ void MainWindow::updateGUI(){
                 javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
 
                 //Send js code.
-                ui->chart_webView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+                chartWebView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+
+                completeOutput += createHeadEXP();
 
                 timeAlgo = "";
                 currentAlgo = 0;
@@ -405,11 +412,17 @@ void MainWindow::loadChart(){
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
 
-    QUrl url("chart.html");             //Url of chart.
-    ui->chart_webView->load(url);       //Insert chart in webView.
+    chartWebView = new QWebView();
+    tabWebView->insertTab(tabWebView->count(), chartWebView, ui->Text_comboBox->currentText());
+    tabWebView->setCurrentIndex(tabWebView->count()-1);
+
+    QUrl url("chart.html");        //Url of chart.
+    chartWebView->load(url);       //Insert chart in webView.
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();
+
+    completeOutput += createHeadEXP();
 
 }
 
@@ -540,7 +553,7 @@ void MainWindow::on_start_pushButton_released() {
            tmpPr += " -tex ";
 
         if(ui->Pre_checkBox->isChecked())
-            tmpPr += " -pre ";
+           tmpPr += " -pre ";
 
         if( ( (ui->SimpleP_lineEdit->text() != "") || (ui->SimpleT_lineEdit->text() != "") ) ){   //SIMPLE
 
