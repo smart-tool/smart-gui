@@ -141,7 +141,7 @@ void generateEXPCode(){
 
 QString MainWindow::createHeadEXP(){
 
-    return  QString::fromLatin1("\n\n  -----------------------------------------------------------------------------") +
+    return  QString::fromLatin1("\n\n  ---------------------------------------------------------------------") +
             QString::fromLatin1("\n  Experimental results on ") + ui->Text_comboBox->currentText() + QString::fromLatin1(": ") + expCode +
             QString::fromLatin1("\n  Searching for a set of ") + ui->Pset_lineEdit->text() + QString::fromLatin1(" patterns with length ") + QString::number(currentPlen) +
             QString::fromLatin1("\n  Testing ") + QString::number(nEnabledAlg) + QString::fromLatin1(" algorithms \n");
@@ -157,14 +157,14 @@ void MainWindow::processEnded(){
 
     if(forcedStop)
         ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
-                                            "\n\n  -----------------------------------------------------------------------------" +
+                                            "\n\n  ---------------------------------------------------------------------" +
                                             "\n  STOPPED BY USER " + expCode
                                             );
     else{
         ui->progressBar->setValue(calculatePercentage());
         QMessageBox::information(this,"Done!","Test complete.");
         ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
-                                            "\n\n  -----------------------------------------------------------------------------" +
+                                            "\n\n  ---------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
                                             );
     }
@@ -209,16 +209,19 @@ void MainWindow::updateGUI(){
             for(int i=0; i<splittedBySpace.length(); i++){
                 if(splittedBySpace[i].contains("ms") && tmpOutput.contains('.')){
 
-                    infoAlgo += '\t' + splittedBySpace[i];
-
                     if(splittedBySpace[i].contains('+')){
                         QStringList tmpTimePre = splittedBySpace[i].split('+');
                         for(int f=0; f<tmpTimePre.length(); f++)
-                            if(tmpTimePre[f].contains("ms"))
+                            if(tmpTimePre[f].contains("ms")){
                                 timeAlgo += tmpTimePre[f].replace(rxFloat,"") + ',';
+                                infoAlgo += '\t' + tmpTimePre[f].replace(rxFloat,"") + " ms";
+                            }
 
-                    }else
+
+                    }else{
                         timeAlgo += splittedBySpace[i].replace(rxFloat,"") + ',';
+                        infoAlgo += '\t' + splittedBySpace[i].replace(rxFloat,"") + " ms";
+                    }
                 }
 
                 if(splittedBySpace[i].contains("std"))
@@ -257,11 +260,11 @@ void MainWindow::updateGUI(){
                 completeOutput += algoOutput[currentAlgo];
                 ui->fakeTerminal_textEdit->setText(completeOutput);
 
-
                 currentAlgo++;
                 countPercent=0;
 
                 helpCounterAlg++;
+                infoAlgo = "";
 
             }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
 
