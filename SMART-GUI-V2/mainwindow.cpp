@@ -11,6 +11,9 @@
 #include <QWebFrame>
 
 #include <QTabWidget>
+#include <QTextEdit>
+#include <QScrollArea>
+#include <QPrinter>
 
 #include <QTimer>
 #include <QProcess>
@@ -44,7 +47,7 @@ double minPlen = 2;             //Min plen.
 double maxPlen = 4096;          //Max plen.
 double currentPlen;             //Current plen.
 
-QVBoxLayout *layoutLegend;      //Declare new Layout.
+bool forcedStop = false;        //Bool true if click stop button.
 
 QString completeOutput = "";               //Output string goint to fake terminal.
 QString parameters = "";                   //Parameters to send in smart.
@@ -52,14 +55,18 @@ QString timeAlgo = "";                     //String with result algo time.
 QString expCode = "";                      //String with code ex.
 QString folderSource = "smartSource";      //Folder contains source of smart.
 
-bool forcedStop = false;        //Bool true if click stop button.
-
 QString Default500 = "500";
 QString Default1Mb = "1";
 QString DefaultTb300 = "300";
 
 QWebView *chartWebView;
-QTabWidget *tabWebView;
+QTabWidget *tabData;
+QTabWidget *tabChartWebView;
+QTextEdit *fakeTerminal;
+QVBoxLayout *layoutLegend;
+QScrollArea *scrollActiveAlgo;
+QHBoxLayout *layoutForTab;
+
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -70,10 +77,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tsize_lineEdit->setText(Default1Mb);
     ui->Tb_lineEdit->setText(DefaultTb300);
 
-    layoutLegend = new QVBoxLayout();
-
-    tabWebView = new QTabWidget;
-    ui->layoutWebView->addWidget(tabWebView);
+    tabData = new QTabWidget;
+    ui->horizontalLayout_2->addWidget(tabData);
 
 }
 
@@ -156,17 +161,25 @@ int calculatePercentage(){
 void MainWindow::processEnded(){
 
     if(forcedStop)
-        ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
+        fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  STOPPED BY USER " + expCode
                                             );
     else{
         ui->progressBar->setValue(calculatePercentage());
         QMessageBox::information(this,"Done!","Test complete.");
-        ui->fakeTerminal_textEdit->setText( ui->fakeTerminal_textEdit->toPlainText() +
+        fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
                                             );
+
+
+        // Initialize printer and set save location
+        QPrinter printer(QPrinter::HighResolution);
+        printer.setOrientation(QPrinter::Landscape);
+        printer.setOutputFileName(expCode + ".pdf");
+
+        //chartWebView->print(&printer);
     }
 
     ui->start_pushButton->setEnabled(true);
@@ -191,7 +204,7 @@ void MainWindow::updateGUI(){
 
         countPercent += tmpOutput.count('%');
 
-        ui->fakeTerminal_textEdit->setText(completeOutput + algoOutput[currentAlgo]);
+        fakeTerminal->setText(completeOutput + algoOutput[currentAlgo]);
 
     }
 
@@ -245,9 +258,16 @@ void MainWindow::updateGUI(){
                 timeAlgo = "";
                 currentAlgo = 0;
 
-                if (currentPlen == maxPlen)
+                if (currentPlen == maxPlen && ui->Text_comboBox->currentText() == "all"){
                     currentPlen = minPlen;
-                else
+
+                    chartWebView = new QWebView();
+                    QUrl url("chart.html");        //Url of chart.
+                    chartWebView->load(url);       //Insert chart in webView.
+
+                    tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, "Tab " + QString::number(tabChartWebView->count()+1) );
+                    tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
+                }else
                     currentPlen*=2;
 
             }
@@ -258,7 +278,7 @@ void MainWindow::updateGUI(){
                                             "\t" + myAlgoName[currentAlgo] + " \t[OK]" + infoAlgo ;
 
                 completeOutput += algoOutput[currentAlgo];
-                ui->fakeTerminal_textEdit->setText(completeOutput);
+                fakeTerminal->setText(completeOutput);
 
                 currentAlgo++;
                 countPercent=0;
@@ -278,7 +298,7 @@ void MainWindow::updateGUI(){
                                             "\t" + myAlgoName[currentAlgo] + " \t[" + tmpError + "]\t" ;
 
                 completeOutput += algoOutput[currentAlgo];
-                ui->fakeTerminal_textEdit->setText(completeOutput);
+                fakeTerminal->setText(completeOutput);
 
                 timeAlgo += "null,";
                 currentAlgo++;
@@ -292,26 +312,12 @@ void MainWindow::updateGUI(){
     }
 
     //Go to the end of fakeTerminal.
-    QTextCursor c = ui->fakeTerminal_textEdit->textCursor();
+    QTextCursor c = fakeTerminal->textCursor();
     c.movePosition(QTextCursor::End);
-    ui->fakeTerminal_textEdit->setTextCursor(c);
+    fakeTerminal->setTextCursor(c);
 
 }
 
-//Clear layout.
-void clearLayout(){
-    QLayoutItem *item;
-    while((item = layoutLegend->takeAt(0))) {
-        if (item->layout()) {
-            clearLayout();
-            delete item->layout();
-        }
-        if (item->widget())
-            delete item->widget();
-
-        delete item;
-    }
-}
 
 //Inizialize and clear all supportVariables
 void MainWindow::inizializeAll(){
@@ -329,14 +335,42 @@ void MainWindow::inizializeAll(){
 
     myAlgoName.clear();
 
-    ui->fakeTerminal_textEdit->setText("");
-
     expCode = "";
     completeOutput = "";
 
     generateEXPCode();
 
-    clearLayout();
+    layoutForTab = new QHBoxLayout();
+
+    fakeTerminal = new QTextEdit();
+    fakeTerminal->setReadOnly(true);
+    fakeTerminal->setMinimumWidth(200);
+    fakeTerminal->setMaximumWidth(400);
+    layoutForTab->addWidget(fakeTerminal);
+
+    chartWebView = new QWebView();
+
+    if( ui->Text_comboBox->currentText()=="all" ){
+        tabChartWebView = new QTabWidget;
+        layoutForTab->addWidget(tabChartWebView);
+        tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, "Tab " + QString::number(tabChartWebView->count()+1));
+    }else{
+        layoutForTab->addWidget(chartWebView);
+    }
+
+    scrollActiveAlgo = new QScrollArea();
+    layoutLegend = new QVBoxLayout();
+    scrollActiveAlgo->setLayout(layoutLegend);
+    scrollActiveAlgo->setMinimumWidth(50);
+    scrollActiveAlgo->setMaximumWidth(150);
+    layoutForTab->addWidget(scrollActiveAlgo);
+
+    QWidget *tmpWideget = new QWidget();
+    tmpWideget->setLayout(layoutForTab);
+
+    tabData->insertTab(tabData->count(), tmpWideget, expCode );
+    tabData->setCurrentIndex(tabData->count()-1);
+
 }
 
 //loadResource to create chart and load it into webView.
@@ -402,7 +436,7 @@ void MainWindow::loadChart(){
 
 
     //Apply layout of label with algoName in ui.
-    ui->activeAlgo_scrollArea->setLayout(layoutLegend);
+    //ui->activeAlgo_scrollArea->setLayout(layoutLegend);
 
     QString chartCodeComplete = chartCode1 + datasets + chartCode2;
 
@@ -414,10 +448,6 @@ void MainWindow::loadChart(){
 
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
-
-    chartWebView = new QWebView();
-    tabWebView->insertTab(tabWebView->count(), chartWebView, ui->Text_comboBox->currentText());
-    tabWebView->setCurrentIndex(tabWebView->count()-1);
 
     QUrl url("chart.html");        //Url of chart.
     chartWebView->load(url);       //Insert chart in webView.
@@ -602,8 +632,6 @@ void MainWindow::on_start_pushButton_released() {
         ui->stop_pushButton->setEnabled(true);
         ui->start_pushButton->setEnabled(false);
 
-        loadChart();
-
         QString execute = "./smart " + parameters;
         qDebug() << execute;
 
@@ -613,6 +641,8 @@ void MainWindow::on_start_pushButton_released() {
         maxPlen = pow(2, floor ( Log2(maxPlen) ) );
 
         currentPlen = minPlen;
+
+        loadChart();
 
         myProc = new QProcess(this);                                                    //Create process.
         connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
