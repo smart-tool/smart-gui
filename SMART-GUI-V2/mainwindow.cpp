@@ -67,6 +67,8 @@ QVBoxLayout *layoutLegend;
 QScrollArea *scrollActiveAlgo;
 QHBoxLayout *layoutForTab;
 
+QStringList nameText;
+
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -79,6 +81,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     tabData = new QTabWidget;
     ui->horizontalLayout_2->addWidget(tabData);
+
+    nameText << "rand2" << "rand4" << "rand8" << "rand16" << "rand32" << "rand64" << "rand128" << "rand250" <<
+                "italianTexts" << "englishTexts" << "frenchTexts" << "chineseTexts" << "midimusic" << "genome" << "protein";
+
 
 }
 
@@ -146,8 +152,15 @@ void generateEXPCode(){
 
 QString MainWindow::createHeadEXP(){
 
+    QString tmpText;
+
+    if( ui->Text_comboBox->currentText() != "all" )
+        tmpText = ui->Text_comboBox->currentText();
+    else
+        tmpText = nameText[tabChartWebView->count()-1];
+
     return  QString::fromLatin1("\n\n  ---------------------------------------------------------------------") +
-            QString::fromLatin1("\n  Experimental results on ") + ui->Text_comboBox->currentText() + QString::fromLatin1(": ") + expCode +
+            QString::fromLatin1("\n  Experimental results on ") + tmpText + QString::fromLatin1(": ") + expCode +
             QString::fromLatin1("\n  Searching for a set of ") + ui->Pset_lineEdit->text() + QString::fromLatin1(" patterns with length ") + QString::number(currentPlen) +
             QString::fromLatin1("\n  Testing ") + QString::number(nEnabledAlg) + QString::fromLatin1(" algorithms \n");
 
@@ -253,8 +266,6 @@ void MainWindow::updateGUI(){
                 //Send js code.
                 chartWebView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
 
-                completeOutput += createHeadEXP();
-
                 timeAlgo = "";
                 currentAlgo = 0;
 
@@ -262,13 +273,18 @@ void MainWindow::updateGUI(){
                     currentPlen = minPlen;
 
                     chartWebView = new QWebView();
-                    QUrl url("chart.html");        //Url of chart.
-                    chartWebView->load(url);       //Insert chart in webView.
+                    chartWebView->load(QUrl("chart.html"));
 
-                    tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, "Tab " + QString::number(tabChartWebView->count()+1) );
+                    tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, nameText[tabChartWebView->count()] );
                     tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
+
+                    ui->progressBar->setValue(0);
+                    helpCounterAlg = 0;
+                    countPercent = 0;
                 }else
                     currentPlen*=2;
+
+                completeOutput += createHeadEXP();
 
             }
 
@@ -353,7 +369,7 @@ void MainWindow::inizializeAll(){
     if( ui->Text_comboBox->currentText()=="all" ){
         tabChartWebView = new QTabWidget;
         layoutForTab->addWidget(tabChartWebView);
-        tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, "Tab " + QString::number(tabChartWebView->count()+1));
+        tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, nameText[tabChartWebView->count()]);
     }else{
         layoutForTab->addWidget(chartWebView);
     }
@@ -449,8 +465,7 @@ void MainWindow::loadChart(){
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
 
-    QUrl url("chart.html");        //Url of chart.
-    chartWebView->load(url);       //Insert chart in webView.
+    chartWebView->load(QUrl("chart.html"));
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();
