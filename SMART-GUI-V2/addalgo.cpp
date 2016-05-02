@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QFile>
+#include <QProcess>
 
 
 AddAlgo::AddAlgo(QWidget *parent) :
@@ -36,7 +37,7 @@ void AddAlgo::on_pushButton_clicked()
 
     if(this->NameAlgo!=""){
 
-        QString filename="source/algos/"+NameAlgo+".c";
+        QString filename="smartSource/source/algos/"+NameAlgo+".c";
         QFile file(filename);
         if ( file.open(QIODevice::ReadWrite) ){
             QTextStream stream( &file );
@@ -49,15 +50,15 @@ void AddAlgo::on_pushButton_clicked()
 
         if(CompiledCheck){
             system("rm logCompiled.txt");
-            QString compiledSequenze="gcc "+filename+" -o "+"source/bin/"+NameAlgo+" 2>logCompiled.txt";
+            QString compiledSequenze="gcc "+filename+" -o "+"smartSource/source/bin/"+NameAlgo+" 2>logCompiled.txt";
             QByteArray ba=compiledSequenze.toLatin1();
             const char * compiledSequenze2= ba.data();
             system(compiledSequenze2);
 
-            QFile BinaryCheck("source/bin/"+NameAlgo);
+            QFile BinaryCheck("smartSource/source/bin/"+NameAlgo);
             if(!(BinaryCheck.exists())){
                     QFile logFile("logCompiled.txt");
-                    QString TextError="";
+
 
                     logFile.open(QIODevice::ReadOnly);
                     QByteArray arr= logFile.readAll();
@@ -67,11 +68,17 @@ void AddAlgo::on_pushButton_clicked()
                     QMessageBox::information(this,"Error..!!",error);
                     logFile.close();
             }else{
+                 //   system("cd smartSource/");
+                    qDebug()<<"ciao2";
                     QString AddSequence="./select -add "+NameAlgo;
                     QByteArray ba=AddSequence.toLatin1();
                     const char * AddSequence2= ba.data();
-                    system(AddSequence2);
+                    QProcess* ProcAdd= new QProcess(this);
+                    ProcAdd->setWorkingDirectory("smartSource");
+                    ProcAdd->start(AddSequence2);
 
+                    //system(AddSequence2);
+                    //system("ls");
 
 
                     if(this->Selected){
