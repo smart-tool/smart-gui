@@ -38,6 +38,8 @@ private slots:
 public slots:
     void updateGUI();
     void processEnded();
+    void showResultFunction();
+    void printPDF();
     QString createHeadEXP();
 
 private:

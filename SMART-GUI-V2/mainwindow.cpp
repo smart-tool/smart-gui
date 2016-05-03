@@ -15,7 +15,7 @@
 #include <QScrollArea>
 #include <QSplitter>
 
-//#include <QPrinter>
+#include <QPrinter>
 
 #include <QTimer>
 #include <QProcess>
@@ -69,6 +69,10 @@ QVBoxLayout *layoutLegend;
 QScrollArea *scrollActiveAlgo;
 QSplitter *layoutForTab;
 
+QWebView *webViewForPDF;
+QWebView *showResult;
+QPrinter *printer;
+
 QStringList nameText;
 
 
@@ -87,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     nameText << "rand2" << "rand4" << "rand8" << "rand16" << "rand32" << "rand64" << "rand128" << "rand250" <<
                 "italianTexts" << "englishTexts" << "frenchTexts" << "chineseTexts" << "midimusic" << "genome" << "protein";
 
+    webViewForPDF = new QWebView();
 
 }
 
@@ -172,6 +177,14 @@ int calculatePercentage(){
     return (helpCounterAlg*100)/(nEnabledAlg * nExecutePatt);
 }
 
+void MainWindow::showResultFunction(){
+    showResult->show();
+}
+
+void MainWindow::printPDF(){
+    webViewForPDF->print(printer);
+}
+
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
 
@@ -182,32 +195,73 @@ void MainWindow::processEnded(){
                                             );
     else{
         ui->progressBar->setValue(calculatePercentage());
-        QMessageBox::information(this,"Done!","Test complete.");
+
         fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
                                             );
 
         if (ui->Text_comboBox->currentText() != "all"){
-            QString tmpFakeOutput = "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".xml" +
-                                    "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".html" ;
+            fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".xml" +
+                                                                 "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".html" );
 
             if (ui->Tex_checkBox->isChecked())
-                tmpFakeOutput += "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".tex" ;
+                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".tex" );
 
             if (ui->Txt_checkBox->isChecked())
-                tmpFakeOutput += "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".txt" ;
+                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".txt" );
 
-            fakeTerminal->setText( fakeTerminal->toPlainText() + tmpFakeOutput);
+            if (ui->Pdf_checkBox->isChecked()){
+                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing is very slow.\nAre you sure to create " + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf?", QMessageBox::Yes|QMessageBox::No).exec()) {
+
+                    printer = new QPrinter(QPrinter::HighResolution);
+                    printer->setOutputFileName(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf");
+
+                    webViewForPDF->load(QUrl(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
+                    connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
+
+                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf" );
+                }
+                QMessageBox::information(this,"Done!","Pdf write successfully!");
+            }
+
+            if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + ui->Text_comboBox->currentText() + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
+                showResult = new QWebView();
+                showResult->load(QUrl(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
+                connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
+            }
+
+        }else{
+            for(int j=0; j<tabChartWebView->count()-1; j++){
+                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + nameText[j] + ".xml" +
+                                                                     "\n  Saving data on " + expCode + "/" + nameText[j] + ".html" );
+
+                if (ui->Tex_checkBox->isChecked())
+                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".tex" );
+
+                if (ui->Txt_checkBox->isChecked())
+                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".txt" );
+
+            }
+
+            if (ui->Pdf_checkBox->isChecked()){
+                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing is very slow.\nAre you shure to create pdf for all test?", QMessageBox::Yes|QMessageBox::No).exec()) {
+                    printer = new QPrinter(QPrinter::HighResolution);
+                    for(int j=0; j<tabChartWebView->count()-1; j++){
+                        printer->setOutputFileName(folderSource + "/results/" + expCode + "/" + nameText[j] + ".pdf");
+
+                        webViewForPDF->load(QUrl(folderSource + "/results/" + expCode + "/" + nameText[j] + ".html"));
+                        connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
+
+                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".pdf" );
+                    }
+                    QMessageBox::information(this,"Done!","Pdf write successfully!");
+                }
+            }
+
+            QMessageBox::information(this,"Done!","Test complete.");
         }
 
-
-        // Initialize printer and set save location
-        //QPrinter printer(QPrinter::HighResolution);
-        //printer.setOrientation(QPrinter::Landscape);
-        //printer.setOutputFileName(expCode + ".pdf");
-
-        //chartWebView->print(&printer);
     }
 
     ui->start_pushButton->setEnabled(true);

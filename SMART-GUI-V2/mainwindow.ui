@@ -322,6 +322,13 @@
         </property>
        </widget>
       </item>
+      <item row="2" column="7">
+       <widget class="QCheckBox" name="Pdf_checkBox">
+        <property name="text">
+         <string>Pdf</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
