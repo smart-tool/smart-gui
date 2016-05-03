@@ -22,25 +22,31 @@ AddAlgo::~AddAlgo()
 }
 
 void AddAlgo::updateBar(){
-    QString tmpOutput2 = ProcAdd->readAllStandardOutput().replace("","");
+   // qDebug()<< ProcAdd->readAllStandardOutput();
+
+
+    QString tmpOutput2 = ProcAdd->readAllStandardOutput().replace("\b","");
     tmpOutput2=tmpOutput2.replace("%]","");
     tmpOutput2=tmpOutput2.replace("[0","");
     tmpOutput2=tmpOutput2.replace("[00","");
     ui->progressBar->setValue(tmpOutput2.toInt());
 
-
-
+    if(tmpOutput2.contains("ok")) finPro();
 
 }
 
 void AddAlgo::finPro(){
-    qDebug()<<"Sono dentro";
+
     if(this->Selected){
 
         QString SelectSequence="./select "+NameAlgo;
         QByteArray ba=SelectSequence.toLatin1();
         const char * SelectSequence2= ba.data();
-        system(SelectSequence2);
+      //  system(SelectSequence2);
+        delete ProcAdd;
+        ProcAdd= new QProcess(this);
+        ProcAdd->setWorkingDirectory("smartSource");
+        ProcAdd->start(SelectSequence2);
         QString error="Algortmhs add and select \n\n";
         QMessageBox::information(this,"ADD and Select",error);
 
@@ -101,14 +107,14 @@ void AddAlgo::on_pushButton_clicked()
                     logFile.close();
             }else{
                  //   system("cd smartSource/");
-                    qDebug()<<"ciao2";
+
                     QString AddSequence="./select -add "+NameAlgo;
                     QByteArray ba=AddSequence.toLatin1();
                     const char * AddSequence2= ba.data();
                     ProcAdd= new QProcess(this);
 
                     connect(ProcAdd, SIGNAL(readyReadStandardOutput()), this, SLOT(updateBar()) );
-                    connect(ProcAdd, SIGNAL(finished(int)), this, SLOT(finPro()) );
+               //     connect(ProcAdd, SIGNAL(finished(int)), this, SLOT(finPro()) );
 
                     ProcAdd->setWorkingDirectory("smartSource");
                     ProcAdd->start(AddSequence2);
