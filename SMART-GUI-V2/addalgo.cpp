@@ -21,6 +21,44 @@ AddAlgo::~AddAlgo()
     delete ui;
 }
 
+void AddAlgo::updateBar(){
+   // qDebug()<< ProcAdd->readAllStandardOutput();
+
+
+    QString tmpOutput2 = ProcAdd->readAllStandardOutput().replace("\b","");
+    tmpOutput2=tmpOutput2.replace("%]","");
+    tmpOutput2=tmpOutput2.replace("[0","");
+    tmpOutput2=tmpOutput2.replace("[00","");
+    ui->progressBar->setValue(tmpOutput2.toInt());
+
+    if(tmpOutput2.contains("ok")) finPro();
+
+}
+
+void AddAlgo::finPro(){
+
+    if(this->Selected){
+
+        QString SelectSequence="./select "+NameAlgo;
+        QByteArray ba=SelectSequence.toLatin1();
+        const char * SelectSequence2= ba.data();
+      //  system(SelectSequence2);
+        delete ProcAdd;
+        ProcAdd= new QProcess(this);
+        ProcAdd->setWorkingDirectory("smartSource");
+        ProcAdd->start(SelectSequence2);
+        QString error="Algortmhs add and select \n\n";
+        QMessageBox::information(this,"ADD and Select",error);
+
+    }else {
+
+        QString error="Algortmhs add \n\n";
+        QMessageBox::information(this,"ADD",error);
+
+    }
+
+}
+
 void AddAlgo::on_pushButton_clicked()
 {
 
@@ -69,18 +107,26 @@ void AddAlgo::on_pushButton_clicked()
                     logFile.close();
             }else{
                  //   system("cd smartSource/");
-                    qDebug()<<"ciao2";
+
                     QString AddSequence="./select -add "+NameAlgo;
                     QByteArray ba=AddSequence.toLatin1();
                     const char * AddSequence2= ba.data();
-                    QProcess* ProcAdd= new QProcess(this);
+                    ProcAdd= new QProcess(this);
+
+                    connect(ProcAdd, SIGNAL(readyReadStandardOutput()), this, SLOT(updateBar()) );
+               //     connect(ProcAdd, SIGNAL(finished(int)), this, SLOT(finPro()) );
+
                     ProcAdd->setWorkingDirectory("smartSource");
                     ProcAdd->start(AddSequence2);
+
+                   //AGGIUNGERE LA FUNZIONE SLOT(GUARDARE UPDATEGUI)
+                    //AGGIUNGERE IL CONNECT GUARDA MAINWINDOW
+
 
                     //system(AddSequence2);
                     //system("ls");
 
-
+/*
                     if(this->Selected){
 
                         QString SelectSequence="./select "+NameAlgo;
@@ -97,7 +143,7 @@ void AddAlgo::on_pushButton_clicked()
 
                     }
 
-
+*/
 
 
 

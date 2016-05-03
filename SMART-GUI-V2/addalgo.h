@@ -2,6 +2,7 @@
 #define ADDALGO_H
 
 #include <QDialog>
+#include <QProcess>
 
 namespace Ui {
 class AddAlgo;
@@ -16,9 +17,13 @@ public:
     ~AddAlgo();
     bool Selected;
     QString NameAlgo;
+    QProcess* ProcAdd;
 
 private slots:
     void on_pushButton_clicked();
+public slots:
+    void updateBar();
+    void finPro();
 
 private:
     Ui::AddAlgo *ui;
