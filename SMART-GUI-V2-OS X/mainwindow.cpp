@@ -194,7 +194,7 @@ void MainWindow::showResultFunction(){
 }
 
 void MainWindow::printPDF(){
-    //webViewForPDF->print(printer);
+    webViewForPDF->render(printer);
 }
 
 //Execute this SLOT on ended process.
@@ -240,7 +240,7 @@ void MainWindow::processEnded(){
 
             if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + ui->Text_comboBox->currentText() + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
                 showResult = new QWebEngineView();
-                showResult->load(QUrl(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
+                showResult->load(QUrl("file:///" + QDir::currentPath() + "/" + folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
                 connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
             }
 
