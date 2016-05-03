@@ -35,6 +35,7 @@ private slots:
 
     void on_actionAdd_Algorithms_triggered();
 
+
 public slots:
     void updateGUI();
     void processEnded();

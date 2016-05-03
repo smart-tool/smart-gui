@@ -24,6 +24,7 @@
 #include <QPalette>
 
 #include <QtWebKit>
+#include <QDir>
 
 #include <cmath>
 
@@ -69,8 +70,9 @@ QVBoxLayout *layoutLegend;
 QScrollArea *scrollActiveAlgo;
 QSplitter *layoutForTab;
 
-QWebView *webViewForPDF;
 QWebView *showResult;
+
+QWebView *webViewForPDF;
 QPrinter *printer;
 
 QStringList nameText;
@@ -91,8 +93,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     nameText << "rand2" << "rand4" << "rand8" << "rand16" << "rand32" << "rand64" << "rand128" << "rand250" <<
                 "italianTexts" << "englishTexts" << "frenchTexts" << "chineseTexts" << "midimusic" << "genome" << "protein";
 
-    webViewForPDF = new QWebView();
-
     ui->PlenL_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->PlenU_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->SimpleP_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
@@ -100,6 +100,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tb_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Tsize_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Pset_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
+
 }
 
 //Distructor.
@@ -219,11 +220,12 @@ void MainWindow::processEnded(){
                 fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".txt" );
 
             if (ui->Pdf_checkBox->isChecked()){
-                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing is very slow.\nAre you sure to create " + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf?", QMessageBox::Yes|QMessageBox::No).exec()) {
+                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing it may be slow.\nAre you sure to create " + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf?", QMessageBox::Yes|QMessageBox::No).exec()) {
 
                     printer = new QPrinter(QPrinter::HighResolution);
                     printer->setOutputFileName(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf");
 
+                    webViewForPDF = new QWebView();
                     webViewForPDF->load(QUrl(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
                     connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
 
@@ -251,8 +253,8 @@ void MainWindow::processEnded(){
 
             }
 
-            if (ui->Pdf_checkBox->isChecked()){
-                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing is very slow.\nAre you shure to create pdf for all test?", QMessageBox::Yes|QMessageBox::No).exec()) {
+            /*if (ui->Pdf_checkBox->isChecked()){
+                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing it may be slow.\nAre you shure to create pdf for all test?", QMessageBox::Yes|QMessageBox::No).exec()) {
                     printer = new QPrinter(QPrinter::HighResolution);
                     for(int j=0; j<tabChartWebView->count()-1; j++){
                         printer->setOutputFileName(folderSource + "/results/" + expCode + "/" + nameText[j] + ".pdf");
@@ -264,7 +266,7 @@ void MainWindow::processEnded(){
                     }
                     QMessageBox::information(this,"Done!","Pdf write successfully!");
                 }
-            }
+            }*/
 
             QMessageBox::information(this,"Done!","Test complete.");
         }
@@ -348,7 +350,7 @@ void MainWindow::updateGUI(){
                     currentPlen = minPlen;
 
                     chartWebView = new QWebView();
-                    chartWebView->load(QUrl("chart.html"));
+                    chartWebView->load(QUrl("file:///" + QDir::currentPath() + "/chart.html"));
 
                     tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, nameText[tabChartWebView->count()] );
                     tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
@@ -473,7 +475,7 @@ void MainWindow::loadChart(){
 
     QFile chartCode1File(":/chartFile/chart/chartPart1.html");        //Load part1 of htmlChart by res.
     QFile chartCode2File(":/chartFile/chart/chartPart2.html");        //Load part2 of htmlChart by res..
-    QFile chartFile("chart.html");                                    //Load file of graph.
+    QFile chartFile(QDir::currentPath() + "/chart.html");             //Load file of graph.
 
     QString chartCode1, chartCode2;
     QString r, g, b;
@@ -537,9 +539,9 @@ void MainWindow::loadChart(){
     }
 
     //Copy Chart.js from resource in local.
-    QFile::copy(":/chartFile/chart/Chart.js" , "Chart.js");
+    QFile::copy(":/chartFile/chart/Chart.js" , QDir::currentPath() + "/Chart.js");
 
-    chartWebView->load(QUrl("chart.html"));
+    chartWebView->load(QUrl("file:///" + QDir::currentPath() + "/chart.html"));
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();

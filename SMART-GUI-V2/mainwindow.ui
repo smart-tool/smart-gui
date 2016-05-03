@@ -324,6 +324,9 @@
       </item>
       <item row="2" column="7">
        <widget class="QCheckBox" name="Pdf_checkBox">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
         <property name="text">
          <string>Pdf</string>
         </property>
