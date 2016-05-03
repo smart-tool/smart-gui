@@ -93,6 +93,13 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     webViewForPDF = new QWebView();
 
+    ui->PlenL_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
+    ui->PlenU_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
+    ui->SimpleP_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
+    ui->SimpleT_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
+    ui->Tb_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
+    ui->Tsize_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
+    ui->Pset_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
 }
 
 //Distructor.
