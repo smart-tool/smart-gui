@@ -188,9 +188,9 @@ void MainWindow::processEnded(){
 
 
         // Initialize printer and set save location
-        QPrinter printer(QPrinter::HighResolution);
-        printer.setOrientation(QPrinter::Landscape);
-        printer.setOutputFileName(expCode + ".pdf");
+        //QPrinter printer(QPrinter::HighResolution);
+        //printer.setOrientation(QPrinter::Landscape);
+        //printer.setOutputFileName(expCode + ".pdf");
 
         //chartWebView->print(&printer);
     }

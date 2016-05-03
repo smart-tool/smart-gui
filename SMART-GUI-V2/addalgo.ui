@@ -42,7 +42,7 @@
      </item>
     </layout>
    </item>
-   <item row="1" column="0">
+   <item row="2" column="0">
     <widget class="QScrollArea" name="scrollArea">
      <property name="widgetResizable">
       <bool>true</bool>
@@ -53,7 +53,7 @@
         <x>0</x>
         <y>0</y>
         <width>766</width>
-        <height>365</height>
+        <height>330</height>
        </rect>
       </property>
       <widget class="QTextEdit" name="textEdit">
@@ -67,6 +67,13 @@
        </property>
       </widget>
      </widget>
+    </widget>
+   </item>
+   <item row="1" column="0">
+    <widget class="QProgressBar" name="progressBar">
+     <property name="value">
+      <number>0</number>
+     </property>
     </widget>
    </item>
   </layout>
