@@ -22,7 +22,7 @@
      <item>
       <widget class="QPushButton" name="checkAll_Button">
        <property name="text">
-        <string>Check all string matching algorithms</string>
+        <string>Select all string matching algorithms</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -32,7 +32,7 @@
      <item>
       <widget class="QPushButton" name="uncheckAll_Button">
        <property name="text">
-        <string>Uncheck all string matching algorithms</string>
+        <string>Un-Select all string matching algorithms</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -42,7 +42,7 @@
      <item>
       <widget class="QPushButton" name="update_Button">
        <property name="text">
-        <string>Update</string>
+        <string>Done!</string>
        </property>
        <property name="autoDefault">
         <bool>false</bool>

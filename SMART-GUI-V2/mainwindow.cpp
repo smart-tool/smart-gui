@@ -13,7 +13,9 @@
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QScrollArea>
-#include <QPrinter>
+#include <QSplitter>
+
+//#include <QPrinter>
 
 #include <QTimer>
 #include <QProcess>
@@ -65,7 +67,7 @@ QTabWidget *tabChartWebView;
 QTextEdit *fakeTerminal;
 QVBoxLayout *layoutLegend;
 QScrollArea *scrollActiveAlgo;
-QHBoxLayout *layoutForTab;
+QSplitter *layoutForTab;
 
 QStringList nameText;
 
@@ -186,11 +188,24 @@ void MainWindow::processEnded(){
                                             "\n  OUTPUT RUNNING TIMES " + expCode
                                             );
 
+        if (ui->Text_comboBox->currentText() != "all"){
+            QString tmpFakeOutput = "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".xml" +
+                                    "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".html" ;
+
+            if (ui->Tex_checkBox->isChecked())
+                tmpFakeOutput += "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".tex" ;
+
+            if (ui->Txt_checkBox->isChecked())
+                tmpFakeOutput += "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".txt" ;
+
+            fakeTerminal->setText( fakeTerminal->toPlainText() + tmpFakeOutput);
+        }
+
 
         // Initialize printer and set save location
-        QPrinter printer(QPrinter::HighResolution);
-        printer.setOrientation(QPrinter::Landscape);
-        printer.setOutputFileName(expCode + ".pdf");
+        //QPrinter printer(QPrinter::HighResolution);
+        //printer.setOrientation(QPrinter::Landscape);
+        //printer.setOutputFileName(expCode + ".pdf");
 
         //chartWebView->print(&printer);
     }
@@ -240,9 +255,9 @@ void MainWindow::updateGUI(){
                         for(int f=0; f<tmpTimePre.length(); f++)
                             if(tmpTimePre[f].contains("ms")){
                                 timeAlgo += tmpTimePre[f].replace(rxFloat,"") + ',';
-                                infoAlgo += '\t' + tmpTimePre[f].replace(rxFloat,"") + " ms";
-                            }
-
+                                infoAlgo += tmpTimePre[f].replace(rxFloat,"") + " ms";
+                            }else
+                                infoAlgo += '\t' + tmpTimePre[f].replace(rxFloat,"") + "+";
 
                     }else{
                         timeAlgo += splittedBySpace[i].replace(rxFloat,"") + ',';
@@ -253,9 +268,8 @@ void MainWindow::updateGUI(){
                 if(splittedBySpace[i].contains("std"))
                     infoAlgo += '\t' + splittedBySpace[i];
 
-                if(splittedBySpace[i].contains('[') &&  splittedBySpace[i].contains(']') && splittedBySpace[i].contains(',')){
+                if(splittedBySpace[i].contains('[') &&  splittedBySpace[i].contains(']') && splittedBySpace[i].contains(','))
                     infoAlgo += '\t' + splittedBySpace[i];
-                }
             }
 
             if (currentAlgo == nEnabledAlg){
@@ -289,6 +303,9 @@ void MainWindow::updateGUI(){
             }
 
             if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
+
+                if( ui->Occ_checkBox->isChecked() )
+                    infoAlgo += '\t' + splittedOutput[j+1].replace('\n',"");
 
                 algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
                                             "\t" + myAlgoName[currentAlgo] + " \t[OK]" + infoAlgo ;
@@ -356,12 +373,12 @@ void MainWindow::inizializeAll(){
 
     generateEXPCode();
 
-    layoutForTab = new QHBoxLayout();
+    layoutForTab = new QSplitter();
+
 
     fakeTerminal = new QTextEdit();
     fakeTerminal->setReadOnly(true);
-    fakeTerminal->setMinimumWidth(200);
-    fakeTerminal->setMaximumWidth(400);
+    fakeTerminal->setLineWrapMode((QTextEdit::NoWrap));
     layoutForTab->addWidget(fakeTerminal);
 
     chartWebView = new QWebView();
@@ -377,14 +394,10 @@ void MainWindow::inizializeAll(){
     scrollActiveAlgo = new QScrollArea();
     layoutLegend = new QVBoxLayout();
     scrollActiveAlgo->setLayout(layoutLegend);
-    scrollActiveAlgo->setMinimumWidth(50);
     scrollActiveAlgo->setMaximumWidth(150);
     layoutForTab->addWidget(scrollActiveAlgo);
 
-    QWidget *tmpWideget = new QWidget();
-    tmpWideget->setLayout(layoutForTab);
-
-    tabData->insertTab(tabData->count(), tmpWideget, expCode );
+    tabData->insertTab(tabData->count(), layoutForTab, expCode );
     tabData->setCurrentIndex(tabData->count()-1);
 
 }
