@@ -14,15 +14,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow.cpp \
            selectalgwindow.cpp \
-    addalgo.cpp
+           addalgo.cpp \
+           setupwindow.cpp
 
 HEADERS += mainwindow.h \
            selectalgwindow.h \
-    addalgo.h
+           addalgo.h \
+           setupwindow.h
 
 FORMS   += mainwindow.ui \
            selectalgwindow.ui \
-    addalgo.ui
+           addalgo.ui \
+           setupwindow.ui
 
 RESOURCES += \
-    chartfile.qrc
+           chartfile.qrc

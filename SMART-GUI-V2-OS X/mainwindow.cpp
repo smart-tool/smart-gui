@@ -26,14 +26,16 @@
 #include <QWebEnginePage>
 #include <QWebEngineView>
 
-#include <QtPrintSupport/QPrinter>
-
 #include <QDir>
 
 #include <cmath>
 
 #include "selectalgwindow.h"
 #include "addalgo.h"
+#include "setupwindow.h"
+
+QString _pathSmartGUI = QDir::homePath() + "/smartGUI";
+QString _pathSmart = _pathSmartGUI + "/smartSource";
 
 #define NumAlgo 500             //Define the number of algorithm
 
@@ -60,7 +62,6 @@ QString completeOutput = "";               //Output string goint to fake termina
 QString parameters = "";                   //Parameters to send in smart.
 QString timeAlgo = "";                     //String with result algo time.
 QString expCode = "";                      //String with code ex.
-QString folderSource = "smartSource";      //Folder contains source of smart.
 
 QString Default500 = "500";
 QString Default1Mb = "1";
@@ -75,9 +76,6 @@ QScrollArea *scrollActiveAlgo;
 QSplitter *layoutForTab;
 
 QWebEngineView *showResult;
-
-QWebEngineView *webViewForPDF;
-QPrinter *printer;
 
 QStringList nameText;
 
@@ -142,7 +140,11 @@ void MainWindow::on_actionAbout_SMART_GUI_triggered() {
 
 //Load into array parameters the status of algo.
 void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
-    FILE *fp = fopen("smartSource/source/algorithms.h", "r");
+
+    QByteArray tmpByteArray = _pathSmart.toLatin1() + "/source/algorithms.h";
+    const char * _pathSmartConst = tmpByteArray.data();
+
+    FILE *fp = fopen(_pathSmartConst, "r");
     char c; int i=0;
     while( (c=getc(fp)) != EOF )
         if(c=='#') {
@@ -193,10 +195,6 @@ void MainWindow::showResultFunction(){
     showResult->show();
 }
 
-void MainWindow::printPDF(){
-    webViewForPDF->render(printer);
-}
-
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
 
@@ -223,24 +221,10 @@ void MainWindow::processEnded(){
             if (ui->Txt_checkBox->isChecked())
                 fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".txt" );
 
-            if (ui->Pdf_checkBox->isChecked()){
-                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing it may be slow.\nAre you sure to create " + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf?", QMessageBox::Yes|QMessageBox::No).exec()) {
-
-                    printer = new QPrinter(QPrinter::HighResolution);
-                    printer->setOutputFileName(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf");
-
-                    webViewForPDF = new QWebEngineView();
-                    webViewForPDF->load(QUrl(folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
-                    connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
-
-                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".pdf" );
-                }
-                QMessageBox::information(this,"Done!","Pdf write successfully!");
-            }
 
             if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + ui->Text_comboBox->currentText() + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
                 showResult = new QWebEngineView();
-                showResult->load(QUrl("file:///" + QDir::currentPath() + "/" + folderSource + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
+                showResult->load(QUrl("file:///" + _pathSmart + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
                 connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
             }
 
@@ -256,21 +240,6 @@ void MainWindow::processEnded(){
                     fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".txt" );
 
             }
-
-            /*if (ui->Pdf_checkBox->isChecked()){
-                if (QMessageBox::Yes == QMessageBox(QMessageBox::Warning, "Warning!", "The PDF writing it may be slow.\nAre you shure to create pdf for all test?", QMessageBox::Yes|QMessageBox::No).exec()) {
-                    printer = new QPrinter(QPrinter::HighResolution);
-                    for(int j=0; j<tabChartWebView->count()-1; j++){
-                        printer->setOutputFileName(folderSource + "/results/" + expCode + "/" + nameText[j] + ".pdf");
-
-                        webViewForPDF->load(QUrl(folderSource + "/results/" + expCode + "/" + nameText[j] + ".html"));
-                        connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
-
-                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".pdf" );
-                    }
-                    QMessageBox::information(this,"Done!","Pdf write successfully!");
-                }
-            }*/
 
             QMessageBox::information(this,"Done!","Test complete.");
         }
@@ -354,7 +323,7 @@ void MainWindow::updateGUI(){
                     currentPlen = minPlen;
 
                     chartWebView = new QWebEngineView();
-                    chartWebView->load(QUrl("file:///" + QDir::currentPath() + "/chart.html"));
+                    chartWebView->load(QUrl("file:///" + _pathSmartGUI + "/chart.html"));
 
                     tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, nameText[tabChartWebView->count()] );
                     tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
@@ -479,7 +448,7 @@ void MainWindow::loadChart(){
 
     QFile chartCode1File(":/chartFile/chart/chartPart1.html");        //Load part1 of htmlChart by res.
     QFile chartCode2File(":/chartFile/chart/chartPart2.html");        //Load part2 of htmlChart by res..
-    QFile chartFile(QDir::currentPath() + "/chart.html");             //Load file of graph.
+    QFile chartFile(_pathSmartGUI + "/chart.html");             //Load file of graph.
 
     QString chartCode1, chartCode2;
     QString r, g, b;
@@ -543,9 +512,9 @@ void MainWindow::loadChart(){
     }
 
     //Copy Chart.js from resource in local.
-    QFile::copy(":/chartFile/chart/Chart.js" , QDir::currentPath() + "/Chart.js");
+    QFile::copy(":/chartFile/chart/Chart.js" , _pathSmartGUI +  "/Chart.js");
 
-    chartWebView->load(QUrl("file:///" + QDir::currentPath() + "/chart.html"));
+    chartWebView->load(QUrl("file:///" + _pathSmartGUI +  "/chart.html"));
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();
@@ -659,9 +628,9 @@ void MainWindow::on_start_pushButton_released() {
 
     QString tmpPr = "";
 
-    QFile SmartCheck(folderSource + "/smart");
-    QFile SelectCheck(folderSource + "/select");
-    QFile TestCheck(folderSource + "/test");
+    QFile SmartCheck(_pathSmart + "/smart");
+    QFile SelectCheck(_pathSmart + "/select");
+    QFile TestCheck(_pathSmart + "/test");
 
     if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
@@ -742,7 +711,7 @@ void MainWindow::on_start_pushButton_released() {
         myProc = new QProcess(this);                                                    //Create process.
         connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
         connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
-        myProc->setWorkingDirectory(folderSource);                                      //Set the folder with SMART.
+        myProc->setWorkingDirectory(_pathSmart);                                      //Set the folder with SMART.
         myProc->start(execute);                                                         //Start process.
 
     }else
@@ -763,4 +732,10 @@ void MainWindow::on_actionAdd_Algorithms_triggered() {
     openAddAlgoWin.setModal(true);
     openAddAlgoWin.exec();
 
+}
+
+void MainWindow::on_actionSetup_SMART_GUI_triggered(){
+    setupWindow openSetupWindow;
+    openSetupWindow.setModal(true);
+    openSetupWindow.exec();
 }

@@ -36,11 +36,13 @@ private slots:
     void on_actionAdd_Algorithms_triggered();
 
 
+    void on_actionSetup_SMART_GUI_triggered();
+
 public slots:
     void updateGUI();
     void processEnded();
     void showResultFunction();
-    void printPDF();
+
     QString createHeadEXP();
 
 private:
