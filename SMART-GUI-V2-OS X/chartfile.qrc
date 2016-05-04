@@ -1,7 +1,0 @@
-<RCC>
-    <qresource prefix="/chartFile">
-        <file>chart/chartPart1.html</file>
-        <file>chart/chartPart2.html</file>
-        <file>chart/Chart.js</file>
-    </qresource>
-</RCC>

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkit webkitwidgets printsupport
+QT       += core gui webenginewidgets printsupport
 
 # greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,15 +14,18 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow.cpp \
            selectalgwindow.cpp \
-    addalgo.cpp
+           addalgo.cpp \
+           setupwindow.cpp
 
 HEADERS += mainwindow.h \
            selectalgwindow.h \
-    addalgo.h
+           addalgo.h \
+           setupwindow.h
 
 FORMS   += mainwindow.ui \
            selectalgwindow.ui \
-    addalgo.ui
+           addalgo.ui \
+           setupwindow.ui
 
 RESOURCES += \
-    chartfile.qrc
+           chartfile.qrc

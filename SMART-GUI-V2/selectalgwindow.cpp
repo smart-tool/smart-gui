@@ -8,13 +8,21 @@
 #include <QMessageBox>
 #include <cstdlib>
 
+#include <QDir>
+
 #define NumAlgo 500                        //Define the number of algorithm.
 QCheckBox *arrayCheckBox[NumAlgo];         //Declary array of checkBox.
 int EXECUTE[NumAlgo];                      //Declare EXECTUE array with the state of alrgorithm (0/1).
 char *ALGO_NAME[NumAlgo];                  //Declare array ALGO_NAME with the name of all string matching algorithms.
 
+QString __pathSmartGUI = QDir::homePath() + "/smartGUI";
+QString __pathSmart = __pathSmartGUI + "/smartSource";
+
 void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {
-    FILE *fp = fopen("smartSource/source/algorithms.h", "r");
+    QByteArray tmpByteArray = __pathSmart.toLatin1() + "/source/algorithms.h";
+    const char * pathSmartConst = tmpByteArray.data();
+
+    FILE *fp = fopen(pathSmartConst, "r");
     char c; int i=0;
     while( (c=getc(fp)) != EOF )
         if(c=='#') {
@@ -102,7 +110,9 @@ void SelectAlgWindow::on_update_Button_clicked(){
     }
 
     //Update / Write the algorithms.h file.
-    FILE *fp = fopen("smartSource/source/algorithms.h", "w");
+    QByteArray tmpByteArray = __pathSmart.toLatin1() + "/source/algorithms.h";
+    const char * pathSmartConst = tmpByteArray.data();
+    FILE *fp = fopen(pathSmartConst, "w");
 
     for(int j=0; j<NumAlgo; j++)
         if(ALGO_NAME[j])

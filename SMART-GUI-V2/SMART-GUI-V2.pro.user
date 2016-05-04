@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 3.5.1, 2016-05-04T00:47:24. -->
+<!-- Written by QtCreator 3.5.1, 2016-05-04T23:26:12. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -58,9 +58,9 @@
  <data>
   <variable>ProjectExplorer.Project.Target.0</variable>
   <valuemap type="QVariantMap">
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Desktop QT4</value>
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Desktop QT4</value>
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{ca9435ce-4453-442b-8d42-ef2d585ffbd2}</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Desktop QT5</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Desktop QT5</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{895fdc41-a7f3-4fff-9a33-b6ac73f10ce8}</value>
    <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
    <value type="int" key="ProjectExplorer.Target.ActiveRunConfiguration">0</value>
@@ -239,8 +239,8 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">SMART-GUI-V2</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName"></value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/alessandro/Documenti/SMART/GIT/SMART-GUI/SMART-GUI-V2/SMART-GUI-V2.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SMART-GUI-V22</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:/home/alessandro/Documenti/SMART/GIT/SMART-GUI/SMART-GUI-V2-OS X/SMART-GUI-V2.pro</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">SMART-GUI-V2.pro</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>

@@ -322,16 +322,6 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="7">
-       <widget class="QCheckBox" name="Pdf_checkBox">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="text">
-         <string>Pdf</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
     <item>
@@ -386,6 +376,8 @@
    </attribute>
    <addaction name="actionSelect_algorithms"/>
    <addaction name="actionAdd_Algorithms"/>
+   <addaction name="separator"/>
+   <addaction name="actionSetup_SMART_GUI"/>
    <addaction name="actionAbout_SMART_GUI"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
@@ -402,6 +394,14 @@
   <action name="actionAdd_Algorithms">
    <property name="text">
     <string>Add algorithms</string>
+   </property>
+  </action>
+  <action name="actionSetup_SMART_GUI">
+   <property name="text">
+    <string>Setup SMART-GUI</string>
+   </property>
+   <property name="toolTip">
+    <string>Setup SMART-GUI</string>
    </property>
   </action>
  </widget>
