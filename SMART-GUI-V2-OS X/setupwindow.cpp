@@ -7,8 +7,8 @@
 #include <QDebug>
 #include <QMessageBox>
 
-QString pathSmartGUI = QDir::homePath() + "/smartGUI";
-QString pathSmart = pathSmartGUI + "/smartSource";
+QString _pathSmartGUI = QDir::homePath() + "/smartGUI";
+QString _pathSmart = _pathSmartGUI + "/smartSource";
 
 QString sourceDirectory;
 
@@ -52,13 +52,13 @@ bool copyPath(QString sourceDir, QString destinationDir, bool overWriteDirectory
 setupWindow::setupWindow(QWidget *parent) :QDialog(parent),ui(new Ui::setupWindow){
     ui->setupUi(this);
 
-    ui->folder_label->setText(pathSmart);
+    ui->folder_label->setText(_pathSmart);
 
-    if(QDir(pathSmart).exists()){
-        ui->info_label->setText("La cartella esiste.");
+    if(QDir(_pathSmart).exists()){
+        ui->info_label->setText("The folder exists.");
         ui->info_label->setStyleSheet( "color: green ;");
     }else{
-        ui->info_label->setText("La cartella non esiste.\nCopiarla manualmente o usare questa finestra.");
+        ui->info_label->setText("The folder does not exist.\nCopy it manually or use this window.");
         ui->info_label->setStyleSheet( "color: red ;");
     }
 }
@@ -81,7 +81,7 @@ void setupWindow::on_chooseFolder_pushButton_clicked(){
 void setupWindow::on_save_pushButton_clicked(){
 
     if (sourceDirectory != ""){
-        bool status = copyPath(sourceDirectory, pathSmart, true);
+        bool status = copyPath(sourceDirectory, _pathSmart, true);
 
         if (status)
             QMessageBox::information(this,"Done!","Folder copied successfully!");
@@ -89,11 +89,11 @@ void setupWindow::on_save_pushButton_clicked(){
             QMessageBox::critical(this,"Error!","Error to copy folder!");
 
 
-        if(QDir(pathSmart).exists()){
-            ui->info_label->setText("La cartella esiste.");
+        if(QDir(_pathSmart).exists()){
+            ui->info_label->setText("The folder exists.");
             ui->info_label->setStyleSheet( "color: green ;");
         }else{
-            ui->info_label->setText("La cartella non esiste.\nCopiarla manualmente o usare questa finestra.");
+            ui->info_label->setText("The folder does not exist.\nCopy it manually or use this window.");
             ui->info_label->setStyleSheet( "color: red ;");
         }
     }else

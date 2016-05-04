@@ -14,7 +14,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void loadChart();
+    void createChart();
     void inizializeAll();
 
 private slots:

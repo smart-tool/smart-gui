@@ -34,8 +34,8 @@
 #include "addalgo.h"
 #include "setupwindow.h"
 
-QString _pathSmartGUI = QDir::homePath() + "/smartGUI";
-QString _pathSmart = _pathSmartGUI + "/smartSource";
+QString pathSmartGUI = QDir::homePath() + "/smartGUI";
+QString pathSmart = pathSmartGUI + "/smartSource";
 
 #define NumAlgo 500             //Define the number of algorithm
 
@@ -141,10 +141,10 @@ void MainWindow::on_actionAbout_SMART_GUI_triggered() {
 //Load into array parameters the status of algo.
 void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
 
-    QByteArray tmpByteArray = _pathSmart.toLatin1() + "/source/algorithms.h";
-    const char * _pathSmartConst = tmpByteArray.data();
+    QByteArray tmpByteArray = pathSmart.toLatin1() + "/source/algorithms.h";
+    const char * pathSmartConst = tmpByteArray.data();
 
-    FILE *fp = fopen(_pathSmartConst, "r");
+    FILE *fp = fopen(pathSmartConst, "r");
     char c; int i=0;
     while( (c=getc(fp)) != EOF )
         if(c=='#') {
@@ -224,7 +224,7 @@ void MainWindow::processEnded(){
 
             if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + ui->Text_comboBox->currentText() + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
                 showResult = new QWebEngineView();
-                showResult->load(QUrl("file:///" + _pathSmart + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
+                showResult->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
                 connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
             }
 
@@ -323,7 +323,7 @@ void MainWindow::updateGUI(){
                     currentPlen = minPlen;
 
                     chartWebView = new QWebEngineView();
-                    chartWebView->load(QUrl("file:///" + _pathSmartGUI + "/chart.html"));
+                    chartWebView->load(QUrl("file:///" + pathSmartGUI + "/chart.html"));
 
                     tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, nameText[tabChartWebView->count()] );
                     tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
@@ -439,7 +439,7 @@ void MainWindow::inizializeAll(){
 }
 
 //loadResource to create chart and load it into webView.
-void MainWindow::loadChart(){
+void MainWindow::createChart(){
 
     inizializeAll();
 
@@ -448,7 +448,7 @@ void MainWindow::loadChart(){
 
     QFile chartCode1File(":/chartFile/chart/chartPart1.html");        //Load part1 of htmlChart by res.
     QFile chartCode2File(":/chartFile/chart/chartPart2.html");        //Load part2 of htmlChart by res..
-    QFile chartFile(_pathSmartGUI + "/chart.html");             //Load file of graph.
+    QFile chartFile(pathSmartGUI + "/chart.html");                   //Load file of graph.
 
     QString chartCode1, chartCode2;
     QString r, g, b;
@@ -499,10 +499,6 @@ void MainWindow::loadChart(){
         }
     }
 
-
-    //Apply layout of label with algoName in ui.
-    //ui->activeAlgo_scrollArea->setLayout(layoutLegend);
-
     QString chartCodeComplete = chartCode1 + datasets + chartCode2;
 
     //Write fileChart.
@@ -512,9 +508,9 @@ void MainWindow::loadChart(){
     }
 
     //Copy Chart.js from resource in local.
-    QFile::copy(":/chartFile/chart/Chart.js" , _pathSmartGUI +  "/Chart.js");
+    QFile::copy(":/chartFile/chart/Chart.js" , pathSmartGUI +  "/Chart.js");
 
-    chartWebView->load(QUrl("file:///" + _pathSmartGUI +  "/chart.html"));
+    chartWebView->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();
@@ -628,9 +624,9 @@ void MainWindow::on_start_pushButton_released() {
 
     QString tmpPr = "";
 
-    QFile SmartCheck(_pathSmart + "/smart");
-    QFile SelectCheck(_pathSmart + "/select");
-    QFile TestCheck(_pathSmart + "/test");
+    QFile SmartCheck(pathSmart + "/smart");
+    QFile SelectCheck(pathSmart + "/select");
+    QFile TestCheck(pathSmart + "/test");
 
     if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
@@ -706,12 +702,12 @@ void MainWindow::on_start_pushButton_released() {
 
         currentPlen = minPlen;
 
-        loadChart();
+        createChart();
 
         myProc = new QProcess(this);                                                    //Create process.
         connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
         connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
-        myProc->setWorkingDirectory(_pathSmart);                                      //Set the folder with SMART.
+        myProc->setWorkingDirectory(pathSmart);                                        //Set the folder with SMART.
         myProc->start(execute);                                                         //Start process.
 
     }else
