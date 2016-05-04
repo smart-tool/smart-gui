@@ -79,6 +79,8 @@ QWebEngineView *showResult;
 
 QStringList nameText;
 
+QWebEngineView *chartWebViewAll[100];
+
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -314,7 +316,10 @@ void MainWindow::updateGUI(){
                 javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
 
                 //Send js code.
-                chartWebView->page()->runJavaScript(javascriptCode);
+                if(ui->Text_comboBox->currentText() != "all")
+                    chartWebView->page()->runJavaScript(javascriptCode);
+                else
+                    chartWebViewAll[tabChartWebView->count() - 1]->page()->runJavaScript(javascriptCode);
 
                 timeAlgo = "";
                 currentAlgo = 0;
@@ -322,10 +327,7 @@ void MainWindow::updateGUI(){
                 if (currentPlen == maxPlen && ui->Text_comboBox->currentText() == "all"){
                     currentPlen = minPlen;
 
-                    chartWebView = new QWebEngineView();
-                    chartWebView->load(QUrl("file:///" + pathSmartGUI + "/chart.html"));
-
-                    tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, nameText[tabChartWebView->count()] );
+                    tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], nameText[tabChartWebView->count()] );
                     tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
 
                     ui->progressBar->setValue(0);
@@ -417,13 +419,17 @@ void MainWindow::inizializeAll(){
     fakeTerminal->setLineWrapMode((QTextEdit::NoWrap));
     layoutForTab->addWidget(fakeTerminal);
 
-    chartWebView = new QWebEngineView();
+    if( ui->Text_comboBox->currentText() == "all" ){
 
-    if( ui->Text_comboBox->currentText()=="all" ){
+        for(int i=0; i<nameText.length(); i++)
+            chartWebViewAll[i] = new QWebEngineView();
+
         tabChartWebView = new QTabWidget;
         layoutForTab->addWidget(tabChartWebView);
-        tabChartWebView->insertTab(tabChartWebView->count(), chartWebView, nameText[tabChartWebView->count()]);
+        tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], nameText[tabChartWebView->count()]);
+
     }else{
+        chartWebView = new QWebEngineView();
         layoutForTab->addWidget(chartWebView);
     }
 
@@ -510,7 +516,12 @@ void MainWindow::createChart(){
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , pathSmartGUI +  "/Chart.js");
 
-    chartWebView->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
+    if( ui->Text_comboBox->currentText() != "all" )
+        chartWebView->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
+    else{
+        for(int i=0; i<nameText.length(); i++)
+            chartWebViewAll[i]->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
+    }
 
     algoOutput = new QString[nEnabledAlg];
     algoOutput->clear();
