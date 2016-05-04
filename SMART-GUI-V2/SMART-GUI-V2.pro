@@ -28,4 +28,5 @@ FORMS   += mainwindow.ui \
            setupwindow.ui
 
 RESOURCES += \
-           chartfile.qrc
+           chartfile.qrc \
+           icon.qrc
