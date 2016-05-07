@@ -1,49 +1,54 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include <QMessageBox>
+//Include the other window header.
+#include "selectalgwindow.h"
+#include "addalgo.h"
+#include "setupwindow.h"
+
+//Library for manage file and directory.
 #include <QFile>
-#include <QDebug>
+#include <QDir>
+
+//Library for manage String.
 #include <QString>
 #include <QStringList>
+#include <QRegExp>
 
+//Library for the ui.
 #include <QTabWidget>
 #include <QTextEdit>
 #include <QScrollArea>
 #include <QSplitter>
 
-#include <QPrinter>
-
-#include <QTimer>
-#include <QProcess>
-#include <QRegExp>
+//Library for styleLabel.
 #include <QColor>
 #include <QPalette>
 
+//Library for webEngineView.
 #include <QtWebEngineWidgets>
-#include <QWebEngineHistory>
-#include <QWebEngineHistoryItem>
 #include <QWebEnginePage>
 #include <QWebEngineView>
 
-#include <QDir>
+#include <QDebug>
+
+#include <QMessageBox>
+
+#include <QProcess>
 
 #include <cmath>
 
-#include "selectalgwindow.h"
-#include "addalgo.h"
-#include "setupwindow.h"
+#define NumAlgo 500             //Define the number of algorithm.
 
-QString pathSmartGUI = QDir::homePath() + "/smartGUI";
-QString pathSmart = pathSmartGUI + "/smartSource";
-
-#define NumAlgo 500             //Define the number of algorithm
-
-QRegExp rxFloat("[^0-9.]");     //Regex keeps floating number.
+QString completeOutput = "";    //Output string goint to fake terminal.
+QString parameters = "";        //Parameters to send in smart.
+QString timeAlgo = "";          //String with result algo time.
+QString expCode = "";           //String with code ex.
 
 QProcess *myProc;               //Declare myProc.
 
-QStringList myAlgoName;         //Name of active algo.
+QStringList nameText;           //List of all text name for 'all test'.
+QStringList myAlgoName;         //List of name of active algo.
 QString *algoOutput;            //List of all output for fake terminal.
 
 int nEnabledAlg;                //Number of active algo.
@@ -56,51 +61,51 @@ double minPlen = 2;             //Min plen.
 double maxPlen = 4096;          //Max plen.
 double currentPlen;             //Current plen.
 
-bool forcedStop = false;        //Bool true if click stop button.
+bool forcedStop;                //Bool true if click stop button.
+bool errorParameters;           //Bool true if we wrong parameters in Smart.
+bool errorSegmentationFault;    //Bool true if Smart have a Segmentation Fault.
 
-QString completeOutput = "";               //Output string goint to fake terminal.
-QString parameters = "";                   //Parameters to send in smart.
-QString timeAlgo = "";                     //String with result algo time.
-QString expCode = "";                      //String with code ex.
+QString Default500 = "500";     //Default value for Pset.
+QString Default1Mb = "1";       //Default value for Tsize.
+QString DefaultTb300 = "300";   //Default value for Tb.
 
-QString Default500 = "500";
-QString Default1Mb = "1";
-QString DefaultTb300 = "300";
+QTextEdit *fakeTerminal;        //Pointer of textEdit used to made a dynamic fakeTerminal.
+QVBoxLayout *layoutLegend;      //Pointer of boxLayout used to made a legend of active algo.
+QScrollArea *scrollActiveAlgo;  //Pointer of scrollArea to make the layoutLenged scrollable.
+QSplitter *layoutForTab;        //Pointer of splitter to make resizable the GUI.
 
-QWebEngineView *chartWebView;
-QTabWidget *tabData;
-QTabWidget *tabChartWebView;
-QTextEdit *fakeTerminal;
-QVBoxLayout *layoutLegend;
-QScrollArea *scrollActiveAlgo;
-QSplitter *layoutForTab;
+QWebEngineView *showResult;     //Pointer of webEngineView used to show the result test.
 
-QWebEngineView *showResult;
+QWebEngineView *chartWebView;           //Pointer of webEngineView (Show single chart).
+QTabWidget *tabData;                    //Pointer of tabWidget (different tab for different exp).
 
-QStringList nameText;
+QWebEngineView *chartWebViewAll[100];   //Array of pointer of webEngineView (Show the multi char for test "all text").
+QTabWidget *tabChartWebView;            //Pointer of tabWidget (different tab for different text).
 
-QWebEngineView *chartWebViewAll[100];
-
+QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js and path of smartSource (nextUpdate) ).
+QString pathSmart = pathSmartGUI + "/smartSource";      //Default contains smartSource file.
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
 
     ui->setupUi(this);
 
+    //Set the the default value in lineEdit.
     ui->Pset_lineEdit->setText(Default500);
     ui->Tsize_lineEdit->setText(Default1Mb);
     ui->Tb_lineEdit->setText(DefaultTb300);
 
+    //Create new tab and add it to layout.
     tabData = new QTabWidget;
     ui->horizontalLayout_2->addWidget(tabData);
 
+    //Load all name of text.
     nameText << "rand2" << "rand4" << "rand8" << "rand16" << "rand32" << "rand64" << "rand128" << "rand250" <<
                 "italianTexts" << "englishTexts" << "frenchTexts" << "chineseTexts" << "midimusic" << "genome" << "protein";
 
+    //Allow only number in lineEdit.
     ui->PlenL_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->PlenU_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
-    ui->SimpleP_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
-    ui->SimpleT_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Tb_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Tsize_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Pset_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
@@ -176,8 +181,9 @@ void generateEXPCode(){
 QString MainWindow::createHeadEXP(){
 
     QString tmpText;
-
-    if( ui->Text_comboBox->currentText() != "all" )
+    if (ui->SimpleT_lineEdit->text() != "")
+        tmpText = ui->SimpleT_lineEdit->text();
+    else if( ui->Text_comboBox->currentText() != "all" )
         tmpText = ui->Text_comboBox->currentText();
     else
         tmpText = nameText[tabChartWebView->count()-1];
@@ -205,9 +211,23 @@ void MainWindow::processEnded(){
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  STOPPED BY USER " + expCode
                                             );
-    else{
-        ui->progressBar->setValue(calculatePercentage());
+    else if(errorParameters){
+        fakeTerminal->setText( fakeTerminal->toPlainText() +
+                                            "\n\n  ---------------------------------------------------------------------" +
+                                            "\n  ERROR IN INPUT PARAMETERS " + expCode
+                                            );
 
+         QMessageBox::warning(this,"Error!","Error in input parameters.");
+    }else if(errorSegmentationFault){
+        fakeTerminal->setText( fakeTerminal->toPlainText() +
+                                            "\n\n  ---------------------------------------------------------------------" +
+                                            "\n  SEGMENTATION FAULT " + expCode
+                                            );
+
+         QMessageBox::warning(this,"Error!","Segmentation fault.");
+
+    }else{
+        ui->progressBar->setValue(calculatePercentage());
         fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
@@ -260,126 +280,134 @@ void MainWindow::updateGUI(){
 
     QString javascriptCode = "";
     QString tmpOutput = myProc->readAllStandardOutput().replace('\b',"");
+    QString tmpError = myProc->readAllStandardError().replace('\b',"");
 
-    if (tmpOutput.contains("%")){
+    if (tmpOutput.contains("Error in input parameters"))
+        errorParameters = true;
+    else if(tmpError.contains("Segmentation fault"))
+        errorSegmentationFault = true;
+    else{
+        if (tmpOutput.contains("%")){
 
-        int tmpPercent = (100*countPercent)/ui->Pset_lineEdit->text().toDouble();
+            int tmpPercent = (100*countPercent)/ui->Pset_lineEdit->text().toDouble();
 
-        algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                    "\t" + myAlgoName[currentAlgo] + " \t[" + QString::number(tmpPercent) + "%]\t" ;
+            algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                        "\t" + myAlgoName[currentAlgo] + " \t[" + QString::number(tmpPercent) + "%]\t" ;
 
-        countPercent += tmpOutput.count('%');
+            countPercent += tmpOutput.count('%');
 
-        fakeTerminal->setText(completeOutput + algoOutput[currentAlgo]);
-
-    }
-
-    if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
-
-        QString infoAlgo = "";
-        QStringList splittedOutput;
-        splittedOutput << tmpOutput.split('\t');
-
-        for(int j=0; j<splittedOutput.length(); j++){
-
-            tmpOutput = splittedOutput[j].replace('\n',"");
-            QStringList splittedBySpace = tmpOutput.split("  "); //Split by doubleSpace
-
-            for(int i=0; i<splittedBySpace.length(); i++){
-                if(splittedBySpace[i].contains("ms") && tmpOutput.contains('.')){
-
-                    if(splittedBySpace[i].contains('+')){
-                        QStringList tmpTimePre = splittedBySpace[i].split('+');
-                        for(int f=0; f<tmpTimePre.length(); f++)
-                            if(tmpTimePre[f].contains("ms")){
-                                timeAlgo += tmpTimePre[f].replace(rxFloat,"") + ',';
-                                infoAlgo += tmpTimePre[f].replace(rxFloat,"") + " ms";
-                            }else
-                                infoAlgo += '\t' + tmpTimePre[f].replace(rxFloat,"") + "+";
-
-                    }else{
-                        timeAlgo += splittedBySpace[i].replace(rxFloat,"") + ',';
-                        infoAlgo += '\t' + splittedBySpace[i].replace(rxFloat,"") + " ms";
-                    }
-                }
-
-                if(splittedBySpace[i].contains("std"))
-                    infoAlgo += '\t' + splittedBySpace[i];
-
-                if(splittedBySpace[i].contains('[') &&  splittedBySpace[i].contains(']') && splittedBySpace[i].contains(','))
-                    infoAlgo += '\t' + splittedBySpace[i];
-            }
-
-            if (currentAlgo == nEnabledAlg){
-
-                //Create the javascript code.
-                javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
-
-                //Send js code.
-                if(ui->Text_comboBox->currentText() != "all")
-                    chartWebView->page()->runJavaScript(javascriptCode);
-                else
-                    chartWebViewAll[tabChartWebView->count() - 1]->page()->runJavaScript(javascriptCode);
-
-                timeAlgo = "";
-                currentAlgo = 0;
-
-                if (currentPlen == maxPlen && ui->Text_comboBox->currentText() == "all"){
-                    currentPlen = minPlen;
-
-                    tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], nameText[tabChartWebView->count()] );
-                    tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
-
-                    ui->progressBar->setValue(0);
-                    helpCounterAlg = 0;
-                    countPercent = 0;
-                }else
-                    currentPlen*=2;
-
-                completeOutput += createHeadEXP();
-
-            }
-
-            if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
-
-                if( ui->Occ_checkBox->isChecked() )
-                    infoAlgo += '\t' + splittedOutput[j+1].replace('\n',"");
-
-                algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                            "\t" + myAlgoName[currentAlgo] + " \t[OK]" + infoAlgo ;
-
-                completeOutput += algoOutput[currentAlgo];
-                fakeTerminal->setText(completeOutput);
-
-                currentAlgo++;
-                countPercent=0;
-
-                helpCounterAlg++;
-                infoAlgo = "";
-
-            }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
-
-                QString tmpError = "--";
-
-                if ( tmpOutput.contains("[ERROR]"))     tmpError = "ERROR";
-                else if (tmpOutput.contains("[OUT]"))   tmpError = "OUT";
-
-
-                algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
-                                            "\t" + myAlgoName[currentAlgo] + " \t[" + tmpError + "]\t" ;
-
-                completeOutput += algoOutput[currentAlgo];
-                fakeTerminal->setText(completeOutput);
-
-                timeAlgo += "null,";
-                currentAlgo++;
-                countPercent=0;
-
-                helpCounterAlg++;
-            }
+            fakeTerminal->setText(completeOutput + algoOutput[currentAlgo]);
 
         }
 
+        if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
+
+            QRegExp rxFloat("[^0-9.]");     //Regex keeps floating number.
+            QString infoAlgo = "";
+            QStringList splittedOutput;
+            splittedOutput << tmpOutput.split('\t');
+
+            for(int j=0; j<splittedOutput.length(); j++){
+
+                tmpOutput = splittedOutput[j].replace('\n',"");
+                QStringList splittedBySpace = tmpOutput.split("  "); //Split by doubleSpace
+
+                for(int i=0; i<splittedBySpace.length(); i++){
+                    if(splittedBySpace[i].contains("ms") && tmpOutput.contains('.')){
+
+                        if(splittedBySpace[i].contains('+')){
+                            QStringList tmpTimePre = splittedBySpace[i].split('+');
+                            for(int f=0; f<tmpTimePre.length(); f++)
+                                if(tmpTimePre[f].contains("ms")){
+                                    timeAlgo += tmpTimePre[f].replace(rxFloat,"") + ',';
+                                    infoAlgo += tmpTimePre[f].replace(rxFloat,"") + " ms";
+                                }else
+                                    infoAlgo += '\t' + tmpTimePre[f].replace(rxFloat,"") + "+";
+
+                        }else{
+                            timeAlgo += splittedBySpace[i].replace(rxFloat,"") + ',';
+                            infoAlgo += '\t' + splittedBySpace[i].replace(rxFloat,"") + " ms";
+                        }
+                    }
+
+                    if(splittedBySpace[i].contains("std"))
+                        infoAlgo += '\t' + splittedBySpace[i];
+
+                    if(splittedBySpace[i].contains('[') &&  splittedBySpace[i].contains(']') && splittedBySpace[i].contains(','))
+                        infoAlgo += '\t' + splittedBySpace[i];
+                }
+
+                if (currentAlgo == nEnabledAlg){
+
+                    //Create the javascript code.
+                    javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
+
+                    //Send js code.
+                    if(ui->Text_comboBox->currentText() != "all")
+                        chartWebView->page()->runJavaScript(javascriptCode);
+                    else
+                        chartWebViewAll[tabChartWebView->count() - 1]->page()->runJavaScript(javascriptCode);
+
+                    timeAlgo = "";
+                    currentAlgo = 0;
+
+                    if (currentPlen == maxPlen && ui->Text_comboBox->currentText() == "all"){
+                        currentPlen = minPlen;
+
+                        tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], nameText[tabChartWebView->count()] );
+                        tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
+
+                        ui->progressBar->setValue(0);
+                        helpCounterAlg = 0;
+                        countPercent = 0;
+                    }else
+                        currentPlen*=2;
+
+                    completeOutput += createHeadEXP();
+
+                }
+
+                if( tmpOutput.contains("ms") && tmpOutput.contains('.') ){
+
+                    if( ui->Occ_checkBox->isChecked() )
+                        infoAlgo += '\t' + splittedOutput[j+1].replace('\n',"");
+
+                    algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                                "\t" + myAlgoName[currentAlgo] + " \t[OK]" + infoAlgo ;
+
+                    completeOutput += algoOutput[currentAlgo];
+                    fakeTerminal->setText(completeOutput);
+
+                    currentAlgo++;
+                    countPercent=0;
+
+                    helpCounterAlg++;
+                    infoAlgo = "";
+
+                }else if ( tmpOutput.contains("[--]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[OUT]") ){
+
+                    QString tmpError = "--";
+
+                    if ( tmpOutput.contains("[ERROR]"))     tmpError = "ERROR";
+                    else if (tmpOutput.contains("[OUT]"))   tmpError = "OUT";
+
+
+                    algoOutput[currentAlgo] =   "\n  - [" + QString::number(currentAlgo+1) + "/" + QString::number(nEnabledAlg) + "]"
+                                                "\t" + myAlgoName[currentAlgo] + " \t[" + tmpError + "]\t" ;
+
+                    completeOutput += algoOutput[currentAlgo];
+                    fakeTerminal->setText(completeOutput);
+
+                    timeAlgo += "null,";
+                    currentAlgo++;
+                    countPercent=0;
+
+                    helpCounterAlg++;
+                }
+
+            }
+
+        }
     }
 
     //Go to the end of fakeTerminal.
@@ -399,6 +427,8 @@ void MainWindow::inizializeAll(){
     helpCounterAlg = 0;
 
     forcedStop = false;
+    errorParameters = false;
+    errorSegmentationFault = false;
 
     nEnabledAlg = 0;
     countPercent = 0;
