@@ -39,6 +39,7 @@ private slots:
     void on_actionSetup_SMART_GUI_triggered();
 
 public slots:
+    void runProcess();
     void updateGUI();
     void processEnded();
     void showResultFunction();

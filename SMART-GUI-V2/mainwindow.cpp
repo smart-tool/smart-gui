@@ -148,6 +148,7 @@ void MainWindow::on_actionAbout_SMART_GUI_triggered() {
 //Load into array parameters the status of algo.
 void getAlgoMain(char *ALGO_NAME[], int EXECUTE[]) {
 
+    //Create const string.
     QByteArray tmpByteArray = pathSmart.toLatin1() + "/source/algorithms.h";
     const char * pathSmartConst = tmpByteArray.data();
 
@@ -178,6 +179,7 @@ void generateEXPCode(){
     expCode = "EXP" + QString::number(t);
 }
 
+//Create EXP header for new test.
 QString MainWindow::createHeadEXP(){
 
     QString tmpText;
@@ -195,10 +197,12 @@ QString MainWindow::createHeadEXP(){
 
 }
 
+//Calculate the current percentage.
 int calculatePercentage(){
     return (helpCounterAlg*100)/(nEnabledAlg * nExecutePatt);
 }
 
+//Open webEngineView with result exp.
 void MainWindow::showResultFunction(){
     showResult->show();
 }
@@ -211,6 +215,7 @@ void MainWindow::processEnded(){
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  STOPPED BY USER " + expCode
                                             );
+
     else if(errorParameters){
         fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
@@ -218,6 +223,7 @@ void MainWindow::processEnded(){
                                             );
 
          QMessageBox::warning(this,"Error!","Error in input parameters.");
+
     }else if(errorSegmentationFault){
         fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
@@ -227,13 +233,15 @@ void MainWindow::processEnded(){
          QMessageBox::warning(this,"Error!","Segmentation fault.");
 
     }else{
-        ui->progressBar->setValue(calculatePercentage());
+
         fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
                                             );
 
         if (ui->Text_comboBox->currentText() != "all"){
+            ui->progressBar->setValue(calculatePercentage());
+
             fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".xml" +
                                                                  "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".html" );
 
@@ -251,6 +259,8 @@ void MainWindow::processEnded(){
             }
 
         }else{
+            ui->progressBar->setValue(100);
+
             for(int j=0; j<tabChartWebView->count()-1; j++){
                 fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + nameText[j] + ".xml" +
                                                                      "\n  Saving data on " + expCode + "/" + nameText[j] + ".html" );
@@ -272,21 +282,24 @@ void MainWindow::processEnded(){
     ui->stop_pushButton->setEnabled(false);
 }
 
-//Execute this SLOT everytime the SMART have an output.
-//Update the chart e progress-bar.
+//Execute this SLOT everytime the SMART have an output. Update the chart e progress-bar.
 void MainWindow::updateGUI(){
 
+    //Set the new percentage.
     ui->progressBar->setValue(calculatePercentage());
 
     QString javascriptCode = "";
-    QString tmpOutput = myProc->readAllStandardOutput().replace('\b',"");
-    QString tmpError = myProc->readAllStandardError().replace('\b',"");
+    QString tmpOutput = myProc->readAllStandardOutput().replace('\b',"");   //Read all output.
+    QString tmpError = myProc->readAllStandardError().replace('\b',"");     //Read all error.
 
     if (tmpOutput.contains("Error in input parameters"))
         errorParameters = true;
+
     else if(tmpError.contains("Segmentation fault"))
         errorSegmentationFault = true;
+
     else{
+
         if (tmpOutput.contains("%")){
 
             int tmpPercent = (100*countPercent)/ui->Pset_lineEdit->text().toDouble();
@@ -295,22 +308,22 @@ void MainWindow::updateGUI(){
                                         "\t" + myAlgoName[currentAlgo] + " \t[" + QString::number(tmpPercent) + "%]\t" ;
 
             countPercent += tmpOutput.count('%');
-
             fakeTerminal->setText(completeOutput + algoOutput[currentAlgo]);
 
         }
 
         if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
 
-            QRegExp rxFloat("[^0-9.]");     //Regex keeps floating number.
+            QRegExp rxFloat("[^0-9.]");                             //Regex keeps floating number.
             QString infoAlgo = "";
             QStringList splittedOutput;
             splittedOutput << tmpOutput.split('\t');
 
+            //Parsing the output to get the data.
             for(int j=0; j<splittedOutput.length(); j++){
 
                 tmpOutput = splittedOutput[j].replace('\n',"");
-                QStringList splittedBySpace = tmpOutput.split("  "); //Split by doubleSpace
+                QStringList splittedBySpace = tmpOutput.split("  "); //Split by doubleSpace.
 
                 for(int i=0; i<splittedBySpace.length(); i++){
                     if(splittedBySpace[i].contains("ms") && tmpOutput.contains('.')){
@@ -417,10 +430,24 @@ void MainWindow::updateGUI(){
 
 }
 
+//Run process when webEngineView end to load the chart.
+void MainWindow::runProcess(){
+    QString execute = "./smart " + parameters;
+    qDebug() << execute;
+
+    generateEXPCode();
+    completeOutput += createHeadEXP();
+
+    tabData->insertTab(tabData->count(), layoutForTab, expCode);
+    tabData->setCurrentIndex(tabData->count()-1);
+
+    myProc->start(execute); //Start process.
+}
 
 //Inizialize and clear all supportVariables
 void MainWindow::inizializeAll(){
 
+    //Reset all variabiles.
     timeAlgo = "";
 
     ui->progressBar->setValue(0);
@@ -439,10 +466,8 @@ void MainWindow::inizializeAll(){
     expCode = "";
     completeOutput = "";
 
-    generateEXPCode();
-
+    //Create the new layout tab.
     layoutForTab = new QSplitter();
-
 
     fakeTerminal = new QTextEdit();
     fakeTerminal->setReadOnly(true);
@@ -467,10 +492,12 @@ void MainWindow::inizializeAll(){
     layoutLegend = new QVBoxLayout();
     scrollActiveAlgo->setLayout(layoutLegend);
     scrollActiveAlgo->setMaximumWidth(150);
-    layoutForTab->addWidget(scrollActiveAlgo);
+    layoutForTab->addWidget(scrollActiveAlgo); 
 
-    tabData->insertTab(tabData->count(), layoutForTab, expCode );
-    tabData->setCurrentIndex(tabData->count()-1);
+    myProc = new QProcess(this);                                                    //Create process.
+    connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
+    connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
+    myProc->setWorkingDirectory(pathSmart);                                         //Set the folder with SMART.
 
 }
 
@@ -535,6 +562,9 @@ void MainWindow::createChart(){
         }
     }
 
+    algoOutput = new QString[nEnabledAlg];
+    algoOutput->clear();
+
     QString chartCodeComplete = chartCode1 + datasets + chartCode2;
 
     //Write fileChart.
@@ -546,17 +576,15 @@ void MainWindow::createChart(){
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , pathSmartGUI +  "/Chart.js");
 
-    if( ui->Text_comboBox->currentText() != "all" )
+    if( ui->Text_comboBox->currentText() != "all" ){
         chartWebView->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
-    else{
+        connect(chartWebView, SIGNAL(loadFinished(bool)), this, SLOT(runProcess()));
+    }else{
         for(int i=0; i<nameText.length(); i++)
             chartWebViewAll[i]->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
+
+        connect(chartWebViewAll[0], SIGNAL(loadFinished(bool)), this, SLOT(runProcess()));
     }
-
-    algoOutput = new QString[nEnabledAlg];
-    algoOutput->clear();
-
-    completeOutput += createHeadEXP();
 
 }
 
@@ -733,23 +761,13 @@ void MainWindow::on_start_pushButton_released() {
         ui->stop_pushButton->setEnabled(true);
         ui->start_pushButton->setEnabled(false);
 
-        QString execute = "./smart " + parameters;
-        qDebug() << execute;
-
         nExecutePatt = (floor ( Log2(maxPlen))) - (ceil ( Log2(minPlen))) + 1;
-
         minPlen = pow(2, ceil ( Log2(minPlen) ) );
         maxPlen = pow(2, floor ( Log2(maxPlen) ) );
 
         currentPlen = minPlen;
 
-        createChart();
-
-        myProc = new QProcess(this);                                                    //Create process.
-        connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
-        connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
-        myProc->setWorkingDirectory(pathSmart);                                        //Set the folder with SMART.
-        myProc->start(execute);                                                         //Start process.
+        createChart();  
 
     }else
         QMessageBox::warning(this,"Error!","Need SMART source in folder.");
