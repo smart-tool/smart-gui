@@ -248,91 +248,91 @@
        </widget>
       </item>
       <item row="3" column="2">
-       <widget class="QCheckBox" name="checkBox_2">
+       <widget class="QCheckBox" name="englishTextsCheckBox">
         <property name="text">
          <string>englishTexts</string>
         </property>
        </widget>
       </item>
       <item row="3" column="1">
-       <widget class="QCheckBox" name="checkBox">
+       <widget class="QCheckBox" name="AllCheckBox">
         <property name="text">
          <string>all</string>
         </property>
        </widget>
       </item>
       <item row="3" column="3">
-       <widget class="QCheckBox" name="checkBox_3">
+       <widget class="QCheckBox" name="italianTextsCheckBox">
         <property name="text">
          <string>italianTexts</string>
         </property>
        </widget>
       </item>
       <item row="3" column="4">
-       <widget class="QCheckBox" name="checkBox_4">
+       <widget class="QCheckBox" name="genomeCheckBox">
         <property name="text">
          <string>genome</string>
         </property>
        </widget>
       </item>
       <item row="3" column="5">
-       <widget class="QCheckBox" name="checkBox_5">
+       <widget class="QCheckBox" name="proteinCheckBox">
         <property name="text">
          <string>protein</string>
         </property>
        </widget>
       </item>
       <item row="3" column="6">
-       <widget class="QCheckBox" name="checkBox_6">
+       <widget class="QCheckBox" name="rand2CheckBox">
         <property name="text">
          <string>rand2</string>
         </property>
        </widget>
       </item>
       <item row="4" column="0">
-       <widget class="QCheckBox" name="checkBox_7">
+       <widget class="QCheckBox" name="rand4CheckBox">
         <property name="text">
          <string>rand4</string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
-       <widget class="QCheckBox" name="checkBox_8">
+       <widget class="QCheckBox" name="rand8CheckBox">
         <property name="text">
          <string>rand8</string>
         </property>
        </widget>
       </item>
       <item row="4" column="2">
-       <widget class="QCheckBox" name="checkBox_9">
+       <widget class="QCheckBox" name="rand16CheckBox">
         <property name="text">
          <string>rand16</string>
         </property>
        </widget>
       </item>
       <item row="4" column="3">
-       <widget class="QCheckBox" name="checkBox_10">
+       <widget class="QCheckBox" name="rand32CheckBox">
         <property name="text">
          <string>rand32</string>
         </property>
        </widget>
       </item>
       <item row="4" column="4">
-       <widget class="QCheckBox" name="checkBox_11">
+       <widget class="QCheckBox" name="rand64CheckBox">
         <property name="text">
          <string>rand64</string>
         </property>
        </widget>
       </item>
       <item row="4" column="5">
-       <widget class="QCheckBox" name="checkBox_12">
+       <widget class="QCheckBox" name="rand128CheckBox">
         <property name="text">
          <string>rand128</string>
         </property>
        </widget>
       </item>
       <item row="4" column="6">
-       <widget class="QCheckBox" name="checkBox_13">
+       <widget class="QCheckBox" name="rand250CheckBox">
         <property name="text">
          <string>rand250</string>
         </property>

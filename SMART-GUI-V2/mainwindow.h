@@ -40,6 +40,8 @@ private slots:
 
     void on_checkBox_clicked();
 
+    void on_AllCheckBox_clicked();
+
 public slots:
     void runProcess();
     void updateGUI();

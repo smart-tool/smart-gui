@@ -61,19 +61,19 @@ public:
     QCheckBox *Tex_checkBox;
     QCheckBox *Pre_checkBox;
     QLabel *label;
-    QCheckBox *checkBox_2;
-    QCheckBox *checkBox;
-    QCheckBox *checkBox_3;
-    QCheckBox *checkBox_4;
-    QCheckBox *checkBox_5;
-    QCheckBox *checkBox_6;
-    QCheckBox *checkBox_7;
-    QCheckBox *checkBox_8;
-    QCheckBox *checkBox_9;
-    QCheckBox *checkBox_10;
-    QCheckBox *checkBox_11;
-    QCheckBox *checkBox_12;
-    QCheckBox *checkBox_13;
+    QCheckBox *englishTextsCheckBox;
+    QCheckBox *AllCheckBox;
+    QCheckBox *italianTextsCheckBox;
+    QCheckBox *genomeCheckBox;
+    QCheckBox *proteinCheckBox;
+    QCheckBox *rand2CheckBox;
+    QCheckBox *rand4CheckBox;
+    QCheckBox *rand8CheckBox;
+    QCheckBox *rand16CheckBox;
+    QCheckBox *rand32CheckBox;
+    QCheckBox *rand64CheckBox;
+    QCheckBox *rand128CheckBox;
+    QCheckBox *rand250CheckBox;
     QHBoxLayout *horizontalLayout;
     QPushButton *start_pushButton;
     QPushButton *stop_pushButton;
@@ -244,70 +244,70 @@ public:
 
         gridLayout->addWidget(label, 3, 0, 1, 1);
 
-        checkBox_2 = new QCheckBox(centralWidget);
-        checkBox_2->setObjectName(QStringLiteral("checkBox_2"));
+        englishTextsCheckBox = new QCheckBox(centralWidget);
+        englishTextsCheckBox->setObjectName(QStringLiteral("englishTextsCheckBox"));
 
-        gridLayout->addWidget(checkBox_2, 3, 2, 1, 1);
+        gridLayout->addWidget(englishTextsCheckBox, 3, 2, 1, 1);
 
-        checkBox = new QCheckBox(centralWidget);
-        checkBox->setObjectName(QStringLiteral("checkBox"));
+        AllCheckBox = new QCheckBox(centralWidget);
+        AllCheckBox->setObjectName(QStringLiteral("AllCheckBox"));
 
-        gridLayout->addWidget(checkBox, 3, 1, 1, 1);
+        gridLayout->addWidget(AllCheckBox, 3, 1, 1, 1);
 
-        checkBox_3 = new QCheckBox(centralWidget);
-        checkBox_3->setObjectName(QStringLiteral("checkBox_3"));
+        italianTextsCheckBox = new QCheckBox(centralWidget);
+        italianTextsCheckBox->setObjectName(QStringLiteral("italianTextsCheckBox"));
 
-        gridLayout->addWidget(checkBox_3, 3, 3, 1, 1);
+        gridLayout->addWidget(italianTextsCheckBox, 3, 3, 1, 1);
 
-        checkBox_4 = new QCheckBox(centralWidget);
-        checkBox_4->setObjectName(QStringLiteral("checkBox_4"));
+        genomeCheckBox = new QCheckBox(centralWidget);
+        genomeCheckBox->setObjectName(QStringLiteral("genomeCheckBox"));
 
-        gridLayout->addWidget(checkBox_4, 3, 4, 1, 1);
+        gridLayout->addWidget(genomeCheckBox, 3, 4, 1, 1);
 
-        checkBox_5 = new QCheckBox(centralWidget);
-        checkBox_5->setObjectName(QStringLiteral("checkBox_5"));
+        proteinCheckBox = new QCheckBox(centralWidget);
+        proteinCheckBox->setObjectName(QStringLiteral("proteinCheckBox"));
 
-        gridLayout->addWidget(checkBox_5, 3, 5, 1, 1);
+        gridLayout->addWidget(proteinCheckBox, 3, 5, 1, 1);
 
-        checkBox_6 = new QCheckBox(centralWidget);
-        checkBox_6->setObjectName(QStringLiteral("checkBox_6"));
+        rand2CheckBox = new QCheckBox(centralWidget);
+        rand2CheckBox->setObjectName(QStringLiteral("rand2CheckBox"));
 
-        gridLayout->addWidget(checkBox_6, 3, 6, 1, 1);
+        gridLayout->addWidget(rand2CheckBox, 3, 6, 1, 1);
 
-        checkBox_7 = new QCheckBox(centralWidget);
-        checkBox_7->setObjectName(QStringLiteral("checkBox_7"));
+        rand4CheckBox = new QCheckBox(centralWidget);
+        rand4CheckBox->setObjectName(QStringLiteral("rand4CheckBox"));
 
-        gridLayout->addWidget(checkBox_7, 4, 0, 1, 1);
+        gridLayout->addWidget(rand4CheckBox, 4, 0, 1, 1);
 
-        checkBox_8 = new QCheckBox(centralWidget);
-        checkBox_8->setObjectName(QStringLiteral("checkBox_8"));
+        rand8CheckBox = new QCheckBox(centralWidget);
+        rand8CheckBox->setObjectName(QStringLiteral("rand8CheckBox"));
 
-        gridLayout->addWidget(checkBox_8, 4, 1, 1, 1);
+        gridLayout->addWidget(rand8CheckBox, 4, 1, 1, 1);
 
-        checkBox_9 = new QCheckBox(centralWidget);
-        checkBox_9->setObjectName(QStringLiteral("checkBox_9"));
+        rand16CheckBox = new QCheckBox(centralWidget);
+        rand16CheckBox->setObjectName(QStringLiteral("rand16CheckBox"));
 
-        gridLayout->addWidget(checkBox_9, 4, 2, 1, 1);
+        gridLayout->addWidget(rand16CheckBox, 4, 2, 1, 1);
 
-        checkBox_10 = new QCheckBox(centralWidget);
-        checkBox_10->setObjectName(QStringLiteral("checkBox_10"));
+        rand32CheckBox = new QCheckBox(centralWidget);
+        rand32CheckBox->setObjectName(QStringLiteral("rand32CheckBox"));
 
-        gridLayout->addWidget(checkBox_10, 4, 3, 1, 1);
+        gridLayout->addWidget(rand32CheckBox, 4, 3, 1, 1);
 
-        checkBox_11 = new QCheckBox(centralWidget);
-        checkBox_11->setObjectName(QStringLiteral("checkBox_11"));
+        rand64CheckBox = new QCheckBox(centralWidget);
+        rand64CheckBox->setObjectName(QStringLiteral("rand64CheckBox"));
 
-        gridLayout->addWidget(checkBox_11, 4, 4, 1, 1);
+        gridLayout->addWidget(rand64CheckBox, 4, 4, 1, 1);
 
-        checkBox_12 = new QCheckBox(centralWidget);
-        checkBox_12->setObjectName(QStringLiteral("checkBox_12"));
+        rand128CheckBox = new QCheckBox(centralWidget);
+        rand128CheckBox->setObjectName(QStringLiteral("rand128CheckBox"));
 
-        gridLayout->addWidget(checkBox_12, 4, 5, 1, 1);
+        gridLayout->addWidget(rand128CheckBox, 4, 5, 1, 1);
 
-        checkBox_13 = new QCheckBox(centralWidget);
-        checkBox_13->setObjectName(QStringLiteral("checkBox_13"));
+        rand250CheckBox = new QCheckBox(centralWidget);
+        rand250CheckBox->setObjectName(QStringLiteral("rand250CheckBox"));
 
-        gridLayout->addWidget(checkBox_13, 4, 6, 1, 1);
+        gridLayout->addWidget(rand250CheckBox, 4, 6, 1, 1);
 
 
         verticalLayout->addLayout(gridLayout);
@@ -393,19 +393,19 @@ public:
         Tex_checkBox->setText(QApplication::translate("MainWindow", "Tex", 0));
         Pre_checkBox->setText(QApplication::translate("MainWindow", "Pre", 0));
         label->setText(QApplication::translate("MainWindow", "Text:", 0));
-        checkBox_2->setText(QApplication::translate("MainWindow", "englishTexts", 0));
-        checkBox->setText(QApplication::translate("MainWindow", "all", 0));
-        checkBox_3->setText(QApplication::translate("MainWindow", "italianTexts", 0));
-        checkBox_4->setText(QApplication::translate("MainWindow", "genome", 0));
-        checkBox_5->setText(QApplication::translate("MainWindow", "protein", 0));
-        checkBox_6->setText(QApplication::translate("MainWindow", "rand2", 0));
-        checkBox_7->setText(QApplication::translate("MainWindow", "rand4", 0));
-        checkBox_8->setText(QApplication::translate("MainWindow", "rand8", 0));
-        checkBox_9->setText(QApplication::translate("MainWindow", "rand16", 0));
-        checkBox_10->setText(QApplication::translate("MainWindow", "rand32", 0));
-        checkBox_11->setText(QApplication::translate("MainWindow", "rand64", 0));
-        checkBox_12->setText(QApplication::translate("MainWindow", "rand128", 0));
-        checkBox_13->setText(QApplication::translate("MainWindow", "rand250", 0));
+        englishTextsCheckBox->setText(QApplication::translate("MainWindow", "englishTexts", 0));
+        AllCheckBox->setText(QApplication::translate("MainWindow", "all", 0));
+        italianTextsCheckBox->setText(QApplication::translate("MainWindow", "italianTexts", 0));
+        genomeCheckBox->setText(QApplication::translate("MainWindow", "genome", 0));
+        proteinCheckBox->setText(QApplication::translate("MainWindow", "protein", 0));
+        rand2CheckBox->setText(QApplication::translate("MainWindow", "rand2", 0));
+        rand4CheckBox->setText(QApplication::translate("MainWindow", "rand4", 0));
+        rand8CheckBox->setText(QApplication::translate("MainWindow", "rand8", 0));
+        rand16CheckBox->setText(QApplication::translate("MainWindow", "rand16", 0));
+        rand32CheckBox->setText(QApplication::translate("MainWindow", "rand32", 0));
+        rand64CheckBox->setText(QApplication::translate("MainWindow", "rand64", 0));
+        rand128CheckBox->setText(QApplication::translate("MainWindow", "rand128", 0));
+        rand250CheckBox->setText(QApplication::translate("MainWindow", "rand250", 0));
         start_pushButton->setText(QApplication::translate("MainWindow", "Start S.M.A.R.T", 0));
         stop_pushButton->setText(QApplication::translate("MainWindow", "Stop S.M.A.R.T", 0));
     } // retranslateUi

@@ -56,7 +56,8 @@ int nExecutePatt;               //Number of patterns to execute.
 int currentAlgo;                //Current algorithm.
 int countPercent = 0;           //Percent of currente execute algorithm.
 int helpCounterAlg = 0;         //Help variable to calculate percentage.
-int TextSelectedCount = 0;           //Count the text select in ad checkbox
+int TextSelectedCount = 0;           //Count the text select in ad
+
 
 double minPlen = 2;             //Min plen.
 double maxPlen = 4096;          //Max plen.
@@ -110,7 +111,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tb_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Tsize_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Pset_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
-    ui->checkBox->click();
+    ui->AllCheckBox->click();
 }
 
 //Distructor.
@@ -616,19 +617,19 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
        ui->PlenU_lineEdit->setEnabled(false);
        ui->PlenL_lineEdit->setEnabled(false);
        ui->Short_checkBox->setEnabled(false);
-        ui->checkBox->setEnabled(false);
-        ui->checkBox_2->setEnabled(false);
-        ui->checkBox_3->setEnabled(false);
-        ui->checkBox_4->setEnabled(false);
-        ui->checkBox_5->setEnabled(false);
-        ui->checkBox_6->setEnabled(false);
-        ui->checkBox_7->setEnabled(false);
-        ui->checkBox_8->setEnabled(false);
-        ui->checkBox_9->setEnabled(false);
-        ui->checkBox_10->setEnabled(false);
-        ui->checkBox_11->setEnabled(false);
-        ui->checkBox_12->setEnabled(false);
-        ui->checkBox_13->setEnabled(false);
+        ui->AllCheckBox->setEnabled(false);
+        ui->englishTextsCheckBox->setEnabled(false);
+        ui->italianTextsCheckBox->setEnabled(false);
+        ui->genomeCheckBox->setEnabled(false);
+        ui->proteinCheckBox->setEnabled(false);
+        ui->rand2CheckBox->setEnabled(false);
+        ui->rand4CheckBox->setEnabled(false);
+        ui->rand8CheckBox->setEnabled(false);
+        ui->rand16CheckBox->setEnabled(false);
+        ui->rand32CheckBox->setEnabled(false);
+        ui->rand64CheckBox->setEnabled(false);
+        ui->rand128CheckBox->setEnabled(false);
+        ui->rand250CheckBox->setEnabled(false);
     }else if(arg1 == "" && ui->SimpleT_lineEdit->text() == ""){
         ui->Pset_lineEdit->setEnabled(true);
         ui->Tsize_lineEdit->setEnabled(true);
@@ -636,19 +637,19 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
         ui->PlenU_lineEdit->setEnabled(true);
         ui->PlenL_lineEdit->setEnabled(true);
         ui->Short_checkBox->setEnabled(true);
-        ui->checkBox->setEnabled(true);
-        ui->checkBox_2->setEnabled(true);
-        ui->checkBox_3->setEnabled(true);
-        ui->checkBox_4->setEnabled(true);
-        ui->checkBox_5->setEnabled(true);
-        ui->checkBox_6->setEnabled(true);
-        ui->checkBox_7->setEnabled(true);
-        ui->checkBox_8->setEnabled(true);
-        ui->checkBox_9->setEnabled(true);
-        ui->checkBox_10->setEnabled(true);
-        ui->checkBox_11->setEnabled(true);
-        ui->checkBox_12->setEnabled(true);
-        ui->checkBox_13->setEnabled(true);
+        ui->AllCheckBox->setEnabled(true);
+        ui->englishTextsCheckBox->setEnabled(true);
+        ui->italianTextsCheckBox->setEnabled(true);
+        ui->genomeCheckBox->setEnabled(true);
+        ui->proteinCheckBox->setEnabled(true);
+        ui->rand2CheckBox->setEnabled(true);
+        ui->rand4CheckBox->setEnabled(true);
+        ui->rand8CheckBox->setEnabled(true);
+        ui->rand16CheckBox->setEnabled(true);
+        ui->rand32CheckBox->setEnabled(true);
+        ui->rand64CheckBox->setEnabled(true);
+        ui->rand128CheckBox->setEnabled(true);
+        ui->rand250CheckBox->setEnabled(true);
     }
 
 }
@@ -661,19 +662,19 @@ void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
         ui->Tb_lineEdit->setEnabled(false);
         ui->PlenU_lineEdit->setEnabled(false);
         ui->PlenL_lineEdit->setEnabled(false);
-        ui->checkBox->setEnabled(false);
-        ui->checkBox_2->setEnabled(false);
-        ui->checkBox_3->setEnabled(false);
-        ui->checkBox_4->setEnabled(false);
-        ui->checkBox_5->setEnabled(false);
-        ui->checkBox_6->setEnabled(false);
-        ui->checkBox_7->setEnabled(false);
-        ui->checkBox_8->setEnabled(false);
-        ui->checkBox_9->setEnabled(false);
-        ui->checkBox_10->setEnabled(false);
-        ui->checkBox_11->setEnabled(false);
-        ui->checkBox_12->setEnabled(false);
-        ui->checkBox_13->setEnabled(false);
+        ui->AllCheckBox->setEnabled(false);
+        ui->englishTextsCheckBox->setEnabled(false);
+        ui->italianTextsCheckBox->setEnabled(false);
+        ui->genomeCheckBox->setEnabled(false);
+        ui->proteinCheckBox->setEnabled(false);
+        ui->rand2CheckBox->setEnabled(false);
+        ui->rand4CheckBox->setEnabled(false);
+        ui->rand8CheckBox->setEnabled(false);
+        ui->rand16CheckBox->setEnabled(false);
+        ui->rand32CheckBox->setEnabled(false);
+        ui->rand64CheckBox->setEnabled(false);
+        ui->rand128CheckBox->setEnabled(false);
+        ui->rand250CheckBox->setEnabled(false);
 
         ui->Short_checkBox->setEnabled(false);
     }else if(arg1 == "" && ui->SimpleP_lineEdit->text() == ""){
@@ -684,19 +685,19 @@ void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
         ui->PlenL_lineEdit->setEnabled(true);
 
         ui->Short_checkBox->setEnabled(true);
-        ui->checkBox->setEnabled(true);
-        ui->checkBox_2->setEnabled(true);
-        ui->checkBox_3->setEnabled(true);
-        ui->checkBox_4->setEnabled(true);
-        ui->checkBox_5->setEnabled(true);
-        ui->checkBox_6->setEnabled(true);
-        ui->checkBox_7->setEnabled(true);
-        ui->checkBox_8->setEnabled(true);
-        ui->checkBox_9->setEnabled(true);
-        ui->checkBox_10->setEnabled(true);
-        ui->checkBox_11->setEnabled(true);
-        ui->checkBox_12->setEnabled(true);
-        ui->checkBox_13->setEnabled(true);
+        ui->AllCheckBox->setEnabled(true);
+        ui->englishTextsCheckBox->setEnabled(true);
+        ui->italianTextsCheckBox->setEnabled(true);
+        ui->genomeCheckBox->setEnabled(true);
+        ui->proteinCheckBox->setEnabled(true);
+        ui->rand2CheckBox->setEnabled(true);
+        ui->rand4CheckBox->setEnabled(true);
+        ui->rand8CheckBox->setEnabled(true);
+        ui->rand16CheckBox->setEnabled(true);
+        ui->rand32CheckBox->setEnabled(true);
+        ui->rand64CheckBox->setEnabled(true);
+        ui->rand128CheckBox->setEnabled(true);
+        ui->rand250CheckBox->setEnabled(true);
     }
 
 }
@@ -751,20 +752,20 @@ void MainWindow::on_start_pushButton_released() {
     QFile TestCheck(pathSmart + "/test");
     QString TextSelected="";
     if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){  //ADD VARIABILISELECT NEGLI IF DIO PORCO
-        if(ui->checkBox->isChecked()){ TextSelected="all"; TextSelectedCount++;}
+        if(ui->AllCheckBox->isChecked()){ TextSelected="all"; TextSelectedCount++;}
         else{
-            if(ui->checkBox_2->isChecked()){ TextSelected=ui->checkBox_2->text();TextSelectedCount++;}
-            if(ui->checkBox_3->isChecked()){ TextSelected= TextSelected+"-"+ui->checkBox_3->text(); TextSelectedCount++;}
-            if(ui->checkBox_4->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_4->text(); TextSelectedCount++;}
-            if(ui->checkBox_5->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_5->text(); TextSelectedCount++;}
-            if(ui->checkBox_6->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_6->text(); TextSelectedCount++;}
-            if(ui->checkBox_7->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_7->text(); TextSelectedCount++;}
-            if(ui->checkBox_8->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_8->text();TextSelectedCount++;}
-            if(ui->checkBox_9->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_9->text();TextSelectedCount++;}
-            if(ui->checkBox_10->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_10->text();TextSelectedCount++;}
-            if(ui->checkBox_11->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_11->text();TextSelectedCount++;}
-            if(ui->checkBox_12->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_12->text();TextSelectedCount++;}
-            if(ui->checkBox_13->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_13->text();TextSelectedCount++;}
+            if(ui->englishTextsCheckBox->isChecked()){ TextSelected=ui->englishTextsCheckBox->text();TextSelectedCount++;}
+            if(ui->italianTextsCheckBox->isChecked()){ TextSelected= TextSelected+"-"+ui->italianTextsCheckBox->text(); TextSelectedCount++;}
+            if(ui->genomeCheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->genomeCheckBox->text(); TextSelectedCount++;}
+            if(ui->proteinCheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->proteinCheckBox->text(); TextSelectedCount++;}
+            if(ui->rand2CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand2CheckBox->text(); TextSelectedCount++;}
+            if(ui->rand4CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand4CheckBox->text(); TextSelectedCount++;}
+            if(ui->rand8CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand8CheckBox->text();TextSelectedCount++;}
+            if(ui->rand16CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand16CheckBox->text();TextSelectedCount++;}
+            if(ui->rand32CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand32CheckBox->text();TextSelectedCount++;}
+            if(ui->rand64CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand64CheckBox->text();TextSelectedCount++;}
+            if(ui->rand128CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand128CheckBox->text();TextSelectedCount++;}
+            if(ui->rand250CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand250CheckBox->text();TextSelectedCount++;}
 
 
         }
@@ -864,34 +865,34 @@ void MainWindow::on_actionSetup_SMART_GUI_triggered(){
     openSetupWindow.exec();
 }
 
-void MainWindow::on_checkBox_clicked()
+void MainWindow::on_AllCheckBox_clicked()
 {
-    if(ui->checkBox->isChecked()){
-        ui->checkBox_2->setEnabled(false);
-        ui->checkBox_3->setEnabled(false);
-        ui->checkBox_4->setEnabled(false);
-        ui->checkBox_5->setEnabled(false);
-        ui->checkBox_6->setEnabled(false);
-        ui->checkBox_7->setEnabled(false);
-        ui->checkBox_8->setEnabled(false);
-        ui->checkBox_9->setEnabled(false);
-        ui->checkBox_10->setEnabled(false);
-        ui->checkBox_11->setEnabled(false);
-        ui->checkBox_12->setEnabled(false);
-        ui->checkBox_13->setEnabled(false);
+    if(ui->AllCheckBox->isChecked()){
+        ui->englishTextsCheckBox->setEnabled(false);
+        ui->italianTextsCheckBox->setEnabled(false);
+        ui->genomeCheckBox->setEnabled(false);
+        ui->proteinCheckBox->setEnabled(false);
+        ui->rand2CheckBox->setEnabled(false);
+        ui->rand4CheckBox->setEnabled(false);
+        ui->rand8CheckBox->setEnabled(false);
+        ui->rand16CheckBox->setEnabled(false);
+        ui->rand32CheckBox->setEnabled(false);
+        ui->rand64CheckBox->setEnabled(false);
+        ui->rand128CheckBox->setEnabled(false);
+        ui->rand250CheckBox->setEnabled(false);
     }else{
-        ui->checkBox_2->setEnabled(true);
-        ui->checkBox_3->setEnabled(true);
-        ui->checkBox_4->setEnabled(true);
-        ui->checkBox_5->setEnabled(true);
-        ui->checkBox_6->setEnabled(true);
-        ui->checkBox_7->setEnabled(true);
-        ui->checkBox_8->setEnabled(true);
-        ui->checkBox_9->setEnabled(true);
-        ui->checkBox_10->setEnabled(true);
-        ui->checkBox_11->setEnabled(true);
-        ui->checkBox_12->setEnabled(true);
-        ui->checkBox_13->setEnabled(true);
+        ui->englishTextsCheckBox->setEnabled(true);
+        ui->italianTextsCheckBox->setEnabled(true);
+        ui->genomeCheckBox->setEnabled(true);
+        ui->proteinCheckBox->setEnabled(true);
+        ui->rand2CheckBox->setEnabled(true);
+        ui->rand4CheckBox->setEnabled(true);
+        ui->rand8CheckBox->setEnabled(true);
+        ui->rand16CheckBox->setEnabled(true);
+        ui->rand32CheckBox->setEnabled(true);
+        ui->rand64CheckBox->setEnabled(true);
+        ui->rand128CheckBox->setEnabled(true);
+        ui->rand250CheckBox->setEnabled(true);
 
 
 
