@@ -48,6 +48,7 @@ QString expCode = "";           //String with code ex.
 QProcess *myProc;               //Declare myProc.
 
 QStringList nameText;           //List of all text name for 'all test'.
+QStringList selectedText;       //List of selected text.
 QStringList myAlgoName;         //List of name of active algo.
 QString *algoOutput;            //List of all output for fake terminal.
 
@@ -56,7 +57,6 @@ int nExecutePatt;               //Number of patterns to execute.
 int currentAlgo;                //Current algorithm.
 int countPercent = 0;           //Percent of currente execute algorithm.
 int helpCounterAlg = 0;         //Help variable to calculate percentage.
-int TextSelectedCount = 0;           //Count the text select in ad
 
 
 double minPlen = 2;             //Min plen.
@@ -183,20 +183,23 @@ void generateEXPCode(){
 
 //Create EXP header for new test.
 QString MainWindow::createHeadEXP(){
-/*
-    QString tmpText;
+
+    QString tmpText = "";
+
     if (ui->SimpleT_lineEdit->text() != "")
         tmpText = ui->SimpleT_lineEdit->text();
-    else if( ui->Text_comboBox->currentText() != "all" )
-        tmpText = ui->Text_comboBox->currentText();
-    else
+    else if( selectedText.length() == 1)
+        tmpText = selectedText[0];
+    else if( ui->AllCheckBox->isChecked())
         tmpText = nameText[tabChartWebView->count()-1];
+    else
+        tmpText = selectedText[tabChartWebView->count()-1];
 
     return  QString::fromLatin1("\n\n  ---------------------------------------------------------------------") +
             QString::fromLatin1("\n  Experimental results on ") + tmpText + QString::fromLatin1(": ") + expCode +
             QString::fromLatin1("\n  Searching for a set of ") + ui->Pset_lineEdit->text() + QString::fromLatin1(" patterns with length ") + QString::number(currentPlen) +
             QString::fromLatin1("\n  Testing ") + QString::number(nEnabledAlg) + QString::fromLatin1(" algorithms \n");
-*/
+
 }
 
 //Calculate the current percentage.
@@ -211,7 +214,7 @@ void MainWindow::showResultFunction(){
 
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
-/*
+
     if(forcedStop)
         fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
@@ -241,38 +244,50 @@ void MainWindow::processEnded(){
                                             "\n  OUTPUT RUNNING TIMES " + expCode
                                             );
 
-        if (ui->Text_comboBox->currentText() != "all"){
+        if ( (ui->AllCheckBox->isChecked() == false) && (selectedText.length()==1) ){
             ui->progressBar->setValue(calculatePercentage());
 
-            fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".xml" +
-                                                                 "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".html" );
+            fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + selectedText[0] + ".xml" +
+                                                                 "\n  Saving data on " + expCode + "/" + selectedText[0] + ".html" );
 
             if (ui->Tex_checkBox->isChecked())
-                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".tex" );
+                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[0] + ".tex" );
 
             if (ui->Txt_checkBox->isChecked())
-                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + ui->Text_comboBox->currentText() + ".txt" );
+                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[0] + ".txt" );
 
 
-            if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + ui->Text_comboBox->currentText() + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
+            if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + selectedText[0] + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
                 showResult = new QWebEngineView();
-                showResult->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + ui->Text_comboBox->currentText() + ".html"));
+                showResult->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
                 connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
             }
 
         }else{
             ui->progressBar->setValue(100);
 
-            for(int j=0; j<tabChartWebView->count()-1; j++){
-                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + nameText[j] + ".xml" +
-                                                                     "\n  Saving data on " + expCode + "/" + nameText[j] + ".html" );
+            if(ui->AllCheckBox->isChecked()){
+                for(int j=0; j<tabChartWebView->count()-1; j++){
+                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + nameText[j] + ".xml" +
+                                                                         "\n  Saving data on " + expCode + "/" + nameText[j] + ".html" );
 
-                if (ui->Tex_checkBox->isChecked())
-                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".tex" );
+                    if (ui->Tex_checkBox->isChecked())
+                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".tex" );
 
-                if (ui->Txt_checkBox->isChecked())
-                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".txt" );
+                    if (ui->Txt_checkBox->isChecked())
+                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".txt" );
+                }
+            }else{
+                for(int j=0; j<selectedText.length(); j++){
+                    fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + selectedText[j] + ".xml" +
+                                                                         "\n  Saving data on " + expCode + "/" + selectedText[j] + ".html" );
 
+                    if (ui->Tex_checkBox->isChecked())
+                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[j] + ".tex" );
+
+                    if (ui->Txt_checkBox->isChecked())
+                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[j] + ".txt" );
+                }
             }
 
             QMessageBox::information(this,"Done!","Test complete.");
@@ -283,12 +298,11 @@ void MainWindow::processEnded(){
     ui->start_pushButton->setEnabled(true);
     ui->stop_pushButton->setEnabled(false);
 
-    */
 }
 
 //Execute this SLOT everytime the SMART have an output. Update the chart e progress-bar.
 void MainWindow::updateGUI(){
-/*
+
     //Set the new percentage.
     ui->progressBar->setValue(calculatePercentage());
 
@@ -360,7 +374,7 @@ void MainWindow::updateGUI(){
                     javascriptCode = "myLineChart.addData([" + timeAlgo.left(timeAlgo.length() - 1) + "], '" + QString::number(currentPlen) + "');";
 
                     //Send js code.
-                    if(ui->Text_comboBox->currentText() != "all")
+                    if(selectedText.length() == 1)
                         chartWebView->page()->runJavaScript(javascriptCode);
                     else
                         chartWebViewAll[tabChartWebView->count() - 1]->page()->runJavaScript(javascriptCode);
@@ -368,15 +382,24 @@ void MainWindow::updateGUI(){
                     timeAlgo = "";
                     currentAlgo = 0;
 
-                    if (currentPlen == maxPlen && ui->Text_comboBox->currentText() == "all"){
+                    if ( currentPlen == maxPlen ){
+
                         currentPlen = minPlen;
 
-                        tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], nameText[tabChartWebView->count()] );
-                        tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
+                        if(ui->AllCheckBox->isChecked())
+                            tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], nameText[tabChartWebView->count()] );
 
-                        ui->progressBar->setValue(0);
-                        helpCounterAlg = 0;
-                        countPercent = 0;
+
+                        if(selectedText.length()>1 && tabChartWebView->count()<selectedText.length())
+                            tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], selectedText[tabChartWebView->count()] );
+
+
+                        if(ui->AllCheckBox->isChecked() || selectedText.length()>1){
+                            tabChartWebView->setCurrentIndex(tabChartWebView->count()-1);
+                            ui->progressBar->setValue(0);
+                            helpCounterAlg = 0;
+                            countPercent = 0;
+                        }
                     }else
                         currentPlen*=2;
 
@@ -431,7 +454,7 @@ void MainWindow::updateGUI(){
     QTextCursor c = fakeTerminal->textCursor();
     c.movePosition(QTextCursor::End);
     fakeTerminal->setTextCursor(c);
-*/
+
 }
 
 //Run process when webEngineView end to load the chart.
@@ -450,7 +473,7 @@ void MainWindow::runProcess(){
 
 //Inizialize and clear all supportVariables
 void MainWindow::inizializeAll(){
-/*
+
     //Reset all variabiles.
     timeAlgo = "";
 
@@ -478,7 +501,7 @@ void MainWindow::inizializeAll(){
     fakeTerminal->setLineWrapMode((QTextEdit::NoWrap));
     layoutForTab->addWidget(fakeTerminal);
 
-    if( ui->Text_comboBox->currentText() == "all" ){
+    if( ui->AllCheckBox->isChecked() ){
 
         for(int i=0; i<nameText.length(); i++)
             chartWebViewAll[i] = new QWebEngineView();
@@ -487,9 +510,19 @@ void MainWindow::inizializeAll(){
         layoutForTab->addWidget(tabChartWebView);
         tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], nameText[tabChartWebView->count()]);
 
-    }else{
+    }else if ( selectedText.length() == 1){
+
         chartWebView = new QWebEngineView();
         layoutForTab->addWidget(chartWebView);
+
+    }else{
+
+        for(int i=0; i<selectedText.length(); i++)
+            chartWebViewAll[i] = new QWebEngineView();
+
+        tabChartWebView = new QTabWidget;
+        layoutForTab->addWidget(tabChartWebView);
+        tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], selectedText[tabChartWebView->count()]);
     }
 
     scrollActiveAlgo = new QScrollArea();
@@ -502,12 +535,12 @@ void MainWindow::inizializeAll(){
     connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
     connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
     myProc->setWorkingDirectory(pathSmart);                                         //Set the folder with SMART.
-*/
+
 }
 
 //loadResource to create chart and load it into webView.
 void MainWindow::createChart(){
-/*
+
     inizializeAll();
 
     int EXECUTE[NumAlgo];                                             //Declare EXECTUE array with the state of alrgorithm (0/1).
@@ -580,16 +613,21 @@ void MainWindow::createChart(){
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , pathSmartGUI +  "/Chart.js");
 
-    if( ui->Text_comboBox->currentText() != "all" ){
+    if( selectedText.length() == 1 ){
         chartWebView->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
         connect(chartWebView, SIGNAL(loadFinished(bool)), this, SLOT(runProcess()));
-    }else{
+    }else if (ui->AllCheckBox->isChecked()){
         for(int i=0; i<nameText.length(); i++)
             chartWebViewAll[i]->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
 
         connect(chartWebViewAll[0], SIGNAL(loadFinished(bool)), this, SLOT(runProcess()));
+    }else{
+        for(int i=0; i<selectedText.length(); i++)
+            chartWebViewAll[i]->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
+
+        connect(chartWebViewAll[0], SIGNAL(loadFinished(bool)), this, SLOT(runProcess()));
     }
-*/
+
 }
 
 void MainWindow::on_Short_checkBox_released() {
@@ -611,12 +649,14 @@ void MainWindow::on_Short_checkBox_released() {
 void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
 
     if(arg1 != ""){
-       ui->Pset_lineEdit->setEnabled(false);
-       ui->Tsize_lineEdit->setEnabled(false);
-       ui->Tb_lineEdit->setEnabled(false);
-       ui->PlenU_lineEdit->setEnabled(false);
-       ui->PlenL_lineEdit->setEnabled(false);
-       ui->Short_checkBox->setEnabled(false);
+
+        ui->Pset_lineEdit->setEnabled(false);
+        ui->Tsize_lineEdit->setEnabled(false);
+        ui->Tb_lineEdit->setEnabled(false);
+        ui->PlenU_lineEdit->setEnabled(false);
+        ui->PlenL_lineEdit->setEnabled(false);
+        ui->Short_checkBox->setEnabled(false);
+        
         ui->AllCheckBox->setEnabled(false);
         ui->englishTextsCheckBox->setEnabled(false);
         ui->italianTextsCheckBox->setEnabled(false);
@@ -630,13 +670,16 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
         ui->rand64CheckBox->setEnabled(false);
         ui->rand128CheckBox->setEnabled(false);
         ui->rand250CheckBox->setEnabled(false);
+
     }else if(arg1 == "" && ui->SimpleT_lineEdit->text() == ""){
+
         ui->Pset_lineEdit->setEnabled(true);
         ui->Tsize_lineEdit->setEnabled(true);
         ui->Tb_lineEdit->setEnabled(true);
         ui->PlenU_lineEdit->setEnabled(true);
         ui->PlenL_lineEdit->setEnabled(true);
         ui->Short_checkBox->setEnabled(true);
+        
         ui->AllCheckBox->setEnabled(true);
         ui->englishTextsCheckBox->setEnabled(true);
         ui->italianTextsCheckBox->setEnabled(true);
@@ -650,6 +693,7 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
         ui->rand64CheckBox->setEnabled(true);
         ui->rand128CheckBox->setEnabled(true);
         ui->rand250CheckBox->setEnabled(true);
+
     }
 
 }
@@ -657,11 +701,13 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
 void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
 
     if(arg1 != ""){
+
         ui->Pset_lineEdit->setEnabled(false);
         ui->Tsize_lineEdit->setEnabled(false);
         ui->Tb_lineEdit->setEnabled(false);
         ui->PlenU_lineEdit->setEnabled(false);
         ui->PlenL_lineEdit->setEnabled(false);
+        
         ui->AllCheckBox->setEnabled(false);
         ui->englishTextsCheckBox->setEnabled(false);
         ui->italianTextsCheckBox->setEnabled(false);
@@ -675,16 +721,17 @@ void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
         ui->rand64CheckBox->setEnabled(false);
         ui->rand128CheckBox->setEnabled(false);
         ui->rand250CheckBox->setEnabled(false);
-
         ui->Short_checkBox->setEnabled(false);
+
     }else if(arg1 == "" && ui->SimpleP_lineEdit->text() == ""){
+
         ui->Pset_lineEdit->setEnabled(true);
         ui->Tsize_lineEdit->setEnabled(true);
         ui->Tb_lineEdit->setEnabled(true);
         ui->PlenU_lineEdit->setEnabled(true);
         ui->PlenL_lineEdit->setEnabled(true);
-
         ui->Short_checkBox->setEnabled(true);
+
         ui->AllCheckBox->setEnabled(true);
         ui->englishTextsCheckBox->setEnabled(true);
         ui->italianTextsCheckBox->setEnabled(true);
@@ -745,28 +792,70 @@ void MainWindow::on_start_pushButton_pressed() {
 
 void MainWindow::on_start_pushButton_released() {
 
+    selectedText.clear();
+
     QString tmpPr = "";
 
     QFile SmartCheck(pathSmart + "/smart");
     QFile SelectCheck(pathSmart + "/select");
     QFile TestCheck(pathSmart + "/test");
-    QString TextSelected="";
-    if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){  //ADD VARIABILISELECT NEGLI IF DIO PORCO
-        if(ui->AllCheckBox->isChecked()){ TextSelected="all"; TextSelectedCount++;}
-        else{
-            if(ui->englishTextsCheckBox->isChecked()){ TextSelected=ui->englishTextsCheckBox->text();TextSelectedCount++;}
-            if(ui->italianTextsCheckBox->isChecked()){ TextSelected= TextSelected+"-"+ui->italianTextsCheckBox->text(); TextSelectedCount++;}
-            if(ui->genomeCheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->genomeCheckBox->text(); TextSelectedCount++;}
-            if(ui->proteinCheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->proteinCheckBox->text(); TextSelectedCount++;}
-            if(ui->rand2CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand2CheckBox->text(); TextSelectedCount++;}
-            if(ui->rand4CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand4CheckBox->text(); TextSelectedCount++;}
-            if(ui->rand8CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand8CheckBox->text();TextSelectedCount++;}
-            if(ui->rand16CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand16CheckBox->text();TextSelectedCount++;}
-            if(ui->rand32CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand32CheckBox->text();TextSelectedCount++;}
-            if(ui->rand64CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand64CheckBox->text();TextSelectedCount++;}
-            if(ui->rand128CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand128CheckBox->text();TextSelectedCount++;}
-            if(ui->rand250CheckBox->isChecked()){ TextSelected=TextSelected+"-"+ui->rand250CheckBox->text();TextSelectedCount++;}
+    QString TextSelected = "";
 
+    if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){  //ADD VARIABILISELECT NEGLI IF DIO PORCO
+
+        if(ui->AllCheckBox->isChecked()){ 
+            TextSelected = "all"; 
+        }else{
+            if(ui->englishTextsCheckBox->isChecked()){ 
+                TextSelected += "-" + ui->englishTextsCheckBox->text();
+                selectedText << ui->englishTextsCheckBox->text();
+            }
+            if(ui->italianTextsCheckBox->isChecked()){ 
+                TextSelected += "-" + ui->italianTextsCheckBox->text();
+                selectedText << ui->italianTextsCheckBox->text(); 
+            }
+            if(ui->genomeCheckBox->isChecked()){ 
+                TextSelected += "-" + ui->genomeCheckBox->text(); 
+                selectedText << ui->genomeCheckBox->text(); 
+            }
+            if(ui->proteinCheckBox->isChecked()){ 
+                TextSelected += "-" + ui->proteinCheckBox->text(); 
+                selectedText << ui->proteinCheckBox->text();
+            }
+            if(ui->rand2CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand2CheckBox->text(); 
+                selectedText << ui->rand2CheckBox->text();
+            }
+            if(ui->rand4CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand4CheckBox->text(); 
+                selectedText << ui->rand4CheckBox->text();
+            }
+            if(ui->rand8CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand8CheckBox->text();
+                selectedText << ui->rand8CheckBox->text();
+            }
+            if(ui->rand16CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand16CheckBox->text();
+                selectedText << ui->rand16CheckBox->text();
+            }
+            if(ui->rand32CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand32CheckBox->text();
+                selectedText << ui->rand32CheckBox->text();
+            }
+            if(ui->rand64CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand64CheckBox->text();
+                selectedText << ui->rand64CheckBox->text();
+            }
+            if(ui->rand128CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand128CheckBox->text();
+                selectedText << ui->rand128CheckBox->text();
+            }
+            if(ui->rand250CheckBox->isChecked()){ 
+                TextSelected += "-" + ui->rand250CheckBox->text();
+                selectedText << ui->rand250CheckBox->text();
+            }
+
+            TextSelected = TextSelected.right(TextSelected.length()-1);
 
         }
         if(ui->Occ_checkBox->isChecked())
@@ -819,7 +908,7 @@ void MainWindow::on_start_pushButton_released() {
                         tmpPr;
 
         }
-        qDebug()<<parameters;
+
         if(ui->PlenU_lineEdit->text()!="" || ui->PlenU_lineEdit->text()!=""){
             minPlen = ui->PlenU_lineEdit->text().toDouble();
             maxPlen = ui->PlenL_lineEdit->text().toDouble();

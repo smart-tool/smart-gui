@@ -35,10 +35,7 @@ private slots:
 
     void on_actionAdd_Algorithms_triggered();
 
-
     void on_actionSetup_SMART_GUI_triggered();
-
-    void on_checkBox_clicked();
 
     void on_AllCheckBox_clicked();
 
