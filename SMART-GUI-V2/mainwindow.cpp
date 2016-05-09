@@ -56,6 +56,7 @@ int nExecutePatt;               //Number of patterns to execute.
 int currentAlgo;                //Current algorithm.
 int countPercent = 0;           //Percent of currente execute algorithm.
 int helpCounterAlg = 0;         //Help variable to calculate percentage.
+int TextSelectedCount = 0;           //Count the text select in ad checkbox
 
 double minPlen = 2;             //Min plen.
 double maxPlen = 4096;          //Max plen.
@@ -109,7 +110,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tb_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Tsize_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Pset_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
-
+    ui->checkBox->click();
 }
 
 //Distructor.
@@ -181,7 +182,7 @@ void generateEXPCode(){
 
 //Create EXP header for new test.
 QString MainWindow::createHeadEXP(){
-
+/*
     QString tmpText;
     if (ui->SimpleT_lineEdit->text() != "")
         tmpText = ui->SimpleT_lineEdit->text();
@@ -194,7 +195,7 @@ QString MainWindow::createHeadEXP(){
             QString::fromLatin1("\n  Experimental results on ") + tmpText + QString::fromLatin1(": ") + expCode +
             QString::fromLatin1("\n  Searching for a set of ") + ui->Pset_lineEdit->text() + QString::fromLatin1(" patterns with length ") + QString::number(currentPlen) +
             QString::fromLatin1("\n  Testing ") + QString::number(nEnabledAlg) + QString::fromLatin1(" algorithms \n");
-
+*/
 }
 
 //Calculate the current percentage.
@@ -209,7 +210,7 @@ void MainWindow::showResultFunction(){
 
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
-
+/*
     if(forcedStop)
         fakeTerminal->setText( fakeTerminal->toPlainText() +
                                             "\n\n  ---------------------------------------------------------------------" +
@@ -280,11 +281,13 @@ void MainWindow::processEnded(){
 
     ui->start_pushButton->setEnabled(true);
     ui->stop_pushButton->setEnabled(false);
+
+    */
 }
 
 //Execute this SLOT everytime the SMART have an output. Update the chart e progress-bar.
 void MainWindow::updateGUI(){
-
+/*
     //Set the new percentage.
     ui->progressBar->setValue(calculatePercentage());
 
@@ -427,7 +430,7 @@ void MainWindow::updateGUI(){
     QTextCursor c = fakeTerminal->textCursor();
     c.movePosition(QTextCursor::End);
     fakeTerminal->setTextCursor(c);
-
+*/
 }
 
 //Run process when webEngineView end to load the chart.
@@ -446,7 +449,7 @@ void MainWindow::runProcess(){
 
 //Inizialize and clear all supportVariables
 void MainWindow::inizializeAll(){
-
+/*
     //Reset all variabiles.
     timeAlgo = "";
 
@@ -498,12 +501,12 @@ void MainWindow::inizializeAll(){
     connect(myProc, SIGNAL(readyReadStandardOutput()), this, SLOT(updateGUI()) );   //Connect SLOT updateGUI to SIGNAL output.
     connect(myProc, SIGNAL(finished(int)), this, SLOT(processEnded()) );            //Connect SLOT processEnded to SIGNAL finished.
     myProc->setWorkingDirectory(pathSmart);                                         //Set the folder with SMART.
-
+*/
 }
 
 //loadResource to create chart and load it into webView.
 void MainWindow::createChart(){
-
+/*
     inizializeAll();
 
     int EXECUTE[NumAlgo];                                             //Declare EXECTUE array with the state of alrgorithm (0/1).
@@ -585,16 +588,16 @@ void MainWindow::createChart(){
 
         connect(chartWebViewAll[0], SIGNAL(loadFinished(bool)), this, SLOT(runProcess()));
     }
-
+*/
 }
 
 void MainWindow::on_Short_checkBox_released() {
 
     if(ui->Short_checkBox->isChecked()){
-     ui->PlenU_lineEdit->setEnabled(false);
-     ui->PlenL_lineEdit->setEnabled(false);
-     ui->SimpleP_lineEdit->setEnabled(false);
-     ui->SimpleT_lineEdit->setEnabled(false);
+        ui->PlenU_lineEdit->setEnabled(false);
+        ui->PlenL_lineEdit->setEnabled(false);
+        ui->SimpleP_lineEdit->setEnabled(false);
+        ui->SimpleT_lineEdit->setEnabled(false);
     }else{
         ui->PlenU_lineEdit->setEnabled(true);
         ui->PlenL_lineEdit->setEnabled(true);
@@ -612,16 +615,40 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
        ui->Tb_lineEdit->setEnabled(false);
        ui->PlenU_lineEdit->setEnabled(false);
        ui->PlenL_lineEdit->setEnabled(false);
-       ui->Text_comboBox->setEnabled(false);
        ui->Short_checkBox->setEnabled(false);
+        ui->checkBox->setEnabled(false);
+        ui->checkBox_2->setEnabled(false);
+        ui->checkBox_3->setEnabled(false);
+        ui->checkBox_4->setEnabled(false);
+        ui->checkBox_5->setEnabled(false);
+        ui->checkBox_6->setEnabled(false);
+        ui->checkBox_7->setEnabled(false);
+        ui->checkBox_8->setEnabled(false);
+        ui->checkBox_9->setEnabled(false);
+        ui->checkBox_10->setEnabled(false);
+        ui->checkBox_11->setEnabled(false);
+        ui->checkBox_12->setEnabled(false);
+        ui->checkBox_13->setEnabled(false);
     }else if(arg1 == "" && ui->SimpleT_lineEdit->text() == ""){
         ui->Pset_lineEdit->setEnabled(true);
         ui->Tsize_lineEdit->setEnabled(true);
         ui->Tb_lineEdit->setEnabled(true);
         ui->PlenU_lineEdit->setEnabled(true);
         ui->PlenL_lineEdit->setEnabled(true);
-        ui->Text_comboBox->setEnabled(true);
         ui->Short_checkBox->setEnabled(true);
+        ui->checkBox->setEnabled(true);
+        ui->checkBox_2->setEnabled(true);
+        ui->checkBox_3->setEnabled(true);
+        ui->checkBox_4->setEnabled(true);
+        ui->checkBox_5->setEnabled(true);
+        ui->checkBox_6->setEnabled(true);
+        ui->checkBox_7->setEnabled(true);
+        ui->checkBox_8->setEnabled(true);
+        ui->checkBox_9->setEnabled(true);
+        ui->checkBox_10->setEnabled(true);
+        ui->checkBox_11->setEnabled(true);
+        ui->checkBox_12->setEnabled(true);
+        ui->checkBox_13->setEnabled(true);
     }
 
 }
@@ -634,7 +661,20 @@ void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
         ui->Tb_lineEdit->setEnabled(false);
         ui->PlenU_lineEdit->setEnabled(false);
         ui->PlenL_lineEdit->setEnabled(false);
-        ui->Text_comboBox->setEnabled(false);
+        ui->checkBox->setEnabled(false);
+        ui->checkBox_2->setEnabled(false);
+        ui->checkBox_3->setEnabled(false);
+        ui->checkBox_4->setEnabled(false);
+        ui->checkBox_5->setEnabled(false);
+        ui->checkBox_6->setEnabled(false);
+        ui->checkBox_7->setEnabled(false);
+        ui->checkBox_8->setEnabled(false);
+        ui->checkBox_9->setEnabled(false);
+        ui->checkBox_10->setEnabled(false);
+        ui->checkBox_11->setEnabled(false);
+        ui->checkBox_12->setEnabled(false);
+        ui->checkBox_13->setEnabled(false);
+
         ui->Short_checkBox->setEnabled(false);
     }else if(arg1 == "" && ui->SimpleP_lineEdit->text() == ""){
         ui->Pset_lineEdit->setEnabled(true);
@@ -642,8 +682,21 @@ void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
         ui->Tb_lineEdit->setEnabled(true);
         ui->PlenU_lineEdit->setEnabled(true);
         ui->PlenL_lineEdit->setEnabled(true);
-        ui->Text_comboBox->setEnabled(true);
+
         ui->Short_checkBox->setEnabled(true);
+        ui->checkBox->setEnabled(true);
+        ui->checkBox_2->setEnabled(true);
+        ui->checkBox_3->setEnabled(true);
+        ui->checkBox_4->setEnabled(true);
+        ui->checkBox_5->setEnabled(true);
+        ui->checkBox_6->setEnabled(true);
+        ui->checkBox_7->setEnabled(true);
+        ui->checkBox_8->setEnabled(true);
+        ui->checkBox_9->setEnabled(true);
+        ui->checkBox_10->setEnabled(true);
+        ui->checkBox_11->setEnabled(true);
+        ui->checkBox_12->setEnabled(true);
+        ui->checkBox_13->setEnabled(true);
     }
 
 }
@@ -696,9 +749,25 @@ void MainWindow::on_start_pushButton_released() {
     QFile SmartCheck(pathSmart + "/smart");
     QFile SelectCheck(pathSmart + "/select");
     QFile TestCheck(pathSmart + "/test");
+    QString TextSelected="";
+    if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){  //ADD VARIABILISELECT NEGLI IF DIO PORCO
+        if(ui->checkBox->isChecked()){ TextSelected="all"; TextSelectedCount++;}
+        else{
+            if(ui->checkBox_2->isChecked()){ TextSelected=ui->checkBox_2->text();TextSelectedCount++;}
+            if(ui->checkBox_3->isChecked()){ TextSelected= TextSelected+"-"+ui->checkBox_3->text(); TextSelectedCount++;}
+            if(ui->checkBox_4->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_4->text(); TextSelectedCount++;}
+            if(ui->checkBox_5->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_5->text(); TextSelectedCount++;}
+            if(ui->checkBox_6->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_6->text(); TextSelectedCount++;}
+            if(ui->checkBox_7->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_7->text(); TextSelectedCount++;}
+            if(ui->checkBox_8->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_8->text();TextSelectedCount++;}
+            if(ui->checkBox_9->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_9->text();TextSelectedCount++;}
+            if(ui->checkBox_10->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_10->text();TextSelectedCount++;}
+            if(ui->checkBox_11->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_11->text();TextSelectedCount++;}
+            if(ui->checkBox_12->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_12->text();TextSelectedCount++;}
+            if(ui->checkBox_13->isChecked()){ TextSelected=TextSelected+"-"+ui->checkBox_13->text();TextSelectedCount++;}
 
-    if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
+        }
         if(ui->Occ_checkBox->isChecked())
            tmpPr += " -occ ";
 
@@ -725,7 +794,7 @@ void MainWindow::on_start_pushButton_released() {
 
         }else if( ( (ui->PlenU_lineEdit->text()!="") || (ui->PlenL_lineEdit->text()!="") ) ){  //PLEN
 
-            parameters = "-text " + ui->Text_comboBox->currentText() +
+            parameters = "-text " + TextSelected +
                         " -pset "+ ui->Pset_lineEdit->text()+
                         " -tsize " + ui->Tsize_lineEdit->text() +
                         " -tb " + ui->Tb_lineEdit->text() +
@@ -735,21 +804,21 @@ void MainWindow::on_start_pushButton_released() {
 
         }else if(ui->Short_checkBox->isChecked()){  //SHORT
 
-            parameters = "-text " + ui->Text_comboBox->currentText() +
+            parameters = "-text " +TextSelected +
                         " -pset "+ ui->Pset_lineEdit->text()+
                         " -tsize " + ui->Tsize_lineEdit->text() +
                         " -tb " + ui->Tb_lineEdit->text() + " -short " + tmpPr;
 
         }else{
 
-            parameters = "-text " + ui->Text_comboBox->currentText() +
+            parameters = "-text " + TextSelected+
                         " -pset "+ ui->Pset_lineEdit->text()+
                         " -tsize " + ui->Tsize_lineEdit->text() +
                         " -tb " + ui->Tb_lineEdit->text() +
                         tmpPr;
 
         }
-
+        qDebug()<<parameters;
         if(ui->PlenU_lineEdit->text()!="" || ui->PlenU_lineEdit->text()!=""){
             minPlen = ui->PlenU_lineEdit->text().toDouble();
             maxPlen = ui->PlenL_lineEdit->text().toDouble();
@@ -793,4 +862,39 @@ void MainWindow::on_actionSetup_SMART_GUI_triggered(){
     setupWindow openSetupWindow;
     openSetupWindow.setModal(true);
     openSetupWindow.exec();
+}
+
+void MainWindow::on_checkBox_clicked()
+{
+    if(ui->checkBox->isChecked()){
+        ui->checkBox_2->setEnabled(false);
+        ui->checkBox_3->setEnabled(false);
+        ui->checkBox_4->setEnabled(false);
+        ui->checkBox_5->setEnabled(false);
+        ui->checkBox_6->setEnabled(false);
+        ui->checkBox_7->setEnabled(false);
+        ui->checkBox_8->setEnabled(false);
+        ui->checkBox_9->setEnabled(false);
+        ui->checkBox_10->setEnabled(false);
+        ui->checkBox_11->setEnabled(false);
+        ui->checkBox_12->setEnabled(false);
+        ui->checkBox_13->setEnabled(false);
+    }else{
+        ui->checkBox_2->setEnabled(true);
+        ui->checkBox_3->setEnabled(true);
+        ui->checkBox_4->setEnabled(true);
+        ui->checkBox_5->setEnabled(true);
+        ui->checkBox_6->setEnabled(true);
+        ui->checkBox_7->setEnabled(true);
+        ui->checkBox_8->setEnabled(true);
+        ui->checkBox_9->setEnabled(true);
+        ui->checkBox_10->setEnabled(true);
+        ui->checkBox_11->setEnabled(true);
+        ui->checkBox_12->setEnabled(true);
+        ui->checkBox_13->setEnabled(true);
+
+
+
+    }
+
 }

@@ -31,7 +31,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -86,19 +86,6 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="7">
-       <widget class="QLabel" name="Text_label">
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>60</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Text</string>
-        </property>
-       </widget>
-      </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="Tsize_lineEdit"/>
       </item>
@@ -118,6 +105,9 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="2">
+       <widget class="QLineEdit" name="Tb_lineEdit"/>
+      </item>
       <item row="1" column="6">
        <widget class="QLineEdit" name="SimpleT_lineEdit">
         <property name="maxLength">
@@ -132,8 +122,8 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="2">
-       <widget class="QLineEdit" name="Tb_lineEdit"/>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="PlenL_lineEdit"/>
       </item>
       <item row="0" column="6">
        <widget class="QLabel" name="SimpleT_label">
@@ -150,9 +140,6 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLineEdit" name="PlenL_lineEdit"/>
       </item>
       <item row="0" column="5">
        <widget class="QLabel" name="SimpleP_label">
@@ -186,80 +173,11 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="7">
-       <widget class="QComboBox" name="Text_comboBox">
-        <item>
-         <property name="text">
-          <string>all</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>englishTexts</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>italianTexts</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>genome</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>protein</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand2</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand4</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand8</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand16</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand32</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand64</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand128</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>rand250</string>
-         </property>
-        </item>
-       </widget>
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="Pset_lineEdit"/>
       </item>
       <item row="1" column="3">
        <widget class="QLineEdit" name="PlenU_lineEdit"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLineEdit" name="Pset_lineEdit"/>
       </item>
       <item row="2" column="0">
        <widget class="QCheckBox" name="Short_checkBox">
@@ -319,6 +237,104 @@
        <widget class="QCheckBox" name="Pre_checkBox">
         <property name="text">
          <string>Pre</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Text:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QCheckBox" name="checkBox_2">
+        <property name="text">
+         <string>englishTexts</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="checkBox">
+        <property name="text">
+         <string>all</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="3">
+       <widget class="QCheckBox" name="checkBox_3">
+        <property name="text">
+         <string>italianTexts</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="4">
+       <widget class="QCheckBox" name="checkBox_4">
+        <property name="text">
+         <string>genome</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="5">
+       <widget class="QCheckBox" name="checkBox_5">
+        <property name="text">
+         <string>protein</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="6">
+       <widget class="QCheckBox" name="checkBox_6">
+        <property name="text">
+         <string>rand2</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QCheckBox" name="checkBox_7">
+        <property name="text">
+         <string>rand4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QCheckBox" name="checkBox_8">
+        <property name="text">
+         <string>rand8</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="2">
+       <widget class="QCheckBox" name="checkBox_9">
+        <property name="text">
+         <string>rand16</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="3">
+       <widget class="QCheckBox" name="checkBox_10">
+        <property name="text">
+         <string>rand32</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="4">
+       <widget class="QCheckBox" name="checkBox_11">
+        <property name="text">
+         <string>rand64</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="5">
+       <widget class="QCheckBox" name="checkBox_12">
+        <property name="text">
+         <string>rand128</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="6">
+       <widget class="QCheckBox" name="checkBox_13">
+        <property name="text">
+         <string>rand250</string>
         </property>
        </widget>
       </item>
@@ -414,7 +430,6 @@
   <tabstop>PlenL_lineEdit</tabstop>
   <tabstop>SimpleP_lineEdit</tabstop>
   <tabstop>SimpleT_lineEdit</tabstop>
-  <tabstop>Text_comboBox</tabstop>
  </tabstops>
  <resources/>
  <connections/>

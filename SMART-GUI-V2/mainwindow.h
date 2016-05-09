@@ -38,6 +38,8 @@ private slots:
 
     void on_actionSetup_SMART_GUI_triggered();
 
+    void on_checkBox_clicked();
+
 public slots:
     void runProcess();
     void updateGUI();
