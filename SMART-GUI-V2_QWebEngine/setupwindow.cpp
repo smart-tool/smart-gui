@@ -23,7 +23,7 @@ bool copyPath(QString sourceDir, QString destinationDir, bool overWriteDirectory
     if(destinationDirectory.exists() && !overWriteDirectory)
         return false;
     else if(destinationDirectory.exists() && overWriteDirectory)
-        //destinationDirectory.removeRecursively();
+        destinationDirectory.removeRecursively();
 
     originDirectory.mkpath(destinationDir);
 

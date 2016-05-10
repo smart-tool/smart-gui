@@ -26,7 +26,9 @@
 #include <QPalette>
 
 //Library for webEngineView.
-#include <QtWebKit>
+#include <QtWebEngineWidgets>
+#include <QWebEnginePage>
+#include <QWebEngineView>
 
 #include <QDebug>
 
@@ -74,12 +76,12 @@ QVBoxLayout *layoutLegend;      //Pointer of boxLayout used to made a legend of 
 QScrollArea *scrollActiveAlgo;  //Pointer of scrollArea to make the layoutLenged scrollable.
 QSplitter *layoutForTab;        //Pointer of splitter to make resizable the GUI.
 
-QWebView *showResult;     //Pointer of QWebView used to show the result test.
+QWebEngineView *showResult;     //Pointer of webEngineView used to show the result test.
 
-QWebView *chartWebView;           //Pointer of QWebView (Show single chart).
+QWebEngineView *chartWebView;           //Pointer of webEngineView (Show single chart).
 QTabWidget *tabData;                    //Pointer of tabWidget (different tab for different exp).
 
-QWebView *chartWebViewAll[100];   //Array of pointer of QWebView (Show the multi char for test "all text").
+QWebEngineView *chartWebViewAll[100];   //Array of pointer of webEngineView (Show the multi char for test "all text").
 QTabWidget *tabChartWebView;            //Pointer of tabWidget (different tab for different text).
 
 QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js and path of smartSource (nextUpdate) ).
@@ -256,7 +258,7 @@ void MainWindow::processEnded(){
 
 
             if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + selectedText[0] + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
-                showResult = new QWebView();
+                showResult = new QWebEngineView();
                 showResult->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
                 connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
             }
@@ -373,9 +375,9 @@ void MainWindow::updateGUI(){
 
                     //Send js code.
                     if(selectedText.length() == 1)
-                        chartWebView->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+                        chartWebView->page()->runJavaScript(javascriptCode);
                     else
-                        chartWebViewAll[tabChartWebView->count() - 1]->page()->mainFrame()->evaluateJavaScript(javascriptCode);
+                        chartWebViewAll[tabChartWebView->count() - 1]->page()->runJavaScript(javascriptCode);
 
                     timeAlgo = "";
                     currentAlgo = 0;
@@ -502,7 +504,7 @@ void MainWindow::inizializeAll(){
     if( ui->AllCheckBox->isChecked() ){
 
         for(int i=0; i<nameText.length(); i++)
-            chartWebViewAll[i] = new QWebView();
+            chartWebViewAll[i] = new QWebEngineView();
 
         tabChartWebView = new QTabWidget;
         layoutForTab->addWidget(tabChartWebView);
@@ -510,13 +512,13 @@ void MainWindow::inizializeAll(){
 
     }else if ( selectedText.length() == 1){
 
-        chartWebView = new QWebView();
+        chartWebView = new QWebEngineView();
         layoutForTab->addWidget(chartWebView);
 
     }else{
 
         for(int i=0; i<selectedText.length(); i++)
-            chartWebViewAll[i] = new QWebView();
+            chartWebViewAll[i] = new QWebEngineView();
 
         tabChartWebView = new QTabWidget;
         layoutForTab->addWidget(tabChartWebView);
