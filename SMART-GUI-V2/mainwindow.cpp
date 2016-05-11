@@ -90,7 +90,7 @@ QWebView *webViewForPDF;        //Pointer of QWebView user for load the result.h
 QPrinter *printer;              //Array of printer.
 
 QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js, pathSource.conf ).
-QString pathSmart = "";                                 //Default contains smartSource file.
+QString pathSmart = "";                                 //String contains the path with smartSource file.
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -120,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     QFile pathSmartFile(pathSmartGUI + "/pathSource.conf");
 
+    //Read file .conf
     if(pathSmartFile.exists()){
         if (pathSmartFile.open(QIODevice::ReadOnly)) {
             QTextStream in(&pathSmartFile);
@@ -128,15 +129,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         }
     }
 
-    if(pathSmart == ""){
+    //Check if .conf file is ok and the setted path contains smart.
+    if(pathSmart == "") {
         ui->actionAdd_Algorithms->setEnabled(false);
         ui->actionSelect_algorithms->setEnabled(false);
     }else{
-        if(QDir(pathSmart).exists()){
+        if(QDir(pathSmart).exists()) {
             QFile SmartCheck(pathSmart + "/smart");
             QFile SelectCheck(pathSmart + "/select");
             QFile TestCheck(pathSmart + "/test");
-            if (! (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists() ) ){
+            if (! (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists() ) ) {
                 ui->actionAdd_Algorithms->setEnabled(false);
                 ui->actionSelect_algorithms->setEnabled(false);
             }
@@ -161,28 +163,9 @@ void MainWindow::on_actionSelect_algorithms_triggered() {
 
 //Menù option. Open about alert.
 void MainWindow::on_actionAbout_SMART_GUI_triggered() {
-
     aboutWindow openAboutWindow;
     openAboutWindow.setModal(true);
     openAboutWindow.exec();
-
-    //const QString help = "\tThis is an help guide for using the tool.\n"
-                         "\n\n-pset N computes running times as the mean of N runs (default 500)."
-                         "\n\n-tsize S set the upper bound dimension (in Mb) of the text used for experimental results (default 1Mb)."
-                         "\n\n-plen L U  test only patterns with a length between L and U (included)."
-                         "\n\n-text F  performs experimental results using text buffer F (mandatory unless you use the -simple parameter)."
-                         "\n\n-short computes experimental results using short length patterns."
-                         "\n\n-occ prints the number of occurrences."
-                         "\n\n-tb L set to L the upper bound for any wort case running time (in ms). The default value is 300 ms."
-                         "\n\n-dif prints the number the best and the worst running time."
-                         "\n\n-std prints the standard deviations of the running times."
-                         "\n\n-txt output results in txt tabular format."
-                         "\n\n-tex output results in latex tabular format."
-                         "\n\n-simple P T executes a single run searching T (max 1000 chars) for occurrences of P (max 100 chars)."
-                         "\n\nSMART by Faro Simone."
-                         "\nGUI by \nAlessandro Maggio\nSimone Di Mauro\nStefano Borzi.";
-
-    //QMessageBox::information(this,"About!",help);
 }
 
 //Load into array parameters the status of algo.
@@ -224,13 +207,13 @@ QString MainWindow::createHeadEXP(){
 
     QString tmpText = "";
 
-    if (ui->SimpleT_lineEdit->text() != "")
+    if (ui->SimpleT_lineEdit->text() != "")                     //Simple setted.
         tmpText = ui->SimpleT_lineEdit->text();
-    else if( selectedText.length() == 1)
+    else if( selectedText.length() == 1)                        //Single text.
         tmpText = selectedText[0];
-    else if( ui->AllCheckBox->isChecked())
+    else if( ui->AllCheckBox->isChecked())                      //All text.
         tmpText = nameText[tabChartWebView->count()-1];
-    else
+    else                                                        //Multi text.
         tmpText = selectedText[tabChartWebView->count()-1];
 
     return  QString::fromLatin1("\n\n  ---------------------------------------------------------------------") +
@@ -259,33 +242,33 @@ void MainWindow::printPDF(){
 void MainWindow::processEnded(){
 
     if(forcedStop)
-        fakeTerminal->setText( fakeTerminal->toPlainText() +
-                                            "\n\n  ---------------------------------------------------------------------" +
-                                            "\n  STOPPED BY USER " + expCode
-                                            );
+        fakeTerminal->setText(  fakeTerminal->toPlainText() +
+                                "\n\n  ---------------------------------------------------------------------" +
+                                "\n  STOPPED BY USER " + expCode
+                            );
 
     else if(errorParameters){
-        fakeTerminal->setText( fakeTerminal->toPlainText() +
-                                            "\n\n  ---------------------------------------------------------------------" +
-                                            "\n  ERROR IN INPUT PARAMETERS " + expCode
-                                            );
+        fakeTerminal->setText(  fakeTerminal->toPlainText() +
+                                "\n\n  ---------------------------------------------------------------------" +
+                                "\n  ERROR IN INPUT PARAMETERS " + expCode
+                            );
 
          QMessageBox::warning(this,"Error!","Error in input parameters.");
 
     }else if(errorSegmentationFault){
-        fakeTerminal->setText( fakeTerminal->toPlainText() +
-                                            "\n\n  ---------------------------------------------------------------------" +
-                                            "\n  SEGMENTATION FAULT " + expCode
-                                            );
+        fakeTerminal->setText(  fakeTerminal->toPlainText() +
+                                "\n\n  ---------------------------------------------------------------------" +
+                                "\n  SEGMENTATION FAULT " + expCode
+                            );
 
          QMessageBox::critical(this,"Error!","Segmentation fault.");
 
     }else{
 
-        fakeTerminal->setText( fakeTerminal->toPlainText() +
-                                            "\n\n  ---------------------------------------------------------------------" +
-                                            "\n  OUTPUT RUNNING TIMES " + expCode
-                                            );
+        fakeTerminal->setText(  fakeTerminal->toPlainText() +
+                                "\n\n  ---------------------------------------------------------------------" +
+                                "\n  OUTPUT RUNNING TIMES " + expCode
+                            );
 
         //If the folder with expCode not exist. Update the code +1.
         if(!( QDir(pathSmart + "/results/" + expCode).exists() ) ){
@@ -293,36 +276,38 @@ void MainWindow::processEnded(){
             QMessageBox::warning(this,"Sorry!","Sorry for the inconvenience. The EXPcode is wrog. The new EXPcode is: " + expCode);
         }
 
-        if ( (ui->AllCheckBox->isChecked() == false) && (selectedText.length()==1) ){
+        //Print the output in fakeTerminal.
+        if ( selectedText.length() == 1 ) {
             ui->progressBar->setValue(calculatePercentage());
 
             fakeTerminal->setText( fakeTerminal->toPlainText() + "\n\n  Saving data on " + expCode + "/" + selectedText[0] + ".xml" +
                                                                  "\n  Saving data on " + expCode + "/" + selectedText[0] + ".html" );
 
-            if (ui->Tex_checkBox->isChecked())
+            if ( ui->Tex_checkBox->isChecked() )
                 fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[0] + ".tex" );
 
-            if (ui->Txt_checkBox->isChecked())
+            if ( ui->Txt_checkBox->isChecked() )
                 fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[0] + ".txt" );
 
-            if (ui->Pdf_checkBox->isChecked()){
+            if ( ui->Pdf_checkBox->isChecked() ) {
 
+                //Create a new Printer.
                 printer = new QPrinter(QPrinter::HighResolution);
                 printer->setOutputFileName(pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".pdf");
 
+                //Create a new webView, load the result.html and connect the signal endendo to slot print.
                 webViewForPDF = new QWebView();
                 webViewForPDF->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
                 connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
             }
 
-            if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + selectedText[0] + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
+            if ( QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + selectedText[0] + ".html?", QMessageBox::Yes|QMessageBox::No).exec() ) {
                 showResult = new QWebView();
                 if( QDir(pathSmart + "/results/" + expCode).exists() ) {
-                    showResult->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
-                    connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
+                    showResult->load( QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html") );
+                    connect( showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()) );
                 }
             }
-
 
         }else{
             ui->progressBar->setValue(100);
@@ -383,6 +368,7 @@ void MainWindow::updateGUI(){
 
     else{
 
+        //Calculate percentage for fakeTerminal.
         if (tmpOutput.contains("%")){
 
             int tmpPercent = (100*countPercent)/ui->Pset_lineEdit->text().toDouble();
@@ -395,11 +381,13 @@ void MainWindow::updateGUI(){
 
         }
 
+        //Single algo test endend.
         if( tmpOutput.contains("[OK]") || tmpOutput.contains("[ERROR]") || tmpOutput.contains("[--]") || tmpOutput.contains("[OUT]") ){
 
             QRegExp rxFloat("[^0-9.]");                             //Regex keeps floating number.
             QString infoAlgo = "";
             QStringList splittedOutput;
+
             splittedOutput << tmpOutput.split('\t');
 
             //Parsing the output to get the data.
@@ -608,12 +596,12 @@ void MainWindow::createChart(){
 
     inizializeAll();
 
-    int EXECUTE[NumAlgo];                                             //Declare EXECTUE array with the state of alrgorithm (0/1).
-    char *ALGO_NAME[NumAlgo];                                         //Declare array ALGO_NAME with the name of all string matching algorithms
+    int EXECUTE[NumAlgo];                                           //Declare EXECTUE array with the state of alrgorithm (0/1).
+    char *ALGO_NAME[NumAlgo];                                       //Declare array ALGO_NAME with the name of all string matching algorithms
 
-    QFile chartCode1File(":/chartFile/chart/chartPart1.html");        //Load part1 of htmlChart by res.
-    QFile chartCode2File(":/chartFile/chart/chartPart2.html");        //Load part2 of htmlChart by res..
-    QFile chartFile(pathSmartGUI + "/chart.html");                   //Load file of graph.
+    QFile chartCode1File(":/chartFile/chart/chartPart1.html");      //Load part1 of htmlChart by res.
+    QFile chartCode2File(":/chartFile/chart/chartPart2.html");      //Load part2 of htmlChart by res..
+    QFile chartFile(pathSmartGUI + "/chart.html");                  //Load file of graph.
 
     QString chartCode1, chartCode2;
     QString r, g, b;
@@ -678,7 +666,8 @@ void MainWindow::createChart(){
     //Copy Chart.js from resource in local.
     QFile::copy(":/chartFile/chart/Chart.js" , pathSmartGUI +  "/Chart.js");
 
-    if( selectedText.length() == 1 ){
+    //Load the file chart.html in all webView (to prevent future errors).
+    if( selectedText.length() == 1 ) {
         chartWebView->load(QUrl("file:///" + pathSmartGUI +  "/chart.html"));
         connect(chartWebView, SIGNAL(loadFinished(bool)), this, SLOT(runProcess()));
     }else if (ui->AllCheckBox->isChecked()){
@@ -1019,8 +1008,8 @@ void MainWindow::on_actionSetup_SMART_GUI_triggered(){
     openSetupWindow.exec();
 }
 
-void MainWindow::on_AllCheckBox_clicked()
-{
+void MainWindow::on_AllCheckBox_clicked() {
+
     if(ui->AllCheckBox->isChecked()){
         ui->englishTextsCheckBox->setEnabled(false);
         ui->italianTextsCheckBox->setEnabled(false);
@@ -1047,8 +1036,6 @@ void MainWindow::on_AllCheckBox_clicked()
         ui->rand64CheckBox->setEnabled(true);
         ui->rand128CheckBox->setEnabled(true);
         ui->rand250CheckBox->setEnabled(true);
-
-
 
     }
 
