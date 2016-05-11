@@ -26,8 +26,11 @@
 #include <QColor>
 #include <QPalette>
 
-//Library for webEngineView.
+//Library for webKit.
 #include <QtWebKit>
+
+//Library for printPDF.
+#include <QPrinter>
 
 #include <QDebug>
 
@@ -75,13 +78,16 @@ QVBoxLayout *layoutLegend;      //Pointer of boxLayout used to made a legend of 
 QScrollArea *scrollActiveAlgo;  //Pointer of scrollArea to make the layoutLenged scrollable.
 QSplitter *layoutForTab;        //Pointer of splitter to make resizable the GUI.
 
-QWebView *showResult;     //Pointer of QWebView used to show the result test.
+QWebView *showResult;           //Pointer of QWebView used to show the result test.
 
-QWebView *chartWebView;           //Pointer of QWebView (Show single chart).
-QTabWidget *tabData;                    //Pointer of tabWidget (different tab for different exp).
+QWebView *chartWebView;         //Pointer of QWebView (Show single chart).
+QTabWidget *tabData;            //Pointer of tabWidget (different tab for different exp).
 
-QWebView *chartWebViewAll[100];   //Array of pointer of QWebView (Show the multi char for test "all text").
-QTabWidget *tabChartWebView;            //Pointer of tabWidget (different tab for different text).
+QWebView *chartWebViewAll[100]; //Array of pointer of QWebView (Show the multi char for test "all text").
+QTabWidget *tabChartWebView;    //Pointer of tabWidget (different tab for different text).
+
+QWebView *webViewForPDF;        //Pointer of QWebView user for load the result.html file (Support for printer).
+QPrinter *printer;              //Array of printer.
 
 QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js and path of smartSource (nextUpdate) ).
 QString pathSmart = pathSmartGUI + "/smartSource";      //Default contains smartSource file.
@@ -216,6 +222,11 @@ void MainWindow::showResultFunction(){
     showResult->show();
 }
 
+//Print the PDF
+void MainWindow::printPDF(){
+    webViewForPDF->print(printer);
+}
+
 //Execute this SLOT on ended process.
 void MainWindow::processEnded(){
 
@@ -239,7 +250,7 @@ void MainWindow::processEnded(){
                                             "\n  SEGMENTATION FAULT " + expCode
                                             );
 
-         QMessageBox::warning(this,"Error!","Segmentation fault.");
+         QMessageBox::critical(this,"Error!","Segmentation fault.");
 
     }else{
 
@@ -247,6 +258,12 @@ void MainWindow::processEnded(){
                                             "\n\n  ---------------------------------------------------------------------" +
                                             "\n  OUTPUT RUNNING TIMES " + expCode
                                             );
+
+        //If the folder with expCode not exist. Update the code +1.
+        if(!( QDir(pathSmart + "/results/" + expCode).exists() ) ){
+            expCode = "EXP" + QString::number( (expCode.replace("EXP","").toInt() ) + 1 );
+            QMessageBox::warning(this,"Sorry!","Sorry for the inconvenience. The EXPcode is wrog. The new EXPcode is: " + expCode);
+        }
 
         if ( (ui->AllCheckBox->isChecked() == false) && (selectedText.length()==1) ){
             ui->progressBar->setValue(calculatePercentage());
@@ -260,12 +277,24 @@ void MainWindow::processEnded(){
             if (ui->Txt_checkBox->isChecked())
                 fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[0] + ".txt" );
 
+            if (ui->Pdf_checkBox->isChecked()){
+
+                printer = new QPrinter(QPrinter::HighResolution);
+                printer->setOutputFileName(pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".pdf");
+
+                webViewForPDF = new QWebView();
+                webViewForPDF->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
+                connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
+            }
 
             if (QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + selectedText[0] + ".html?", QMessageBox::Yes|QMessageBox::No).exec()) {
                 showResult = new QWebView();
-                showResult->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
-                connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
+                if( QDir(pathSmart + "/results/" + expCode).exists() ) {
+                    showResult->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
+                    connect(showResult, SIGNAL(loadFinished(bool)), this, SLOT(showResultFunction()));
+                }
             }
+
 
         }else{
             ui->progressBar->setValue(100);
@@ -291,8 +320,12 @@ void MainWindow::processEnded(){
 
                     if (ui->Txt_checkBox->isChecked())
                         fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[j] + ".txt" );
+
                 }
             }
+
+            if (ui->Pdf_checkBox->isChecked())
+                QMessageBox::warning(this,"Error!","The PDF printer work only with single text test.");
 
             QMessageBox::information(this,"Done!","Test complete.");
         }
@@ -933,7 +966,7 @@ void MainWindow::on_start_pushButton_released() {
         createChart();  
 
     }else
-        QMessageBox::warning(this,"Error!","Need SMART source in folder.");
+        QMessageBox::critical(this,"Error!","Need SMART source in folder.");
 
 
 }

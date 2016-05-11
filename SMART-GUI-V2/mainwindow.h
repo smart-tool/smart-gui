@@ -34,7 +34,6 @@ private slots:
     void on_stop_pushButton_released();
 
     void on_actionAdd_Algorithms_triggered();
-
     void on_actionSetup_SMART_GUI_triggered();
 
     void on_AllCheckBox_clicked();
@@ -44,6 +43,8 @@ public slots:
     void updateGUI();
     void processEnded();
     void showResultFunction();
+    void printPDF();
+
 
     QString createHeadEXP();
 

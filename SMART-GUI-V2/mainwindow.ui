@@ -31,7 +31,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,0,0">
+     <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0">
       <property name="sizeConstraint">
        <enum>QLayout::SetDefaultConstraint</enum>
       </property>
@@ -108,6 +108,9 @@
       <item row="1" column="2">
        <widget class="QLineEdit" name="Tb_lineEdit"/>
       </item>
+      <item row="1" column="4">
+       <widget class="QLineEdit" name="PlenL_lineEdit"/>
+      </item>
       <item row="1" column="6">
        <widget class="QLineEdit" name="SimpleT_lineEdit">
         <property name="maxLength">
@@ -121,9 +124,6 @@
          <number>1000</number>
         </property>
        </widget>
-      </item>
-      <item row="1" column="4">
-       <widget class="QLineEdit" name="PlenL_lineEdit"/>
       </item>
       <item row="0" column="6">
        <widget class="QLabel" name="SimpleT_label">
@@ -140,6 +140,9 @@
          <set>Qt::AlignCenter</set>
         </property>
        </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QLineEdit" name="Pset_lineEdit"/>
       </item>
       <item row="0" column="5">
        <widget class="QLabel" name="SimpleP_label">
@@ -173,13 +176,21 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QLineEdit" name="Pset_lineEdit"/>
-      </item>
       <item row="1" column="3">
        <widget class="QLineEdit" name="PlenU_lineEdit"/>
       </item>
-      <item row="2" column="0">
+     </layout>
+    </item>
+    <item>
+     <widget class="Line" name="line_3">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
        <widget class="QCheckBox" name="Short_checkBox">
         <property name="text">
          <string>Short</string>
@@ -189,28 +200,28 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="1">
+      <item>
        <widget class="QCheckBox" name="Occ_checkBox">
         <property name="text">
          <string>Occ</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="2">
+      <item>
        <widget class="QCheckBox" name="Dif_checkBox">
         <property name="text">
          <string>Dif</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="3">
+      <item>
        <widget class="QCheckBox" name="Std_checkBox">
         <property name="text">
          <string>Std</string>
         </property>
        </widget>
       </item>
-      <item row="2" column="4">
+      <item>
        <widget class="QCheckBox" name="Txt_checkBox">
         <property name="text">
          <string>Txt</string>
@@ -223,7 +234,7 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="5">
+      <item>
        <widget class="QCheckBox" name="Tex_checkBox">
         <property name="text">
          <string>Tex</string>
@@ -233,10 +244,17 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="6">
+      <item>
        <widget class="QCheckBox" name="Pre_checkBox">
         <property name="text">
          <string>Pre</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="Pdf_checkBox">
+        <property name="text">
+         <string>Pdf</string>
         </property>
        </widget>
       </item>
