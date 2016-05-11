@@ -23,7 +23,7 @@ AddAlgo::~AddAlgo(){
 
 void AddAlgo::updateBar(){
    // qDebug()<< ProcAdd->readAllStandardOutput();
-
+   qDebug()<<"prova";
 
     QString tmpOutput2 = ProcAdd->readAllStandardOutput().replace("\b","");
 
@@ -93,11 +93,11 @@ void AddAlgo::on_pushButton_clicked()
             CompiledCheck=true;
         }else{
             QString error = "Error to save the algortmis \n";
-            QMessageBox::information(this,"Error..!!",error);
+            QMessageBox::information(this,"Error save algortmis",error);
         }
 
         if(CompiledCheck){
-
+            qDebug()<<"entra qui";
             system("rm logCompiled.txt");
             QString compiledSequenze = "gcc " + filename + " -o " + ___pathSmart + "/source/bin/" + NameAlgo + " 2>logCompiled.txt";
             QByteArray ba = compiledSequenze.toLatin1();
@@ -119,10 +119,11 @@ void AddAlgo::on_pushButton_clicked()
                 logFile.close();
 
             }else{
-
+                qDebug()<<"entra qui 2";
                 //system("cd smartSource/");
 
-                QString AddSequence = ___pathSmart + "./select -add " + NameAlgo;
+                QString AddSequence = ___pathSmart + "/./select -add " + NameAlgo;
+                qDebug()<<AddSequence;
                 QByteArray ba = AddSequence.toLatin1();
                 const char * AddSequence2 = ba.data();
                 ProcAdd = new QProcess(this);
