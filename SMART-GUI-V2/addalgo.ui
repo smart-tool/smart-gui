@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Add algorithm</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
@@ -53,7 +57,7 @@
         <x>0</x>
         <y>0</y>
         <width>766</width>
-        <height>340</height>
+        <height>338</height>
        </rect>
       </property>
       <widget class="QTextEdit" name="textEdit">

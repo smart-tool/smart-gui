@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Select algorithm</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true"/>
   </property>
@@ -69,7 +73,7 @@
         <x>0</x>
         <y>0</y>
         <width>358</width>
-        <height>349</height>
+        <height>343</height>
        </rect>
       </property>
      </widget>
