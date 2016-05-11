@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
     MainWindow w;
 
     // icon
-    QIcon icon(":/icon.jpg");
+    QIcon icon(":/icon.png");
     w.setWindowIcon(icon);
 
     w.show();
