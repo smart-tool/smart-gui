@@ -22,8 +22,7 @@ AddAlgo::~AddAlgo(){
 }
 
 void AddAlgo::updateBar(){
-   // qDebug()<< ProcAdd->readAllStandardOutput();
-   qDebug()<<"prova";
+
 
     QString tmpOutput2 = ProcAdd->readAllStandardOutput().replace("\b","");
 
@@ -45,22 +44,20 @@ void AddAlgo::finPro(){
         QString SelectSequence = "./select " + NameAlgo;
         QByteArray ba = SelectSequence.toLatin1();
         const char * SelectSequence2 = ba.data();
-
-        //system(SelectSequence2);
         delete ProcAdd;
 
         ProcAdd = new QProcess(this);
         ProcAdd->setWorkingDirectory(___pathSmart);
         ProcAdd->start(SelectSequence2);
 
-        QString error = "Algortmhs add and select \n\n";
-        QMessageBox::information(this,"ADD and Select",error);
-
+        QString Add = "Algortmhs add and select \n\n";
+        QMessageBox::information(this,"ADD and Select",Add);
+        this->close();
     }else {
 
-        QString error = "Algortmhs add \n\n";
-        QMessageBox::information(this,"ADD",error);
-
+        QString Add = "Algortmhs add \n\n";
+        QMessageBox::information(this,"ADD",Add);
+        this->close();
     }
 
 }
@@ -75,11 +72,16 @@ void AddAlgo::on_pushButton_clicked()
     if(ui->checkBox->isChecked())
         this->Selected = true;
 
-    if(ui->lineEdit->text() != "")
-        this->NameAlgo=ui->lineEdit->text();
+    if(ui->lineEdit->text() != ""){
+        if(ui->lineEdit->text().contains(" ")){
+            QString error = "You Name algortmis contais space \n";
+            QMessageBox::information(this,"Error",error);
+
+        }else  this->NameAlgo=ui->lineEdit->text();
+    }
     else{
         QString error = "You add Name Algortmis to add \n";
-        QMessageBox::information(this,"Error..!!",error);
+        QMessageBox::information(this,"Error",error);
     }
 
     if(this->NameAlgo != ""){
@@ -97,7 +99,7 @@ void AddAlgo::on_pushButton_clicked()
         }
 
         if(CompiledCheck){
-            qDebug()<<"entra qui";
+
             system("rm logCompiled.txt");
             QString compiledSequenze = "gcc " + filename + " -o " + ___pathSmart + "/source/bin/" + NameAlgo + " 2>logCompiled.txt";
             QByteArray ba = compiledSequenze.toLatin1();
@@ -119,8 +121,7 @@ void AddAlgo::on_pushButton_clicked()
                 logFile.close();
 
             }else{
-                qDebug()<<"entra qui 2";
-                //system("cd smartSource/");
+
 
                 QString AddSequence = ___pathSmart + "/./select -add " + NameAlgo;
                 qDebug()<<AddSequence;
@@ -129,38 +130,9 @@ void AddAlgo::on_pushButton_clicked()
                 ProcAdd = new QProcess(this);
 
                 connect(ProcAdd, SIGNAL(readyReadStandardOutput()), this, SLOT(updateBar()) );
-                //connect(ProcAdd, SIGNAL(finished(int)), this, SLOT(finPro()) );
 
                 ProcAdd->setWorkingDirectory(___pathSmart);
                 ProcAdd->start(AddSequence2);
-
-                //AGGIUNGERE LA FUNZIONE SLOT(GUARDARE UPDATEGUI)
-                //AGGIUNGERE IL CONNECT GUARDA MAINWINDOW
-
-
-                //system(AddSequence2);
-                //system("ls");
-
-                /*
-                 *
-                if(this->Selected){
-
-                    QString SelectSequence = ___pathSmart + "./select " + NameAlgo;
-                    QByteArray ba = SelectSequence.toLatin1();
-                    const char * SelectSequence2 = ba.data();
-                    system(SelectSequence2);
-                    QString error = "Algortmhs add and select \n\n";
-                    QMessageBox::information(this,"ADD and Select",error);
-
-                }else {
-
-                    QString error = "Algortmhs add \n\n";
-                    QMessageBox::information(this,"ADD",error);
-
-                }
-
-                */
-
 
             }
         }
