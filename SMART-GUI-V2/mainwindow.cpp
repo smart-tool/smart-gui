@@ -5,6 +5,7 @@
 #include "selectalgwindow.h"
 #include "addalgo.h"
 #include "setupwindow.h"
+#include "aboutwindow.h"
 
 //Library for manage file and directory.
 #include <QFile>
@@ -126,7 +127,12 @@ void MainWindow::on_actionSelect_algorithms_triggered() {
 
 //Menù option. Open about alert.
 void MainWindow::on_actionAbout_SMART_GUI_triggered() {
-    const QString help = "\tThis is an help guide for using the tool.\n"
+
+    aboutWindow openAboutWindow;
+    openAboutWindow.setModal(true);
+    openAboutWindow.exec();
+
+    //const QString help = "\tThis is an help guide for using the tool.\n"
                          "\n\n-pset N computes running times as the mean of N runs (default 500)."
                          "\n\n-tsize S set the upper bound dimension (in Mb) of the text used for experimental results (default 1Mb)."
                          "\n\n-plen L U  test only patterns with a length between L and U (included)."
@@ -142,7 +148,7 @@ void MainWindow::on_actionAbout_SMART_GUI_triggered() {
                          "\n\nSMART by Faro Simone."
                          "\nGUI by \nAlessandro Maggio\nSimone Di Mauro\nStefano Borzi.";
 
-    QMessageBox::information(this,"About!",help);
+    //QMessageBox::information(this,"About!",help);
 }
 
 //Load into array parameters the status of algo.

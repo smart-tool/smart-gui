@@ -15,17 +15,20 @@ SOURCES += main.cpp\
            mainwindow.cpp \
            selectalgwindow.cpp \
            addalgo.cpp \
-           setupwindow.cpp
+           setupwindow.cpp \
+    aboutwindow.cpp
 
 HEADERS += mainwindow.h \
            selectalgwindow.h \
            addalgo.h \
-           setupwindow.h
+           setupwindow.h \
+    aboutwindow.h
 
 FORMS   += mainwindow.ui \
            selectalgwindow.ui \
            addalgo.ui \
-           setupwindow.ui
+           setupwindow.ui \
+    aboutwindow.ui
 
 RESOURCES += \
            chartfile.qrc \
