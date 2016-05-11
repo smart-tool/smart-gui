@@ -8,10 +8,22 @@
 #include <QDir>
 
 QString ___pathSmartGUI = QDir::homePath() + "/smartGUI";
-QString ___pathSmart = ___pathSmartGUI + "/smartSource";
+QString ___pathSmart = "";
 
 AddAlgo::AddAlgo(QWidget *parent) : QDialog(parent), ui(new Ui::AddAlgo) {
     ui->setupUi(this);
+
+    QFile pathSmartFile(___pathSmartGUI + "/pathSource.conf");
+
+    if(pathSmartFile.exists()){
+        if (pathSmartFile.open(QIODevice::ReadOnly)) {
+            QTextStream in(&pathSmartFile);
+            ___pathSmart = in.readAll();
+            pathSmartFile.close();
+        }
+    }
+
+
     ui->textEdit->setText("#include \"include/main.h\"\n\n //ADD YOUR CODE HERE \n\n //FOR MORE INFO FOR ADD ALGORTHIMS VISIT http://www.dmi.unict.it/~faro/smart/howto.php?id=18 \n\n");
     this->Selected=false;
     this->NameAlgo="";

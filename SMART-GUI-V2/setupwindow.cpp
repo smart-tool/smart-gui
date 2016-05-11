@@ -8,59 +8,39 @@
 #include <QMessageBox>
 
 QString _pathSmartGUI = QDir::homePath() + "/smartGUI";
-QString _pathSmart = _pathSmartGUI + "/smartSource";
+QString _pathSmart = "";
+
+QFile pathSmartFile(_pathSmartGUI + "/pathSource.conf");
 
 QString sourceDirectory;
-
-bool copyPath(QString sourceDir, QString destinationDir, bool overWriteDirectory) {
-    QDir originDirectory(sourceDir);
-
-    if (! originDirectory.exists())
-        return false;
-
-    QDir destinationDirectory(destinationDir);
-
-    if(destinationDirectory.exists() && !overWriteDirectory)
-        return false;
-    else if(destinationDirectory.exists() && overWriteDirectory)
-        //destinationDirectory.removeRecursively();
-
-    originDirectory.mkpath(destinationDir);
-
-    foreach (QString directoryName, originDirectory.entryList(QDir::Dirs | \
-                                                              QDir::NoDotAndDotDot)) {
-
-        QString destinationPath = destinationDir + "/" + directoryName;
-        originDirectory.mkpath(destinationPath);
-        copyPath(sourceDir + "/" + directoryName, destinationPath, overWriteDirectory);
-    }
-
-    foreach (QString fileName, originDirectory.entryList(QDir::Files)) {
-        QFile::copy(sourceDir + "/" + fileName, destinationDir + "/" + fileName);
-    }
-
-    /*! Possible race-condition mitigation? */
-    QDir finalDestination(destinationDir);
-    finalDestination.refresh();
-
-    if(finalDestination.exists())
-        return true;
-
-    return false;
-}
 
 setupWindow::setupWindow(QWidget *parent) :QDialog(parent),ui(new Ui::setupWindow){
     ui->setupUi(this);
 
-    ui->folder_label->setText(_pathSmart);
-
-    if(QDir(_pathSmart).exists()){
-        ui->info_label->setText("The folder exists.");
-        ui->info_label->setStyleSheet( "color: green ;");
-    }else{
-        ui->info_label->setText("The folder does not exist.\nCopy it manually or use this window.");
-        ui->info_label->setStyleSheet( "color: red ;");
+    if(pathSmartFile.exists()){
+        if (pathSmartFile.open(QIODevice::ReadOnly)) {
+            QTextStream in(&pathSmartFile);
+            _pathSmart = in.readAll();
+            pathSmartFile.close();
+        }
     }
+
+    if(_pathSmart == ""){
+        ui->folder_label->setStyleSheet( "color: red ;");
+        ui->folder_label->setText("The SMART folder is not setted.");
+    }else{
+        QFile SmartCheck(_pathSmart + "/smart");
+        QFile SelectCheck(_pathSmart + "/select");
+        QFile TestCheck(_pathSmart + "/test");
+        if (! (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists() ) ){
+            ui->folder_label->setStyleSheet( "color: red ;");
+            ui->folder_label->setText("Current folder: " + _pathSmart);
+        }else{
+            ui->folder_label->setStyleSheet( "color: green ;");
+            ui->folder_label->setText("Current folder: " + _pathSmart);
+        }
+    }
+
 }
 
 setupWindow::~setupWindow(){
@@ -73,29 +53,39 @@ void setupWindow::on_chooseFolder_pushButton_clicked(){
     dialog.setFileMode(QFileDialog::DirectoryOnly);
     dialog.setLabelText(QFileDialog::Accept, "Choose folder");
 
-    if(dialog.exec())
+    if(dialog.exec()){
         sourceDirectory = dialog.selectedFiles().at(0);
+        ui->newFolder_label->setText("New folder: " + sourceDirectory);
+    }
 
 }
 
 void setupWindow::on_save_pushButton_clicked(){
 
     if (sourceDirectory != ""){
-        bool status = copyPath(sourceDirectory, _pathSmart, true);
+        QFile SmartCheck(sourceDirectory + "/smart");
+        QFile SelectCheck(sourceDirectory + "/select");
+        QFile TestCheck(sourceDirectory + "/test");
 
-        if (status)
-            QMessageBox::information(this,"Done!","Folder copied successfully!");
-        else
-            QMessageBox::critical(this,"Error!","Error to copy folder!");
+        if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
+            QDir dirGUI(_pathSmartGUI);
+            if(!(dirGUI.exists()))
+                dirGUI.mkdir(_pathSmartGUI);
 
-        if(QDir(_pathSmart).exists()){
-            ui->info_label->setText("The folder exists.");
-            ui->info_label->setStyleSheet( "color: green ;");
-        }else{
-            ui->info_label->setText("The folder does not exist.\nCopy it manually or use this window.");
-            ui->info_label->setStyleSheet( "color: red ;");
-        }
+            if (pathSmartFile.open(QFile::WriteOnly|QFile::Truncate)) {
+                QTextStream stream(&pathSmartFile);
+                stream << sourceDirectory;
+            }
+
+            ui->folder_label->setStyleSheet( "color: green ;");
+            ui->folder_label->setText("Current folder: " + sourceDirectory);
+
+            ui->newFolder_label->setText("");
+
+            QMessageBox::information(this,"Done!","Folder setted successfully!\nRestart SMART-GUI to enable changes.");
+        }else
+            QMessageBox::critical(this,"Error!","The selected folder not contains SMART!");
     }else
         QMessageBox::critical(this,"Error!","First choose a folder!");
 

@@ -89,8 +89,8 @@ QTabWidget *tabChartWebView;    //Pointer of tabWidget (different tab for differ
 QWebView *webViewForPDF;        //Pointer of QWebView user for load the result.html file (Support for printer).
 QPrinter *printer;              //Array of printer.
 
-QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js and path of smartSource (nextUpdate) ).
-QString pathSmart = pathSmartGUI + "/smartSource";      //Default contains smartSource file.
+QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js, pathSource.conf ).
+QString pathSmart = "";                                 //Default contains smartSource file.
 
 //Constructor.
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
@@ -117,6 +117,34 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->Tsize_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->Pset_lineEdit->setValidator( new QIntValidator(0, 1000, this) );
     ui->AllCheckBox->click();
+
+    QFile pathSmartFile(pathSmartGUI + "/pathSource.conf");
+
+    if(pathSmartFile.exists()){
+        if (pathSmartFile.open(QIODevice::ReadOnly)) {
+            QTextStream in(&pathSmartFile);
+            pathSmart = in.readAll();
+            pathSmartFile.close();        
+        }
+    }
+
+    if(pathSmart == ""){
+        ui->actionAdd_Algorithms->setEnabled(false);
+        ui->actionSelect_algorithms->setEnabled(false);
+    }else{
+        if(QDir(pathSmart).exists()){
+            QFile SmartCheck(pathSmart + "/smart");
+            QFile SelectCheck(pathSmart + "/select");
+            QFile TestCheck(pathSmart + "/test");
+            if (! (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists() ) ){
+                ui->actionAdd_Algorithms->setEnabled(false);
+                ui->actionSelect_algorithms->setEnabled(false);
+            }
+        }else{
+            ui->actionAdd_Algorithms->setEnabled(false);
+            ui->actionSelect_algorithms->setEnabled(false);
+        }
+    }
 }
 
 //Distructor.
@@ -838,7 +866,7 @@ void MainWindow::on_start_pushButton_released() {
     QFile TestCheck(pathSmart + "/test");
     QString TextSelected = "";
 
-    if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){  //ADD VARIABILISELECT NEGLI IF DIO PORCO
+    if (SmartCheck.exists() && SelectCheck.exists() && TestCheck.exists()){
 
         if(ui->AllCheckBox->isChecked()){ 
             TextSelected = "all"; 

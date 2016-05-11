@@ -16,7 +16,7 @@ int EXECUTE[NumAlgo];                      //Declare EXECTUE array with the stat
 char *ALGO_NAME[NumAlgo];                  //Declare array ALGO_NAME with the name of all string matching algorithms.
 
 QString __pathSmartGUI = QDir::homePath() + "/smartGUI";
-QString __pathSmart = __pathSmartGUI + "/smartSource";
+QString __pathSmart = "";
 
 void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {
     QByteArray tmpByteArray = __pathSmart.toLatin1() + "/source/algorithms.h";
@@ -42,6 +42,16 @@ SelectAlgWindow::SelectAlgWindow(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::SelectAlgWindow){
     ui->setupUi(this);
+
+    QFile pathSmartFile(__pathSmartGUI + "/pathSource.conf");
+
+    if(pathSmartFile.exists()){
+        if (pathSmartFile.open(QIODevice::ReadOnly)) {
+            QTextStream in(&pathSmartFile);
+            __pathSmart = in.readAll();
+            pathSmartFile.close();
+        }
+    }
 
     //Load array.
     getAlgo(ALGO_NAME,EXECUTE);
