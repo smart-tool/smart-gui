@@ -38,6 +38,9 @@
   <layout class="QHBoxLayout" name="horizontalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>6</number>
+     </property>
      <item alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="label">
        <property name="minimumSize">
@@ -48,7 +51,7 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>300</width>
+         <width>240</width>
          <height>300</height>
         </size>
        </property>
@@ -88,9 +91,10 @@ Coded by</string>
      <item alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Alessandro Maggio   alex.tkd.alex@gmail.com, 
-   Simone DI Mauro      simone989@gmail.com, 
-     Stefano Borzì       stefanoborzi32@gmail.com</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/Tkd-Alex&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Alessandro Maggio&lt;/span&gt;&lt;/a&gt; alex.tkd.alex@gmail.com, &lt;br/&gt;&lt;a href=&quot;https://github.com/simone989&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Simone DI Mauro&lt;/span&gt;&lt;/a&gt; simonedimauro989@gmail.com,&lt;br/&gt;&lt;a href=&quot;https://github.com/Helias&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;Stefano Borzì&lt;/span&gt;&lt;/a&gt; stefanoborzi32@gmail.com&lt;br&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

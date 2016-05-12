@@ -43,7 +43,7 @@ public slots:
     void updateGUI();
     void processEnded();
     void showResultFunction();
-    void printPDF(int _index);
+    void printPDF();
 
 
     QString createHeadEXP();
