@@ -32,6 +32,8 @@
 //Library for printPDF.
 #include <QPrinter>
 
+#include <QSignalMapper>
+
 #include <QDebug>
 
 #include <QMessageBox>
@@ -83,11 +85,11 @@ QWebView *showResult;           //Pointer of QWebView used to show the result te
 QWebView *chartWebView;         //Pointer of QWebView (Show single chart).
 QTabWidget *tabData;            //Pointer of tabWidget (different tab for different exp).
 
-QWebView *chartWebViewAll[100]; //Array of pointer of QWebView (Show the multi char for test "all text").
+QWebView *chartWebViewAll[50];  //Array of pointer of QWebView (Show the multi char for test "all text").
 QTabWidget *tabChartWebView;    //Pointer of tabWidget (different tab for different text).
 
-QWebView *webViewForPDF;        //Pointer of QWebView user for load the result.html file (Support for printer).
-QPrinter *printer;              //Array of printer.
+QWebView *webViewForPDF[50];    //Array of pointer of QWebView user for load the result.html file (Support for printer).
+QPrinter *printer[50];          //Array of pointer of printer.
 
 QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js, pathSource.conf ).
 QString pathSmart = "";                                 //String contains the path with smartSource file.
@@ -234,8 +236,8 @@ void MainWindow::showResultFunction(){
 }
 
 //Print the PDF
-void MainWindow::printPDF(){
-    webViewForPDF->print(printer);
+void MainWindow::printPDF(int _index){
+    webViewForPDF[_index]->print(printer[_index]);
 }
 
 //Execute this SLOT on ended process.
@@ -292,13 +294,19 @@ void MainWindow::processEnded(){
             if ( ui->Pdf_checkBox->isChecked() ) {
 
                 //Create a new Printer.
-                printer = new QPrinter(QPrinter::HighResolution);
-                printer->setOutputFileName(pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".pdf");
+                printer[0] = new QPrinter(QPrinter::HighResolution);
+                printer[0]->setOutputFileName(pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".pdf");
 
                 //Create a new webView, load the result.html and connect the signal endendo to slot print.
-                webViewForPDF = new QWebView();
-                webViewForPDF->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
-                connect(webViewForPDF, SIGNAL(loadFinished(bool)), this, SLOT(printPDF()));
+                webViewForPDF[0] = new QWebView();
+                webViewForPDF[0]->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[0] + ".html"));
+
+                QSignalMapper *mapperPrint = new QSignalMapper();
+                connect(webViewForPDF[0], SIGNAL(loadFinished(bool)), mapperPrint, SLOT(map()));
+                mapperPrint->setMapping(webViewForPDF[0], 0);
+                connect(mapperPrint, SIGNAL(mapped(int)), this, SLOT(printPDF(int)));
+
+                fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[0] + ".pdf" );
             }
 
             if ( QMessageBox::Yes == QMessageBox(QMessageBox::Question, "Done!", "Test complete.\nOpen " + expCode + "/" + selectedText[0] + ".html?", QMessageBox::Yes|QMessageBox::No).exec() ) {
@@ -311,6 +319,7 @@ void MainWindow::processEnded(){
 
         }else{
             ui->progressBar->setValue(100);
+            QSignalMapper *mapperPrint[50];
 
             if(ui->AllCheckBox->isChecked()){
                 for(int j=0; j<tabChartWebView->count()-1; j++){
@@ -322,6 +331,25 @@ void MainWindow::processEnded(){
 
                     if (ui->Txt_checkBox->isChecked())
                         fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".txt" );
+
+                    if ( ui->Pdf_checkBox->isChecked() ) {
+
+                        //Create a new Printer.
+                        printer[j] = new QPrinter(QPrinter::HighResolution);
+                        printer[j]->setOutputFileName(pathSmart + "/results/" + expCode + "/" + nameText[j] + ".pdf");
+
+                        //Create a new webView, load the result.html and connect the signal endendo to slot print.
+                        webViewForPDF[j] = new QWebView();
+                        webViewForPDF[j]->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + nameText[j] + ".html"));
+
+                        mapperPrint[j] = new QSignalMapper();
+
+                        connect(webViewForPDF[j], SIGNAL(loadFinished(bool)), mapperPrint[j], SLOT(map()));
+                        mapperPrint[j]->setMapping(webViewForPDF[j], j);
+                        connect(mapperPrint[j], SIGNAL(mapped(int)), this, SLOT(printPDF(int)));
+
+                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + nameText[j] + ".pdf" );
+                    }
                 }
             }else{
                 for(int j=0; j<selectedText.length(); j++){
@@ -334,11 +362,27 @@ void MainWindow::processEnded(){
                     if (ui->Txt_checkBox->isChecked())
                         fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[j] + ".txt" );
 
+                    if ( ui->Pdf_checkBox->isChecked() ) {
+
+                        //Create a new Printer.
+                        printer[j] = new QPrinter(QPrinter::HighResolution);
+                        printer[j]->setOutputFileName(pathSmart + "/results/" + expCode + "/" + selectedText[j] + ".pdf");
+
+                        //Create a new webView, load the result.html and connect the signal endendo to slot print.
+                        webViewForPDF[j] = new QWebView();
+                        webViewForPDF[j]->load(QUrl("file:///" + pathSmart + "/results/" + expCode + "/" + selectedText[j] + ".html"));
+
+                        mapperPrint[j] = new QSignalMapper();
+
+                        connect(webViewForPDF[j], SIGNAL(loadFinished(bool)), mapperPrint[j], SLOT(map()));
+                        mapperPrint[j]->setMapping(webViewForPDF[j], j);
+                        connect(mapperPrint[j], SIGNAL(mapped(int)), this, SLOT(printPDF(int)));
+
+                        fakeTerminal->setText( fakeTerminal->toPlainText() + "\n  Saving data on " + expCode + "/" + selectedText[j] + ".pdf" );
+                    }
+
                 }
             }
-
-            if (ui->Pdf_checkBox->isChecked())
-                QMessageBox::warning(this,"Error!","The PDF printer work only with single text test.");
 
             QMessageBox::information(this,"Done!","Test complete.");
         }
