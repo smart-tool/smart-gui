@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>400</height>
+    <width>475</width>
+    <height>475</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
-    <height>400</height>
+    <width>475</width>
+    <height>475</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>400</width>
-    <height>400</height>
+    <width>475</width>
+    <height>479</height>
    </size>
   </property>
   <property name="baseSize">
@@ -51,8 +51,8 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>240</width>
-         <height>300</height>
+         <width>200</width>
+         <height>200</height>
         </size>
        </property>
        <property name="text">
@@ -77,6 +77,45 @@
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;SMART-GUI version &lt;span style=&quot; font-weight:600;&quot;&gt;1.0&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignHCenter">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>
+Star it on GitHub</string>
+       </property>
+      </widget>
+     </item>
+     <item alignment="Qt::AlignHCenter">
+      <widget class="QLabel" name="label_8">
+       <property name="maximumSize">
+        <size>
+         <width>75</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="cursor">
+        <cursorShape>PointingHandCursor</cursorShape>
+       </property>
+       <property name="midLineWidth">
+        <number>7</number>
+       </property>
+       <property name="text">
+        <string>&lt;a href=&quot;https://github.com/Helias/SMART-GUI.git&quot;&gt;&lt;img src=&quot;:/Star.png&quot; width=&quot;75&quot; height=&quot;30&quot;&gt;&lt;/a&gt;</string>
+       </property>
+       <property name="pixmap">
+        <pixmap resource="icon.qrc">:/Star.png</pixmap>
+       </property>
+       <property name="scaledContents">
+        <bool>true</bool>
+       </property>
+       <property name="margin">
+        <number>-3</number>
+       </property>
+       <property name="openExternalLinks">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
