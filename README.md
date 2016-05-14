@@ -3,7 +3,7 @@ Graphic User Interface for [SMART](http://www.dmi.unict.it/~faro/smart/index.php
 
 ## Requirements
 
-SMART-GUI you need **Qt** installed to run.
+SMART-GUI need **Qt** installed to run.
 
 To install Qt on **Linux** you can just run the follow command:
 ```
