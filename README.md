@@ -3,14 +3,14 @@ Graphic User Interface for [SMART](http://www.dmi.unict.it/~faro/smart/index.php
 
 ## Requirements
 
-SMART-GUI need **Qt** installed to run.
+SMART-GUI need some **QtLibrary** installed to run.
 
-To install Qt on **Linux** you can just run the follow command:
+To install the QtLibrary on **Linux** you can just run the follow command:
 ```
 sudo apt-get install libqtwebkit4
 ```
 
-To install Qt on **Mac** you can just install [this](https://dl.dropboxusercontent.com/u/2314785/Qt_libraries.pkg.zip) package. 
+To install the QtLibrary on **Mac** you can just install [this](https://dl.dropboxusercontent.com/u/2314785/Qt_libraries.pkg.zip) package. 
 
 **Windows** is not  yet supported by SMART.
 
