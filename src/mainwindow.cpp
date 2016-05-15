@@ -91,7 +91,7 @@ QTabWidget *tabChartWebView;    //Pointer of tabWidget (different tab for differ
 QWebView *webViewForPDF;        //Pointer of QWebView user for load the result.html file (Support for printer).
 QPrinter *printer;              //Pointer of printer.
 
-QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js, pathSource.conf ).
+QString pathSmartGUI = QDir::currentPath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js, pathSource.conf ).
 QString pathSmart = "";                                 //String contains the path with smartSource file.
 
 //Constructor.
