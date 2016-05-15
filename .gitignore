@@ -1,4 +1,3 @@
-/build-SMART-GUI-V2-Desktop-Debug/
-/build-SMART-GUI-V2-Desktop_Qt_5_6_0_GCC_64bit-Debug/
-/build-SMART-GUI-V2-Qt_4_8_7_in_PATH_System-Debug/
-/SMART-GUI-V2/SMART-GUI-V2.pro.user
+build-SMART-GUI-Desktop-Debug/
+build-SMART-GUI-Desktop-Release/
+/src/SMART-GUI-V2.pro.user

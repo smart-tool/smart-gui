@@ -8,7 +8,7 @@ QT       += core gui webkit widgets printsupport
 
 # greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = SMART-GUI-V2
+TARGET = SMART-GUI
 TEMPLATE = app
 
 SOURCES += main.cpp\
