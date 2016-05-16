@@ -15,7 +15,7 @@ QCheckBox *arrayCheckBox[NumAlgo];         //Declary array of checkBox.
 int EXECUTE[NumAlgo];                      //Declare EXECTUE array with the state of alrgorithm (0/1).
 char *ALGO_NAME[NumAlgo];                  //Declare array ALGO_NAME with the name of all string matching algorithms.
 
-QString __pathSmartGUI = QDir::homePath() + "/smartGUI";
+QString __pathSmartGUI = QDir::currentPath() + "/smartGUI";
 QString __pathSmart = "";
 
 void getAlgo(char *ALGO_NAME[], int EXECUTE[]) {

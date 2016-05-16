@@ -7,7 +7,7 @@
 
 #include <QDir>
 
-QString ___pathSmartGUI = QDir::homePath() + "/smartGUI";
+QString ___pathSmartGUI = QDir::currentPath() + "/smartGUI";
 QString ___pathSmart = "";
 
 AddAlgo::AddAlgo(QWidget *parent) : QDialog(parent), ui(new Ui::AddAlgo) {
@@ -42,7 +42,8 @@ void AddAlgo::updateBar(){
     tmpOutput2 = tmpOutput2.replace("[0","");
     tmpOutput2 = tmpOutput2.replace("[00","");
 
-    ui->progressBar->setValue(tmpOutput2.toInt());
+    if (ui->progressBar->value() < tmpOutput2.toInt() || ui->progressBar->value() == 0)
+        ui->progressBar->setValue(tmpOutput2.toInt());
 
     if(tmpOutput2.contains("ok"))
         finPro();
@@ -51,6 +52,7 @@ void AddAlgo::updateBar(){
 
 void AddAlgo::finPro(){
 
+    ui->progressBar->setValue(100);
     if(this->Selected){
 
         QString SelectSequence = "./select " + NameAlgo;
@@ -62,16 +64,15 @@ void AddAlgo::finPro(){
         ProcAdd->setWorkingDirectory(___pathSmart);
         ProcAdd->start(SelectSequence2);
 
-        QString Add = "Algortmhs add and select \n\n";
+        QString Add = "Algoritmhs added and selected \n\n";
         QMessageBox::information(this,"ADD and Select",Add);
         this->close();
     }else {
 
-        QString Add = "Algortmhs add \n\n";
+        QString Add = "Algoritmhs added \n\n";
         QMessageBox::information(this,"ADD",Add);
         this->close();
     }
-
 }
 
 void AddAlgo::on_pushButton_clicked()
@@ -97,6 +98,7 @@ void AddAlgo::on_pushButton_clicked()
     }
 
     if(this->NameAlgo != ""){
+        NameAlgo = NameAlgo.toLower();
 
         QString filename=___pathSmart + "/source/algos/" + NameAlgo + ".c";
         QFile file(filename);
