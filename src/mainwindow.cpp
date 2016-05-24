@@ -78,6 +78,7 @@ QString DefaultTb300 = "300";   //Default value for Tb.
 QTextEdit *fakeTerminal;        //Pointer of textEdit used to made a dynamic fakeTerminal.
 QVBoxLayout *layoutLegend;      //Pointer of boxLayout used to made a legend of active algo.
 QScrollArea *scrollActiveAlgo;  //Pointer of scrollArea to make the layoutLenged scrollable.
+QWidget *scrollWidget;
 QSplitter *layoutForTab;        //Pointer of splitter to make resizable the GUI.
 
 QWebView *showResult;           //Pointer of QWebView used to show the result test.
@@ -586,10 +587,16 @@ void MainWindow::inizializeAll(){
         tabChartWebView->insertTab(tabChartWebView->count(), chartWebViewAll[tabChartWebView->count()], selectedText[tabChartWebView->count()]);
     }
 
+
     scrollActiveAlgo = new QScrollArea();
+    scrollWidget = new QWidget;
     layoutLegend = new QVBoxLayout();
-    scrollActiveAlgo->setLayout(layoutLegend);
-    scrollActiveAlgo->setMaximumWidth(150);
+
+    scrollWidget->setLayout(layoutLegend);
+    scrollActiveAlgo->setWidget(scrollWidget);
+    scrollActiveAlgo->setWidgetResizable(true);
+    scrollActiveAlgo->resize(130,0);
+    scrollActiveAlgo->setMaximumWidth(200);
     layoutForTab->addWidget(scrollActiveAlgo); 
 
     myProc = new QProcess(this);                                                    //Create process.
