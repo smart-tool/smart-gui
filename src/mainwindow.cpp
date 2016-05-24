@@ -316,7 +316,6 @@ void MainWindow::processEnded(){
 
         }else{
             ui->progressBar->setValue(100);
-            QSignalMapper *mapperPrint[50];
 
             if(ui->AllCheckBox->isChecked()){
                 for(int j=0; j<tabChartWebView->count()-1; j++){
