@@ -560,7 +560,7 @@ void MainWindow::inizializeAll(){
     fakeTerminal->setReadOnly(true);
     fakeTerminal->setLineWrapMode((QTextEdit::NoWrap));
     layoutForTab->addWidget(fakeTerminal);
-    fakeTerminal->setStyleSheet("background-color: black; color: #00ff00;");
+    //fakeTerminal->setStyleSheet("background-color: black; color: #00ff00;");
 
     if( ui->AllCheckBox->isChecked() ){
 
