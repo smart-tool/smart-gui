@@ -39,7 +39,7 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="spacing">
-      <number>6</number>
+      <number>1</number>
      </property>
      <item alignment="Qt::AlignHCenter">
       <widget class="QLabel" name="label">
@@ -103,7 +103,7 @@ Star it on GitHub</string>
         <number>7</number>
        </property>
        <property name="text">
-        <string>&lt;a href=&quot;https://github.com/Helias/SMART-GUI.git&quot;&gt;&lt;img src=&quot;:/Star.png&quot; width=&quot;75&quot; height=&quot;30&quot;&gt;&lt;/a&gt;</string>
+        <string/>
        </property>
        <property name="pixmap">
         <pixmap resource="icon.qrc">:/Star.png</pixmap>
