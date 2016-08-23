@@ -14,6 +14,11 @@ To install the QtLibrary on **Mac** you can just install [this](https://dl.dropb
 
 **Windows** is not  yet supported by SMART.
 
+## Download
+
+You can download the **SMART-GUI binaries** **[here](https://github.com/smart-tool/smart-gui/releases)**.
+
+
 ##[Documentation](http://www.dmi.unict.it/~faro/smart/howto.php)
 
 # ![SMART-GUI](https://raw.githubusercontent.com/Helias/SMART-GUI/master/SMART.png)
