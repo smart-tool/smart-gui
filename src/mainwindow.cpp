@@ -92,7 +92,7 @@ QTabWidget *tabChartWebView;    //Pointer of tabWidget (different tab for differ
 QWebView *webViewForPDF;        //Pointer of QWebView user for load the result.html file (Support for printer).
 QPrinter *printer;              //Pointer of printer.
 
-QString pathSmartGUI = QDir::currentPath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js, pathSource.conf ).
+QString pathSmartGUI = QDir::homePath() + "/smartGUI";  //Default directory contains smartGUI file (chart.html, chart.js, pathSource.conf ).
 QString pathSmart = "";                                 //String contains the path with smartSource file.
 
 //Constructor.
@@ -110,7 +110,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->horizontalLayout_2->addWidget(tabData);
 
     //Load all name of text.
-    nameText << "rand2" << "rand4" << "rand8" << "rand16" << "rand32" << "rand64" << "rand128" << "rand250" <<
+    nameText << "rand2" << "rand4" << "rand8" << "rand16" << "rand32" << "rand64" << "rand128" << "rand256" <<
                 "italianTexts" << "englishTexts" << "frenchTexts" << "chineseTexts" << "midimusic" << "genome" << "protein";
 
     //Allow only number in lineEdit.
@@ -737,7 +737,7 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
         ui->rand32CheckBox->setEnabled(false);
         ui->rand64CheckBox->setEnabled(false);
         ui->rand128CheckBox->setEnabled(false);
-        ui->rand250CheckBox->setEnabled(false);
+        ui->rand256CheckBox->setEnabled(false);
 
     }else if(arg1 == "" && ui->SimpleT_lineEdit->text() == ""){
 
@@ -760,7 +760,7 @@ void MainWindow::on_SimpleP_lineEdit_textChanged(const QString &arg1) {
         ui->rand32CheckBox->setEnabled(true);
         ui->rand64CheckBox->setEnabled(true);
         ui->rand128CheckBox->setEnabled(true);
-        ui->rand250CheckBox->setEnabled(true);
+        ui->rand256CheckBox->setEnabled(true);
 
     }
 
@@ -788,7 +788,7 @@ void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
         ui->rand32CheckBox->setEnabled(false);
         ui->rand64CheckBox->setEnabled(false);
         ui->rand128CheckBox->setEnabled(false);
-        ui->rand250CheckBox->setEnabled(false);
+        ui->rand256CheckBox->setEnabled(false);
         ui->Short_checkBox->setEnabled(false);
 
     }else if(arg1 == "" && ui->SimpleP_lineEdit->text() == ""){
@@ -812,7 +812,7 @@ void MainWindow::on_SimpleT_lineEdit_textChanged(const QString &arg1) {
         ui->rand32CheckBox->setEnabled(true);
         ui->rand64CheckBox->setEnabled(true);
         ui->rand128CheckBox->setEnabled(true);
-        ui->rand250CheckBox->setEnabled(true);
+        ui->rand256CheckBox->setEnabled(true);
     }
 
 }
@@ -918,9 +918,9 @@ void MainWindow::on_start_pushButton_released() {
                 TextSelected += "-" + ui->rand128CheckBox->text();
                 selectedText << ui->rand128CheckBox->text();
             }
-            if(ui->rand250CheckBox->isChecked()){ 
-                TextSelected += "-" + ui->rand250CheckBox->text();
-                selectedText << ui->rand250CheckBox->text();
+            if(ui->rand256CheckBox->isChecked()){
+                TextSelected += "-" + ui->rand256CheckBox->text();
+                selectedText << ui->rand256CheckBox->text();
             }
 
             TextSelected = TextSelected.right(TextSelected.length()-1);
@@ -1036,7 +1036,7 @@ void MainWindow::on_AllCheckBox_clicked() {
         ui->rand32CheckBox->setEnabled(false);
         ui->rand64CheckBox->setEnabled(false);
         ui->rand128CheckBox->setEnabled(false);
-        ui->rand250CheckBox->setEnabled(false);
+        ui->rand256CheckBox->setEnabled(false);
     }else{
         ui->englishTextsCheckBox->setEnabled(true);
         ui->italianTextsCheckBox->setEnabled(true);
@@ -1049,7 +1049,7 @@ void MainWindow::on_AllCheckBox_clicked() {
         ui->rand32CheckBox->setEnabled(true);
         ui->rand64CheckBox->setEnabled(true);
         ui->rand128CheckBox->setEnabled(true);
-        ui->rand250CheckBox->setEnabled(true);
+        ui->rand256CheckBox->setEnabled(true);
 
     }
 

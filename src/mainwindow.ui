@@ -371,9 +371,9 @@
        </widget>
       </item>
       <item row="1" column="6">
-       <widget class="QCheckBox" name="rand250CheckBox">
+       <widget class="QCheckBox" name="rand256CheckBox">
         <property name="text">
-         <string>rand250</string>
+         <string>rand256</string>
         </property>
        </widget>
       </item>

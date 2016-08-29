@@ -7,7 +7,7 @@
 #include <QDebug>
 #include <QMessageBox>
 
-QString _pathSmartGUI = QDir::currentPath() + "/smartGUI";
+QString _pathSmartGUI = QDir::homePath() + "/smartGUI";
 QString _pathSmart = "";
 
 QFile pathSmartFile(_pathSmartGUI + "/pathSource.conf");

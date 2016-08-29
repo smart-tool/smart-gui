@@ -7,7 +7,7 @@
 
 #include <QDir>
 
-QString ___pathSmartGUI = QDir::currentPath() + "/smartGUI";
+QString ___pathSmartGUI = QDir::homePath() + "/smartGUI";
 QString ___pathSmart = "";
 
 AddAlgo::AddAlgo(QWidget *parent) : QDialog(parent), ui(new Ui::AddAlgo) {
@@ -24,7 +24,7 @@ AddAlgo::AddAlgo(QWidget *parent) : QDialog(parent), ui(new Ui::AddAlgo) {
     }
 
 
-    ui->textEdit->setText("#include \"include/main.h\"\n\n //ADD YOUR CODE HERE \n\n //FOR MORE INFO FOR ADD ALGORTHIMS VISIT http://www.dmi.unict.it/~faro/smart/howto.php?id=18 \n\n");
+    ui->textEdit->setText("#include \"include/main.h\"\n\n //ADD YOUR CODE HERE \n\n //FOR MORE INFO FOR ADD ALGORITHMS VISIT http://www.dmi.unict.it/~faro/smart/howto.php?id=18 \n\n");
     this->Selected=false;
     this->NameAlgo="";
 }
@@ -87,13 +87,13 @@ void AddAlgo::on_pushButton_clicked()
 
     if(ui->lineEdit->text() != ""){
         if(ui->lineEdit->text().contains(" ")){
-            QString error = "You Name algortmis contais space \n";
+            QString error = "Your algorithm name contain space \n";
             QMessageBox::information(this,"Error",error);
 
         }else  this->NameAlgo=ui->lineEdit->text();
     }
     else{
-        QString error = "You add Name Algortmis to add \n";
+        QString error = "Add a name to the algorithm \n";
         QMessageBox::information(this,"Error",error);
     }
 
@@ -108,14 +108,14 @@ void AddAlgo::on_pushButton_clicked()
             stream << ui->textEdit->toPlainText() << endl;
             CompiledCheck=true;
         }else{
-            QString error = "Error to save the algortmis \n";
-            QMessageBox::information(this,"Error save algortmis",error);
+            QString error = "Error to save the algorithm \n";
+            QMessageBox::information(this,"Error save algorithm",error);
         }
 
         if(CompiledCheck){
 
             system("rm logCompiled.txt");
-            QString compiledSequenze = "gcc " + filename + " -o " + ___pathSmart + "/source/bin/" + NameAlgo + " 2>logCompiled.txt";
+            QString compiledSequenze = "gcc \"" + filename + "\" -o \"" + ___pathSmart + "/source/bin/" + NameAlgo + "\" 2>" + ___pathSmartGUI + "/logCompiled.txt";
             QByteArray ba = compiledSequenze.toLatin1();
             const char * compiledSequenze2 = ba.data();
             system(compiledSequenze2);
@@ -130,7 +130,7 @@ void AddAlgo::on_pushButton_clicked()
                 QByteArray arr = logFile.readAll();
 
                 QString errorText(arr);
-                QString error = "Error Compiled \n\n"+errorText;
+                QString error = "Error Compiled \n\n"+errorText+"\n\n "+compiledSequenze2 +"\n";
                 QMessageBox::information(this,"Error..!!",error);
                 logFile.close();
 
