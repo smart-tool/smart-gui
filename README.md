@@ -32,7 +32,7 @@ brew install p7zip
 or you can just download it from [here](http://www.updatestar.com/directdownload/7zx/2188433).
 
 
-##[Documentation](http://www.dmi.unict.it/~faro/smart/howto.php)
+## [Documentation](http://www.dmi.unict.it/~faro/smart/howto.php)
 
 # ![SMART-GUI](https://raw.githubusercontent.com/Helias/SMART-GUI/master/SMART.png)
 
