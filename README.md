@@ -1,5 +1,5 @@
 # SMART-GUI
-Graphic User Interface for [SMART](http://www.dmi.unict.it/~faro/smart/index.php) (String Matching Algorithms Research Tool)
+Graphic User Interface for **SMART (String Matching Algorithms Research Tool)**
 
 ## Requirements
 
@@ -10,7 +10,7 @@ To install the QtLibrary on **Linux** you can just run the follow command:
 sudo apt-get install libqtwebkit4
 ```
 
-To install the QtLibrary on **Mac** you can just install [this](https://dl.dropboxusercontent.com/u/2314785/Qt_libraries.pkg.zip) package. 
+To install the QtLibrary on **Mac** you can just install [this](https://github.com/smart-tool/smart-gui/releases/download/1.0.0/Qt_libraries_MACOS.pkg.zip) package. 
 
 **Windows** is not  yet supported by SMART.
 
@@ -19,6 +19,23 @@ To install the QtLibrary on **Mac** you can just install [this](https://dl.dropb
 
 You can download the **SMART-GUI binaries** **[here](https://github.com/smart-tool/smart-gui/releases)**.
 
+## Reference
+
+[Stringology Conference article url](https://www.stringology.org/event/2016/p09.html)
+
+If you work with SMART, please cite:
+```BibTeX
+@INPROCEEDINGS( PSC2016-9, 
+ author = "Simone Faro and Thierry Lecroq and Stefano Borz\`i and Simone Di Mauro and Alessandro Maggio",
+ title = "The String Matching Algorithms Research Tool",
+ booktitle = "Proceedings of the Prague Stringology Conference 2016",
+ address = "Czech Technical University in Prague, Czech Republic",
+ editor = "Jan Holub and Jan {\v{Z}}{\v{d}}{\'{a}}rek",
+ isbn = "978-80-01-05996-8",
+ year = 2016,
+ pages = "99--111",
+)
+```
 
 ## Troubleshooting (for Mac)
 
